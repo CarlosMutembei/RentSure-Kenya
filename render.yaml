@@ -18,6 +18,8 @@ services:
       - build-essential
 
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"  # <-- Forces Render to use a stable, production-ready environment
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
