@@ -1,23 +1,10 @@
-#!/bin/bash
-# Exit on error
+#!/usr/bin/env bash
+# exit on error
 set -o errexit
 
-# Install system dependencies
-apt-get update
-apt-get install -y --no-install-recommends \
-    gdal-bin \
-    libgdal-dev \
-    binutils \
-    libproj-dev \
-    python3-dev \
-    build-essential
+# Install dependencies using Poetry (since the logs show you use Poetry)
+poetry install
 
-# Upgrade pip
-pip install --upgrade pip setuptools wheel
-
-# Install Python packages
-pip install -r requirements.txt
-
-# Django commands
-python manage.py collectstatic --noinput
-python manage.py migrate
+# Run Django commands
+poetry run python manage.py collectstatic --no-input
+poetry run python manage.py migrate
