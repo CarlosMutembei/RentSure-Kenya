@@ -2,9 +2,12 @@
 # exit on error
 set -o errexit
 
-# Install dependencies using Poetry (since the logs show you use Poetry)
-poetry install
+# Upgrade installer tools
+pip install --upgrade pip setuptools wheel
 
-# Run Django commands
-poetry run python manage.py collectstatic --no-input
-poetry run python manage.py migrate
+# Install dependencies using your requirements.txt
+pip install -r requirements.txt
+
+# Run core django preparation commands
+python manage.py collectstatic --noinput
+python manage.py migrate

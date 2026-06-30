@@ -3,11 +3,12 @@ services:
     name: rentsure-kenya
     env: python
     plan: free
-    # 1. Point this directly to your clean build script
+    # 1. Point this directly to your clean pip-based build script
     buildCommand: ./build.sh
-    startCommand: poetry run gunicorn rentsure.wsgi:application
+    # 2. Replaced 'poetry run' with direct gunicorn execution
+    startCommand: gunicorn rentsure.wsgi:application
     
-    # 2. Render installs these system dependencies BEFORE running your build script
+    # 3. Render installs these system dependencies BEFORE running your build script
     packages:
       - gdal-bin
       - libgdal-dev
