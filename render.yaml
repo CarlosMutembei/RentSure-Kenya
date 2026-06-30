@@ -3,27 +3,26 @@ services:
     name: rentsure-kenya
     env: python
     plan: free
-    buildCommand: |
-      apt-get update
-      apt-get install -y --no-install-recommends \
-        gdal-bin \
-        libgdal-dev \
-        binutils \
-        libproj-dev \
-        python3-dev \
-        build-essential
-      pip install --upgrade pip setuptools wheel
-      pip install -r requirements.txt
-      python manage.py collectstatic --noinput
-      python manage.py migrate
-    startCommand: gunicorn rentsure.wsgi:application
+    # 1. Point this directly to your clean build script
+    buildCommand: ./build.sh
+    startCommand: poetry run gunicorn rentsure.wsgi:application
+    
+    # 2. Render installs these system dependencies BEFORE running your build script
+    packages:
+      - gdal-bin
+      - libgdal-dev
+      - binutils
+      - libproj-dev
+      - python3-dev
+      - build-essential
+
     envVars:
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
-        value: false
+        value: "false"
       - key: RENDER
-        value: true
+        value: "true"
       - key: DATABASE_URL
         fromDatabase:
           name: rentsure-db
@@ -35,9 +34,9 @@ services:
       - key: PROJ_LIB
         value: /usr/share/proj
       - key: PYTHONUNBUFFERED
-        value: true
+        value: "true"
       - key: PIP_DEFAULT_TIMEOUT
-        value: 100
+        value: "100"
 
 databases:
   - name: rentsure-db
