@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: rentsure-kenya
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn rentsure.wsgi:application
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: DB_NAME
+        fromDatabase:
+          name: rentsure-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: rentsure-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: rentsure-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: rentsure-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: rentsure-db
+          property: port
+      - key: GDAL_LIBRARY_PATH
+        value: /usr/lib/libgdal.so
+      - key: PROJ_LIB
+        value: /usr/share/proj
+      - key: GDAL_DATA
+        value: /usr/share/gdal
+
+databases:
+  - name: rentsure-db
+    databaseName: rentsure_kenya
+    plan: starter  # or free
+    user: rentsure_user
