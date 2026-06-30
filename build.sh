@@ -1,32 +1,23 @@
 #!/bin/bash
+# Exit on error
+set -o errexit
 
-echo "🚀 Starting RentSure Kenya build..."
-
-# Install system dependencies for GDAL/GeoDjango
-echo "📦 Installing GDAL and system dependencies..."
-apt-get update && apt-get install -y \
-    binutils \
-    libproj-dev \
+# Install system dependencies
+apt-get update
+apt-get install -y --no-install-recommends \
     gdal-bin \
     libgdal-dev \
+    binutils \
+    libproj-dev \
     python3-dev \
     build-essential
 
-# Set GDAL environment variables
-export GDAL_LIBRARY_PATH=/usr/lib/libgdal.so
-export GDAL_DATA=/usr/share/gdal
-export PROJ_LIB=/usr/share/proj
+# Upgrade pip
+pip install --upgrade pip setuptools wheel
 
-# Install Python dependencies
-echo "📦 Installing Python packages..."
-pip install --upgrade pip
+# Install Python packages
 pip install -r requirements.txt
 
-# Run Django commands
-echo "📁 Collecting static files..."
+# Django commands
 python manage.py collectstatic --noinput
-
-echo "🗄️ Running migrations..."
 python manage.py migrate
-
-echo "✅ Build complete!"
