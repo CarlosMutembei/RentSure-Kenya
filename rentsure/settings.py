@@ -117,7 +117,6 @@ else:
 # ============================================================
 # GDAL / PROJ (Render.com compatible)
 # ============================================================
-# Use environment variables for Render.com
 if 'RENDER' in os.environ:
     # Render.com paths
     GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH', '/usr/lib/libgdal.so')

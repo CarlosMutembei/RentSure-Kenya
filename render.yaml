@@ -2,6 +2,7 @@ services:
   - type: web
     name: rentsure-kenya
     env: python
+    plan: free  # ✅ Free tier
     buildCommand: |
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
@@ -12,35 +13,21 @@ services:
         generateValue: true
       - key: DEBUG
         value: false
-      - key: DB_NAME
+      - key: RENDER
+        value: true
+      - key: DATABASE_URL
         fromDatabase:
           name: rentsure-db
-          property: database
-      - key: DB_USER
-        fromDatabase:
-          name: rentsure-db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: rentsure-db
-          property: password
-      - key: DB_HOST
-        fromDatabase:
-          name: rentsure-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: rentsure-db
-          property: port
+          property: connectionString
       - key: GDAL_LIBRARY_PATH
         value: /usr/lib/libgdal.so
-      - key: PROJ_LIB
-        value: /usr/share/proj
       - key: GDAL_DATA
         value: /usr/share/gdal
+      - key: PROJ_LIB
+        value: /usr/share/proj
 
 databases:
   - name: rentsure-db
+    plan: free  # ✅ Free tier database
     databaseName: rentsure_kenya
-    plan: starter  # or free
     user: rentsure_user
