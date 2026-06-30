@@ -1,0 +1,478 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load static cache %}
+{% block content %}
+<div class="bg-gradient-to-br from-slate-50 via-white to-zinc-100 overflow-hidden font-sans selection:bg-emerald-500 selection:text-white">
+    <div class="relative bg-kenya-green text-white py-16 md:py-20">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full filter blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-1/4 w-64 h-64 bg-teal-500/10 rounded-full filter blur-2xl pointer-events-none"></div>
+        
+        <div class="relative z-10 container mx-auto px-6 max-w-6xl">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-emerald-400 text-xs md:text-sm font-medium tracking-wide mb-4 shadow-inner">
+                    <span class="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    🛡️ Zero Scam Guarantee • Secure Rental Escrow
+                </span>
+                <h1 class="text-4xl md:text-5xl font-black tracking-tight leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-neutral-100 to-emerald-200">
+                    Find Your Safe & Affordable Home
+                </h1>
+                <p class="text-base md:text-lg text-neutral-300 mt-3 font-light max-w-2xl mx-auto">
+                    Search thousands of verified properties across Kenya – no unexpected agent fees, no deposit exploitation.
+                </p>
+            </div>
+            
+            <div class="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-slate-100 p-5 md:p-6 text-slate-800 backdrop-blur-md">
+                <form method="get" action="{% url 'search' %}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5">
+                    <div class="relative">
+                        <input type="text" name="town" placeholder="Town / Estate (e.g., Westlands)" class="w-full text-sm border border-slate-200 bg-slate-50 focus:bg-white p-3 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    </div>
+                    <div>
+                        <input type="text" name="workplace" placeholder="Workplace (e.g., CBD)" class="w-full text-sm border border-slate-200 bg-slate-50 focus:bg-white p-3 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    </div>
+                    <div>
+                        <select name="bedrooms" class="w-full text-sm border border-slate-200 bg-slate-50 focus:bg-white p-3 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition text-slate-600">
+                            <option value="">Room Type...</option>
+                            <option value="0">Bedsitter</option>
+                            <option value="1">1 Bedroom</option>
+                            <option value="2">2 Bedrooms</option>
+                            <option value="3">3+ Bedrooms</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="number" name="min_rent" placeholder="Min KES" class="w-1/2 text-sm border border-slate-200 bg-slate-50 focus:bg-white p-3 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                        <input type="number" name="max_rent" placeholder="Max KES" class="w-1/2 text-sm border border-slate-200 bg-slate-50 focus:bg-white p-3 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    </div>
+                    <div class="sm:col-span-2 md:col-span-1">
+                        <button type="submit" class="w-full h-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-emerald-900/10 flex items-center justify-center gap-2">
+                            Search Properties
+                        </button>
+                    </div>
+                </form>
+                <div class="flex items-center gap-2 text-xs text-slate-400 mt-3.5 pt-3 border-t border-slate-100">
+                    <span>🔍 Advanced Filters: Smart proximity tracking, localized budgets, and directly audited layouts.</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-0 left-0 right-0 w-full overflow-hidden line-height-0">
+            <svg viewBox="0 0 1440 40" preserveAspectRatio="none" class="relative block w-full h-[40px] text-slate-50" fill="currentColor">
+                <path d="M0,40 C320,10 720,0 1440,40 L1440,40 L0,40 Z"></path>
+            </svg>
+        </div>
+    </div>
+
+    {% if user.is_authenticated and user.role == 'tenant' and user.default_town %}
+    <div class="container mx-auto px-6 mt-4 max-w-6xl">
+        <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 p-3.5 rounded-xl text-sm flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-2">
+                <span>📍</span>
+                <span>Showing properties near <strong class="font-bold">{{ user.default_town }}{% if user.default_estate %}, {{ user.default_estate }}{% endif %}</strong>.</span>
+            </div>
+            <div class="flex gap-4">
+                <a href="{% url 'update_location' %}" class="font-semibold underline hover:text-emerald-900 transition">Change location</a>
+                <span class="text-emerald-300">|</span>
+                <a href="{% url 'search' %}" class="font-semibold underline hover:text-emerald-900 transition">Search manually</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% cache 250 featured_houses %}
+    <section class="container mx-auto px-6 py-12 max-w-6xl">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 gap-4">
+            <div>
+                <span class="inline-flex items-center px-3 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 font-bold text-xs uppercase tracking-wide mb-2">
+                    Handpicked Options
+                </span>
+                <h2 class="text-3xl font-black text-slate-900 tracking-tight">Featured Homes</h2>
+                <p class="text-slate-500 text-sm mt-1">Premium verified listings and modern spaces reviewed meticulously by our team.</p>
+            </div>
+            <a href="{% url 'property_list' %}" class="group inline-flex items-center gap-1.5 text-sm font-bold text-emerald-600 hover:text-emerald-700 transition shrink-0">
+                Browse All Properties
+                <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {% for prop in featured %}
+            <div class="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-10px_rgba(16,185,129,0.1)] hover:-translate-y-1 transition-all duration-500">
+                <div class="relative aspect-[16/10] overflow-hidden bg-slate-100">
+                    {% if prop.images.first %}
+                    <img src="{{ prop.images.first.image.url }}" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    {% else %}
+                    <div class="h-full w-full flex items-center justify-center text-slate-300">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7l9-4 9 4M4 10v10h16V10"/>
+                        </svg>
+                    </div>
+                    {% endif %}
+
+                    <div class="absolute top-3 left-3 flex flex-col gap-1.5">
+                        <span class="px-2.5 py-1 rounded-lg bg-slate-900/90 backdrop-blur-md text-white text-[10px] font-black tracking-wider uppercase">FEATURED</span>
+                    </div>
+                    <span class="absolute top-3 right-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-black tracking-wider uppercase text-emerald-950 bg-gradient-to-r from-emerald-50 to-emerald-200 border border-emerald-300 shadow-md backdrop-blur-sm">
+                        🛡️ VERIFIED
+                    </span>
+                </div>
+
+                <div class="p-5">
+                    <div class="flex justify-between items-start gap-2 mb-1.5">
+                        <h3 class="font-bold text-lg text-slate-900 line-clamp-1 group-hover:text-emerald-600 transition-colors duration-300">
+                            {{ prop.title }}
+                        </h3>
+                        <button class="save-btn text-slate-300 hover:text-red-500 transition shrink-0 mt-1" data-property-id="{{ prop.id }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 text-xs text-slate-500 mb-3.5">
+                        <span class="text-emerald-600 text-sm">📍</span>
+                        <span>{{ prop.town }}{% if prop.estate %}, {{ prop.estate }}{% endif %}</span>
+                    </div>
+
+                    <div class="flex items-baseline gap-1 mb-4">
+                        <span class="text-xl font-black text-emerald-600 tracking-tight">
+                            KES 
+                            {% if prop.price_range.min == prop.price_range.max %}
+                                {{ prop.price_range.min|floatformat:"0" }}
+                            {% else %}
+                                {{ prop.price_range.min|floatformat:"0" }} - {{ prop.price_range.max|floatformat:"0" }}
+                            {% endif %}
+                        </span>
+                        <span class="text-slate-400 text-xs font-normal">/ month</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 py-3 border-t border-b border-slate-50 text-xs font-medium text-slate-600 text-center bg-slate-50/50 rounded-xl px-2">
+                        <div>🛏️ {{ prop.bedrooms|default:"-" }} Beds</div>
+                        <div class="border-l border-r border-slate-200/60">🛁 {{ prop.bathrooms|default:"-" }} Baths</div>
+                        <div>📐 {{ prop.size|default:"-" }} sqft</div>
+                    </div>
+
+                    <a href="{% url 'property_detail' prop.id %}" class="mt-4 flex items-center justify-center gap-2 w-full bg-kenya-green hover:bg-emerald-950 text-white text-sm font-bold py-3 rounded-xl transition-all duration-300 shadow-md">
+                        View Property Details
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full">
+                <div class="bg-white rounded-2xl border border-dashed border-slate-200 p-12 text-center max-w-md mx-auto">
+                    <span class="text-4xl block mb-3">🏠</span>
+                    <h3 class="text-lg font-bold text-slate-800">No Featured Properties Yet</h3>
+                    <p class="text-slate-400 text-xs mt-1">Handpicked featured listings will populate directly onto your workspace view shortly.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endcache %}
+
+    {% cache 250 verified_properties %}
+    <section class="bg-slate-50 border-t border-b border-slate-100 py-12">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <div class="mb-8">
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-xs uppercase tracking-wide">
+                    RentSure System Certified
+                </span>
+                <h2 class="text-3xl font-black text-slate-900 tracking-tight mt-1.5">Verified Properties</h2>
+                <p class="text-slate-500 text-sm mt-1">Secure rentals protected against identity duplication and unauthorized broker channels.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                {% for prop in verified %}
+                <div class="group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+                    <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                        {% if prop.images.first %}
+                        <img src="{{ prop.images.first.image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center text-slate-300 text-xs">No image uploaded</div>
+                        {% endif %}
+                        
+                        <span class="absolute top-2.5 right-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider text-emerald-900 bg-white border border-emerald-200 shadow-sm z-10">
+                            🛡️ Verified
+                        </span>
+                        
+                        <button class="save-btn absolute top-2.5 left-2.5 bg-white/80 backdrop-blur-sm rounded-full p-1.5 shadow-sm hover:bg-red-50 transition z-10" data-property-id="{{ prop.id }}">
+                            <svg class="w-5 h-5 text-slate-500 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="p-4">
+                        <h3 class="font-bold text-slate-900 line-clamp-1 text-base group-hover:text-emerald-600 transition-colors">{{ prop.title }}</h3>
+                        
+                        <div class="flex items-baseline gap-0.5 mt-1">
+                            <span class="text-md font-black text-emerald-600">
+                                KES 
+                                {% if prop.price_range.min == prop.price_range.max %}
+                                    {{ prop.price_range.min|floatformat:"0" }}
+                                {% else %}
+                                    {{ prop.price_range.min|floatformat:"0" }}+
+                                {% endif %}
+                            </span>
+                            <span class="text-slate-400 text-[10px]">/mo</span>
+                        </div>
+                        
+                        <p class="text-slate-400 text-xs mt-1.5 flex items-center gap-1">
+                            <span>📍</span> {{ prop.town }}
+                        </p>
+                        <a href="{% url 'property_detail' prop.id %}" class="mt-3.5 inline-flex items-center justify-center w-full bg-slate-50 hover:bg-emerald-50 border border-slate-100 hover:border-emerald-200 text-slate-700 hover:text-emerald-700 text-xs font-bold py-2.5 rounded-xl transition-all">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center py-12">
+                    <div class="text-3xl mb-2">🛡️</div>
+                    <h3 class="text-base font-bold text-slate-700">Awaiting Agent Verification</h3>
+                    <p class="text-slate-400 text-xs mt-1">Landlord items are currently processing verification filters.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endcache %}
+
+    <div class="container mx-auto px-6 py-6 max-w-6xl">
+        <div class="rounded-2xl border border-rose-100 bg-gradient-to-r from-rose-50/60 via-white to-rose-50/30 shadow-sm overflow-hidden p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-100 text-rose-600 text-xl shrink-0">🚨</div>
+                <div>
+                    <h3 class="text-base font-black text-rose-950">Rental Safety Alert</h3>
+                    <p class="text-slate-600 text-xs md:text-sm mt-0.5 leading-relaxed">
+                        Never send money directly via mobile platform routes before secure viewing verification. RentSure protects your ecosystem through an authentic <strong class="text-rose-700 font-bold">Escrow Framework Layer</strong>.
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0">
+                <a href="{% url 'how_it_works' %}" class="text-center w-1/2 md:w-auto text-xs bg-rose-600 hover:bg-rose-700 text-white font-bold px-4 py-2.5 rounded-xl shadow-sm transition">
+                    Learn Escrow Operation
+                </a>
+                <a href="{% url 'safety_tips' %}" class="text-center w-1/2 md:w-auto text-xs bg-white border border-rose-200 text-rose-700 hover:bg-rose-50 font-semibold px-4 py-2.5 rounded-xl transition">
+                    Guidelines
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <section class="bg-slate-50 border-t border-b border-slate-100 py-12">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <div class="text-center mb-8">
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-xs uppercase tracking-wide">
+                    Feedback Auditing Loop
+                </span>
+                <h2 class="text-3xl font-black text-slate-900 tracking-tight mt-1.5">What Our Users Say</h2>
+                <p class="text-slate-500 text-xs mt-1 max-w-xl mx-auto">Real experiences from tenants and landlords using RentSure across Kenya.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {% for t in testimonials %}
+                <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm relative overflow-hidden flex flex-col justify-between">
+                    <div class="text-slate-100 text-6xl absolute -top-5 -right-2 font-black pointer-events-none">“</div>
+                    <p class="text-slate-600 text-sm italic relative z-10 leading-relaxed mb-4">"{{ t.content }}"</p>
+                    <div>
+                        <div class="flex gap-0.5 text-amber-400 text-xs mb-2">
+                            {% for i in "12345"|slice:":t.rating" %}★{% endfor %}
+                            {% for i in "12345"|slice:":5"|slice:":5-t.rating" %}☆{% endfor %}
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-900">{{ t.name }}</h4>
+                        <p class="text-[10px] text-slate-400">Verified RentSure Client</p>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center py-6 bg-white rounded-2xl border border-slate-100 max-w-md mx-auto p-6">
+                    <p class="text-slate-500 text-sm font-medium">No system reviews found.</p>
+                    <a href="{% url 'submit_testimonial' %}" class="inline-flex mt-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                        Share Your Profile Experience
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {% cache 250 recent_and_map %}
+    <section class="container mx-auto px-3 sm:px-6 py-6 sm:py-12 max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+        <!-- LEFT COLUMN: Recently Added -->
+        <div class="lg:col-span-5 flex flex-col">
+            <div class="mb-4">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-blue-50 border border-blue-100 text-blue-700 font-bold text-[10px] uppercase tracking-wider">
+                    🕒 Live Feed
+                </span>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1">Recently Added</h2>
+            </div>
+            <div class="space-y-3 flex-1">
+                {% for prop in recent %}
+                <div class="group bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 p-2.5 sm:p-3">
+                    <div class="flex gap-3 relative">
+                        <!-- Thumbnail -->
+                        <div class="w-16 sm:w-20 h-16 sm:h-20 shrink-0 rounded-lg overflow-hidden bg-slate-50 relative">
+                            {% if prop.images.first %}
+                            <img src="{{ prop.images.first.image.url }}" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ prop.title }}">
+                            {% else %}
+                            <div class="h-full w-full flex items-center justify-center text-slate-300 text-2xl">🏠</div>
+                            {% endif %}
+                            <!-- Save button (touch-friendly) -->
+                            <button class="save-btn absolute top-1 right-1 bg-white/80 backdrop-blur-sm rounded-full p-1.5 shadow-sm hover:bg-red-50 transition z-10" data-property-id="{{ prop.id }}" aria-label="Save property">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- Info -->
+                        <div class="flex flex-col justify-between flex-1 min-w-0 py-0.5">
+                            <div>
+                                <h4 class="font-bold text-slate-900 line-clamp-1 text-sm sm:text-base group-hover:text-emerald-600 transition-colors">
+                                    {{ prop.title }}
+                                </h4>
+                                <p class="text-emerald-600 font-bold text-xs sm:text-sm mt-0.5">
+                                    KES 
+                                    {% if prop.price_range.min == prop.price_range.max %}
+                                        {{ prop.price_range.min|floatformat:"0" }}
+                                    {% else %}
+                                        {{ prop.price_range.min|floatformat:"0" }}+
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between gap-2 mt-1.5">
+                                <span class="text-[10px] sm:text-xs text-slate-400 flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    {{ prop.created_at|timesince }} ago
+                                </span>
+                                <a href="{% url 'property_detail' prop.id %}" class="text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-800 transition whitespace-nowrap">
+                                    View Unit →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="bg-white border border-slate-100 rounded-xl p-6 text-center">
+                    <p class="text-slate-400 text-sm">No recent uploads yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Map -->
+        <div class="lg:col-span-7 flex flex-col">
+            <div class="mb-4">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-emerald-50 border border-emerald-100 text-emerald-700 font-bold text-[10px] uppercase tracking-wider">
+                    📍 Location Verification Engine
+                </span>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1">Geospatial Mapping Matrix</h2>
+            </div>
+
+            <div class="bg-slate-100 rounded-2xl overflow-hidden shadow-md border border-slate-200 flex-1">
+                <div id="homeMap" style="height: 300px; width: 100%;"></div>
+                <div class="bg-white/90 backdrop-blur-md border-t border-slate-200 p-3 text-center">
+                    <div class="flex items-center justify-center gap-1.5 text-emerald-800 font-bold text-xs">
+                        🛡️ Coordinate Audit
+                    </div>
+                    <p class="text-[10px] text-slate-500">Pins are linked to physical structures by on-ground verifiers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endcache %}
+
+    <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-neutral-950 text-white py-16">
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+            <div class="absolute -top-20 -left-20 w-80 h-80 bg-emerald-500 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-80 h-80 bg-teal-400 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="relative z-10 container mx-auto px-6 text-center max-w-4xl">
+            <div class="text-4xl mb-3">📱</div>
+            <h3 class="text-3xl font-black tracking-tight">RentSure Mobile Ecosystem</h3>
+            <p class="text-neutral-300 mt-2 text-sm max-w-xl mx-auto font-light leading-relaxed">
+                A streamlined engine tracking push alerts, fully localized encrypted messaging rooms, and integrated escrow transaction status tools.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-2 mt-5 text-xs font-medium text-neutral-200">
+                <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10">🔔 Instant Alerts</span>
+                <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10">💬 Encrypted In-App Chat</span>
+                <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10">💳 STK Push Integration</span>
+            </div>
+
+            <form method="post" action="{% url 'app_lead' %}" class="mt-8 flex flex-col sm:flex-row justify-center gap-2 max-w-md mx-auto">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Enter secure email address" class="w-full sm:w-2/3 text-sm px-4 py-3 rounded-xl text-slate-900 bg-white border border-transparent outline-none focus:ring-2 focus:ring-emerald-500" required>
+                <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 px-5 py-3 rounded-xl text-sm font-bold text-slate-950 transition shadow-lg shrink-0">
+                    Join Waitlist
+                </button>
+            </form>
+            <p class="text-[11px] text-slate-500 mt-3">Be first to access internal sandboxed testing channels for Android / iOS.</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var map = L.map('homeMap').setView([{{ map_center.0 }}, {{ map_center.1 }}], {{ map_zoom }});
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        {% for prop in map_properties %}
+        // Build map price display text dynamically inside script injection loops safely
+        var displayPrice = "KES " + ({{ prop.price_range.min }} === {{ prop.price_range.max }} ? "{{ prop.price_range.min }}" : "{{ prop.price_range.min }}+");
+        
+        L.marker([{{ prop.location.y }}, {{ prop.location.x }}])
+            .addTo(map)
+            .bindPopup('<b>{{ prop.title|escapejs }}</b><br>{{ prop.town|escapejs }}<br>' + displayPrice + '<br><a href="/property/{{ prop.id }}/">View</a>');
+        {% endfor %}
+    });
+</script>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    document.querySelectorAll('.save-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const propertyId = this.dataset.propertyId;
+            const button = this;
+
+            fetch(`/property/${propertyId}/save/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.saved) {
+                    button.innerHTML = '<svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>';
+                    button.classList.add('text-red-500');
+                } else {
+                    button.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>';
+                    button.classList.remove('text-red-500');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+{% endblock %}

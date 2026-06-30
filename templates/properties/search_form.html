@@ -1,0 +1,230 @@
+<section class="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-white to-zinc-100 font-sans">
+<div class="w-full max-w-4xl bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden transition-all duration-300">
+
+    <!-- Premium RentSure Brand Header Block -->
+    <div class="relative bg-kenya-green px-6 py-5 md:px-8">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full filter blur-2xl pointer-events-none"></div>
+
+        <div class="relative flex items-center justify-between">
+            <div>
+                <h2 class="text-xl md:text-2xl font-black text-white flex items-center gap-2.5 tracking-tight">
+                    <span>🔍</span>
+                    Refine Your Search
+                </h2>
+                <p class="text-emerald-300/90 text-xs md:text-sm mt-0.5 font-light">
+                    Find your perfect home faster with authenticated RentSure filters
+                </p>
+            </div>
+
+            <div class="hidden md:flex items-center justify-center h-11 w-11 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md shadow-inner">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2l-7 8v5l-4 2v-7L3 6V4z" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tighter Structured Parameter Form Loop -->
+    <form method="get" action="{% url 'search' %}" class="p-5 md:p-6 space-y-6">
+
+        <!-- Location Parameters Segment -->
+        <div>
+            <h3 class="text-sm font-bold text-slate-900 mb-2.5 flex items-center gap-1.5 uppercase tracking-wider">
+                <span>📍</span> Location Boundaries
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Town / Estate</label>
+                    <input
+                        type="text"
+                        name="town"
+                        value="{{ request.GET.town }}"
+                        placeholder="e.g. Kilimani, Westlands"
+                        class="w-full text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">County</label>
+                    <input
+                        type="text"
+                        name="county"
+                        value="{{ request.GET.county }}"
+                        placeholder="e.g. Nairobi"
+                        class="w-full text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Processing Matrix -->
+        <div>
+            <h3 class="text-sm font-bold text-slate-900 mb-2.5 flex items-center gap-1.5 uppercase tracking-wider">
+                <span>💰</span> Budget Threshold
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Minimum Rent (KES)</label>
+                    <input
+                        type="number"
+                        name="min_rent"
+                        value="{{ request.GET.min_rent }}"
+                        placeholder="0"
+                        class="w-full text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Maximum Rent (KES)</label>
+                    <input
+                        type="number"
+                        name="max_rent"
+                        value="{{ request.GET.max_rent }}"
+                        placeholder="Any Limit"
+                        class="w-full text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
+            </div>
+        </div>
+
+        <!-- Architectural Blueprint Layout Specs -->
+        <div>
+            <h3 class="text-sm font-bold text-slate-900 mb-2.5 flex items-center gap-1.5 uppercase tracking-wider">
+                <span>🏠</span> Space Specifics
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Bedrooms</label>
+                    <select
+                        name="bedrooms"
+                        class="w-full text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 transition text-slate-700">
+                        <option value="">Any Configuration</option>
+                        <option value="0" {% if request.GET.bedrooms == '0' %}selected{% endif %}>Bedsitter</option>
+                        <option value="1" {% if request.GET.bedrooms == '1' %}selected{% endif %}>1 Bedroom</option>
+                        <option value="2" {% if request.GET.bedrooms == '2' %}selected{% endif %}>2 Bedrooms</option>
+                        <option value="3" {% if request.GET.bedrooms == '3' %}selected{% endif %}>3+ Bedrooms</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Property Framework Type</label>
+                    <select
+                        name="property_type"
+                        class="w-full text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 transition text-slate-700">
+                        <option value="">Any Layout</option>
+                        <option value="rental" {% if request.GET.property_type == 'rental' %}selected{% endif %}>Long-term Rental</option>
+                        <option value="bnb" {% if request.GET.property_type == 'bnb' %}selected{% endif %}>Bed & Breakfast</option>
+                        <option value="lodging" {% if request.GET.property_type == 'lodging' %}selected{% endif %}>Lodging (Daily)</option>
+                        <option value="short_stay" {% if request.GET.property_type == 'short_stay' %}selected{% endif %}>Short Stay (Weekly)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verified Amenities Grid Node Matrix -->
+        <div>
+            <h3 class="text-sm font-bold text-slate-900 mb-2.5 flex items-center gap-1.5 uppercase tracking-wider">
+                <span>⭐</span> Audited Utilities
+            </h3>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
+                <!-- Unit Card Filter Loop -->
+                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-emerald-50/40 hover:border-emerald-200 transition cursor-pointer text-xs font-medium text-slate-700">
+                    <input type="checkbox" name="furnished" value="yes" {% if request.GET.furnished %}checked{% endif %} class="rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 w-4 h-4">
+                    Furnished
+                </label>
+
+                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-emerald-50/40 hover:border-emerald-200 transition cursor-pointer text-xs font-medium text-slate-700">
+                    <input type="checkbox" name="water" value="yes" {% if request.GET.water %}checked{% endif %} class="rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 w-4 h-4">
+                    Borehole/Water
+                </label>
+
+                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-emerald-50/40 hover:border-emerald-200 transition cursor-pointer text-xs font-medium text-slate-700">
+                    <input type="checkbox" name="parking" value="yes" {% if request.GET.parking %}checked{% endif %} class="rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 w-4 h-4">
+                    Secure Parking
+                </label>
+
+                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-emerald-50/40 hover:border-emerald-200 transition cursor-pointer text-xs font-medium text-slate-700">
+                    <input type="checkbox" name="security" value="yes" {% if request.GET.security %}checked{% endif %} class="rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 w-4 h-4">
+                    CCTV / Guard
+                </label>
+
+                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-emerald-50/40 hover:border-emerald-200 transition cursor-pointer text-xs font-medium text-slate-700">
+                    <input type="checkbox" name="wifi" value="yes" {% if request.GET.wifi %}checked{% endif %} class="rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 w-4 h-4">
+                    Fiber WiFi
+                </label>
+
+                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-emerald-50/40 hover:border-emerald-200 transition cursor-pointer text-xs font-medium text-slate-700">
+                    <input type="checkbox" name="pets" value="yes" {% if request.GET.pets %}checked{% endif %} class="rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 w-4 h-4">
+                    Pets Allowed
+                </label>
+            </div>
+        </div>
+
+        <!-- Saved Target Location Proximity Layer -->
+        <div class="bg-gradient-to-r from-emerald-50/60 to-teal-50/30 border border-emerald-100/70 rounded-xl p-4">
+            <label class="flex items-start gap-3 cursor-pointer">
+                <input
+                    type="checkbox"
+                    name="near_me"
+                    value="1"
+                    {% if request.GET.near_me %}checked{% endif %}
+                    class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500 border-emerald-300 w-4 h-4 shrink-0">
+
+                <div>
+                    <p class="font-bold text-slate-900 text-xs sm:text-sm">
+                        Restrict results near my saved profile location
+                    </p>
+                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+                        Locks priority processing queries down to matching parameters within your verified default estate coordinates.
+                    </p>
+                </div>
+            </label>
+        </div>
+
+        <!-- Commute & Distance Mapping Engine Grid Frame -->
+        <div class="rounded-2xl border border-slate-200/80 bg-slate-50/30 p-4">
+            <div class="flex items-center justify-between mb-3.5">
+                <h3 class="text-xs font-bold text-slate-800 proper tracking-wider flex items-center gap-1.5">
+                    <span>🧭</span> Real-time Proximity Engine
+                </h3>
+                <span class="bg-slate-200/60 text-slate-600 px-2.5 py-0.5 rounded-md text-[10px] font-bold proper tracking-wide">
+                    Telemetry Input
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+                <input type="text" name="workplace" placeholder="🏢 Workplace Node" value="{{ request.GET.workplace }}" class="text-xs rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                <input type="text" name="school" placeholder="🏫 School Hub" value="{{ request.GET.school }}" class="text-xs rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                <input type="text" name="hospital" placeholder="🏥 Med Center" value="{{ request.GET.hospital }}" class="text-xs rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                <input type="text" name="cbd" placeholder="🏙️ CBD Proximity" value="{{ request.GET.cbd }}" class="text-xs rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                <input type="text" name="bus_stage" placeholder="🚏 Transit Station" value="{{ request.GET.bus_stage }}" class="text-xs rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 bg-white col-span-2 sm:col-span-1">
+            </div>
+
+            <div class="mt-3 rounded-lg bg-white p-3 border border-slate-100 flex items-center gap-2">
+                <span class="text-xs shrink-0">💡</span>
+                <p class="text-[11px] text-slate-500 leading-snug">
+                    RentSure dynamically maps localized routing arrays to measure approximate travel durations and public matatu fare structures.
+                </p>
+            </div>
+        </div>
+
+        <!-- System Action Pipeline Footer -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2 border-t border-slate-100">
+            <a href="{% url 'search' %}"
+               class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-center text-xs font-bold transition">
+                Reset Filters
+            </a>
+
+            <button
+                type="submit"
+                class="group w-full sm:w-auto bg-kenya-green hover:bg-emerald-800 text-white px-8 py-3 rounded-xl text-xs font-black tracking-wider uppercase shadow-md shadow-emerald-950/10 transition duration-300 flex items-center justify-center gap-2">
+                <svg class="w-4 h-4 transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 105.5 5.5a7.5 7.5 0 0011.15 11.15z"/>
+                </svg>
+                Execute Secure Search
+            </button>
+        </div>
+
+    </form>
+</div>
+</section>

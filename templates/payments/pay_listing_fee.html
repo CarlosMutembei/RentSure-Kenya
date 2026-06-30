@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pay Listing Fee | RentSure Kenya{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto">
+        <!-- Main Card -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            <!-- Header (Kenyan green solid) -->
+            <div class="bg-kenya-green px-6 py-6 text-center">
+                <div class="mx-auto w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-tag text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-white">Listing Fee Payment</h1>
+                <p class="text-emerald-100 text-sm mt-1">Pay KES 200 to publish your property</p>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <!-- Property Summary -->
+                <div class="bg-gray-50 rounded-xl p-4 flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <i class="fas fa-building text-emerald-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700">Property being listed</p>
+                        <p class="font-bold text-gray-900">ID #{{ property_id }}</p>
+                        <p class="text-xs text-gray-500">You will be able to complete property details after payment.</p>
+                    </div>
+                </div>
+
+                <!-- Fee Breakdown -->
+                <div class="border-t border-gray-100 pt-4">
+                    <div class="flex justify-between text-sm mb-2">
+                        <span class="text-gray-600">Listing fee</span>
+                        <span class="font-semibold text-gray-900">KES 200</span>
+                    </div>
+                    <div class="flex justify-between text-sm font-bold border-t border-gray-100 pt-2 mt-1">
+                        <span>Total to pay</span>
+                        <span class="text-emerald-700 text-lg">KES 200</span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">* One‑time fee. Listing valid for 30 days.</p>
+                </div>
+
+                <!-- M-Pesa Payment Form -->
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">M-Pesa Phone Number</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-400 text-sm">+254</span>
+                            </div>
+                            <input type="tel" name="phone" placeholder="712345678" required
+                                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Enter the number registered with M-Pesa (e.g., 712345678).</p>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                        <i class="fas fa-mobile-alt"></i> Pay KES 200 with M-Pesa
+                    </button>
+                </form>
+
+                <!-- Security Notice -->
+                <div class="bg-blue-50 rounded-xl p-3 flex gap-2 text-xs text-blue-700">
+                    <i class="fas fa-shield-alt mt-0.5"></i>
+                    <span>Your payment is processed securely via M-Pesa. You will receive an STK push on your phone.</span>
+                </div>
+
+                <!-- Footer note -->
+                <div class="text-center text-xs text-gray-400">
+                    <a href="{% url 'dashboard' %}" class="hover:text-emerald-600">← Cancel and return to dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

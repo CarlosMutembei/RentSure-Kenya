@@ -1,0 +1,616 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Units: {{ property.title }} | RentSure Kenya{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-gray-50 via-white to-gray-100 py-6 sm:py-12">
+    <div class="container mx-auto px-3 sm:px-4 max-w-7xl">
+
+        <!-- Header Banner Card -->
+        <div class="mb-6 sm:mb-8 bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-green-100 overflow-hidden">
+            <!-- Top Banner -->
+            <div class="bg-gradient-to-r from-green-700 via-green-600 to-green-500 px-4 py-6 sm:px-8 sm:py-8">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+                    <!-- Left Side Details -->
+                    <div class="flex items-center gap-4 sm:gap-5">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center shrink-0">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M5 21V7l8-4 6 3v15"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="flex flex-wrap items-center gap-2 mb-1 sm:mb-2">
+                                <h1 class="text-xl sm:text-3xl lg:text-4xl font-black text-white leading-tight">Manage Units</h1>
+                                <span class="px-2.5 py-0.5 rounded-full bg-white/15 border border-white/20 text-white text-xs font-semibold">Active Property</span>
+                            </div>
+                            <p class="text-green-100 text-sm sm:text-lg font-medium">{{ property.title }}</p>
+                        </div>
+                    </div>
+                    <!-- Right Side Actions -->
+                    <div class="flex flex-wrap gap-2.5 sm:gap-3">
+                        <a href="{% url 'manage_property_images' property_id=property.id %}" class="group inline-flex items-center justify-center gap-2.5 bg-white text-green-700 hover:bg-green-50 px-4 py-3 sm:px-6 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-semibold shadow-md transition-all duration-300 w-full sm:w-auto">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4-4a2 2 0 012.828 0L16 17m-2-2l1-1a2 2 0 012.828 0L20 16"/>
+                            </svg>
+                            Property Images
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Information Bar -->
+            <div class="px-4 py-4 sm:px-8 sm:py-5 bg-white">
+                <div class="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm text-gray-700">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0L6.343 16.657a8 8 0 1111.314 0z"/>
+                        </svg>
+                        <span class="font-medium">{{ property.town }}, {{ property.estate }}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        <span class="font-medium text-green-700">Verified Property</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4M4 10v10h16V10"/>
+                        </svg>
+                        <span class="font-medium">{{ units|length }} Units</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== ADD UNIT SECTION ===================== -->
+        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-green-100 overflow-hidden mb-6 sm:mb-10">
+            <!-- Form Header Banner -->
+            <div class="px-4 py-5 sm:px-8 sm:py-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500">
+                <div class="flex items-center justify-between flex-wrap gap-4">
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center shrink-0">
+                            <svg class="w-6 h-6 sm:w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-lg sm:text-2xl font-bold text-white">Add New Units</h2>
+                            <p class="text-green-100 text-xs sm:text-sm mt-0.5">Bulk or individual – choose what suits you</p>
+                        </div>
+                    </div>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/15 border border-white/20 text-white text-xs font-semibold">Property Management</span>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-8">
+                <!-- MODE TOGGLE -->
+                <div class="bg-gray-50 p-3 sm:p-4 rounded-xl border border-gray-200 mb-6">
+                    <p class="text-xs sm:text-sm font-medium text-gray-700 mb-2">Choose how you want to add units:</p>
+                    <div class="flex flex-wrap gap-3 sm:gap-4">
+                        <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                            <input type="radio" name="unit_mode" value="bulk" checked class="accent-emerald-600">
+                            <span class="text-sm font-semibold">Bulk Add</span>
+                            <span class="text-[10px] sm:text-xs text-gray-400 hidden xs:inline">(5+ units)</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                            <input type="radio" name="unit_mode" value="individual" class="accent-emerald-600">
+                            <span class="text-sm font-semibold">Individual Add</span>
+                            <span class="text-[10px] sm:text-xs text-gray-400 hidden xs:inline">(≤4 units)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- ===== BULK ADD SECTION ===== -->
+                <div id="bulk-mode">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                        <p class="text-xs sm:text-sm text-gray-500">Define each type of unit. Auto‑generates units with correct statuses.</p>
+                        <button type="button" id="add-unit-type-btn" class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition w-full sm:w-auto text-center">
+                            ➕ Add Unit Type Group
+                        </button>
+                    </div>
+
+                    <form method="post" id="bulk-form">
+                        {% csrf_token %}
+                        <div id="unit-inventory-wrapper" class="space-y-4">
+                            <!-- Default group -->
+                            <div class="unit-type-card bg-gray-50 p-3 sm:p-5 rounded-2xl border border-gray-200 relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                                <div class="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-between items-center text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    <span>Unit Inventory Group #1</span>
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Unit Config Style</label>
+                                    <select name="unit_type[]" class="unit-type-select w-full bg-white border border-gray-300 p-2 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600">
+                                        <option value="studio">Bedsitter / Studio Room</option>
+                                        <option value="single">Single Room</option>
+                                        <option value="double">Double Room (shared)</option>
+                                        <option value="1br">1 Bedroom House</option>
+                                        <option value="2br">2 Bedroom House</option>
+                                        <option value="3br">3 Bedroom House</option>
+                                        <option value="short-single">Short-stay Single Room</option>
+                                        <option value="short-1br">Short-stay 1 Bedroom</option>
+                                        <option value="commercial">Commercial / Shop Front</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Rent (KES / Month)</label>
+                                    <input type="number" name="unit_rent[]" placeholder="12000" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Total Built</label>
+                                    <input type="number" name="unit_total[]" placeholder="25" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Occupied</label>
+                                    <input type="number" name="unit_occupied[]" placeholder="18" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Booked</label>
+                                    <input type="number" name="unit_booked[]" placeholder="0" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Under Maintenance</label>
+                                    <input type="number" name="unit_repair[]" placeholder="2" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+                                </div>
+                                <div class="flex items-center pt-1">
+                                    <label class="inline-flex items-center text-[10px] sm:text-xs font-semibold text-gray-700 cursor-pointer">
+                                        <input type="checkbox" name="unit_furnished[]" class="rounded text-emerald-600 accent-emerald-600 mr-1.5"> Furnished?
+                                    </label>
+                                </div>
+                                <!-- Amenities per category -->
+                                <div class="col-span-1 sm:col-span-2 lg:col-span-3 border-t border-gray-200 pt-2 sm:pt-3 mt-1">
+                                    <p class="text-[10px] sm:text-xs font-medium text-gray-500 mb-1">Amenities in this unit type:</p>
+                                    <div class="flex flex-wrap gap-2 sm:gap-3">
+                                        <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_water[]" checked class="accent-emerald-600 mr-1"> 💧 Water</label>
+                                        <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_electricity[]" checked class="accent-emerald-600 mr-1"> ⚡ Electricity</label>
+                                        <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_parking[]" class="accent-emerald-600 mr-1"> 🅿️ Parking</label>
+                                        <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_security[]" class="accent-emerald-600 mr-1"> 🔒 Security</label>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="this.closest('.unit-type-card').remove(); updateUnitTypeOptions();" class="absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold text-xs uppercase bg-white/80 p-1 rounded">🗑️ Remove</button>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 xl:col-span-3 pt-4 border-t border-gray-100 mt-4">
+                            <button type="submit" class="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white font-bold px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-green-200 transition-all duration-300 hover:scale-[1.01] w-full sm:w-auto text-sm sm:text-base">
+                                <svg class="w-5 h-5 transition-transform duration-300 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                Add Units in Bulk
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- ===== INDIVIDUAL ADD SECTION ===== -->
+                <div id="individual-mode" class="hidden">
+                    <div class="mb-5 sm:mb-6">
+                        <h3 class="text-base sm:text-lg font-bold text-gray-800">Unit Information</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm mt-0.5">Enter the details of the rental unit below.</p>
+                    </div>
+
+                    <form method="post" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                        {% csrf_token %}
+
+                        <!-- Unit Type Selector -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Unit Type</label>
+                            <select name="unit_type" required class="w-full text-sm sm:text-base rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 px-3 py-3 sm:px-4 sm:py-4 transition-all focus:bg-white focus:border-green-600 focus:ring-4 focus:ring-green-100 outline-none">
+                                <option value="" disabled selected>Select type</option>
+                                <option value="studio">Bedsitter / Studio</option>
+                                <option value="single">Single Room</option>
+                                <option value="double">Double Room (shared)</option>
+                                <option value="1br">1 Bedroom</option>
+                                <option value="2br">2 Bedrooms</option>
+                                <option value="3br">3 Bedrooms</option>
+                                <option value="short-single">Short-stay Single</option>
+                                <option value="short-1br">Short-stay 1 Bedroom</option>
+                                <option value="commercial">Commercial</option>
+                            </select>
+                        </div>
+
+                        <!-- Unit ID/Number Field -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Unit Number</label>
+                            <input type="text" name="unit_number" placeholder="e.g. A-12" class="w-full text-sm sm:text-base rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 px-3 py-3 sm:px-4 sm:py-4 transition-all focus:bg-white focus:border-green-600 focus:ring-4 focus:ring-green-100 outline-none">
+                        </div>
+
+                        <!-- Rent Pricing Input -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Monthly Rent (KES)</label>
+                            <input type="number" name="monthly_rent" required placeholder="e.g. 15000" class="w-full text-sm sm:text-base rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 px-3 py-3 sm:px-4 sm:py-4 transition-all focus:bg-white focus:border-green-600 focus:ring-4 focus:ring-green-100 outline-none">
+                        </div>
+
+                        <!-- Deposit Pricing Input -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Deposit (KES)</label>
+                            <input type="number" name="deposit" placeholder="e.g. 15000" class="w-full text-sm sm:text-base rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 px-3 py-3 sm:px-4 sm:py-4 transition-all focus:bg-white focus:border-green-600 focus:ring-4 focus:ring-green-100 outline-none">
+                        </div>
+
+                        <!-- Availability Status -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Status</label>
+                            <select name="status" class="w-full text-sm sm:text-base rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 px-3 py-3 sm:px-4 sm:py-4 transition-all focus:bg-white focus:border-green-600 focus:ring-4 focus:ring-green-100 outline-none">
+                                <option value="available">Available</option>
+                                <option value="occupied">Occupied</option>
+                                <option value="booked">Booked</option>
+                                <option value="maintenance">Maintenance</option>
+                            </select>
+                        </div>
+
+                        <!-- Calendar Date Selector -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Available From</label>
+                            <input type="date" name="available_from" value="{{ today }}" class="w-full text-sm sm:text-base rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 px-3 py-3 sm:px-4 sm:py-4 transition-all focus:bg-white focus:border-green-600 focus:ring-4 focus:ring-green-100 outline-none">
+                        </div>
+
+                        <!-- Furnished checkbox -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Furnished</label>
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" name="furnished" id="furnished" class="w-4 h-4 accent-emerald-600 rounded">
+                                <label for="furnished" class="text-sm text-gray-600">This unit is fully furnished</label>
+                            </div>
+                        </div>
+
+                        <!-- Amenities -->
+                        <div class="md:col-span-2 xl:col-span-3 border-t border-gray-100 pt-4 mt-2">
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">Amenities in this unit</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <label class="flex items-center gap-2 p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-sm hover:border-emerald-300 transition">
+                                    <input type="checkbox" name="has_water" checked class="accent-emerald-600"> 💧 Water
+                                </label>
+                                <label class="flex items-center gap-2 p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-sm hover:border-emerald-300 transition">
+                                    <input type="checkbox" name="has_electricity" checked class="accent-emerald-600"> ⚡ Electricity
+                                </label>
+                                <label class="flex items-center gap-2 p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-sm hover:border-emerald-300 transition">
+                                    <input type="checkbox" name="has_parking" class="accent-emerald-600"> 🅿️ Parking
+                                </label>
+                                <label class="flex items-center gap-2 p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-sm hover:border-emerald-300 transition">
+                                    <input type="checkbox" name="has_security" class="accent-emerald-600"> 🔒 Security
+                                </label>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1">Uncheck any amenity that is <strong>not available</strong> in this unit.</p>
+                        </div>
+
+                        <!-- Action Trigger Button -->
+                        <div class="md:col-span-2 xl:col-span-3 pt-4 border-t border-gray-100">
+                            <button type="submit" class="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white font-bold px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-green-200 transition-all duration-300 hover:scale-[1.01] w-full sm:w-auto text-sm sm:text-base">
+                                <svg class="w-5 h-5 transition-transform duration-300 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                Add Rental Unit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== EXISTING UNITS LIST ===================== -->
+        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-green-100 overflow-hidden">
+            <!-- List Header Section -->
+            <div class="px-4 py-5 sm:px-8 sm:py-6 border-b border-green-100 bg-gradient-to-r from-white to-green-50/40">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="text-lg sm:text-2xl font-bold text-gray-900">Existing Units</h2>
+                        <p class="text-gray-500 text-xs sm:text-sm mt-0.5">Manage all units and monitor availability</p>
+                    </div>
+                    <div class="flex items-center self-start sm:self-auto">
+                        <div class="px-4 py-1.5 rounded-lg sm:rounded-xl bg-green-100 text-green-700 text-xs sm:text-sm font-bold">
+                            {{ units|length }} Units
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Filter Elements -->
+            <div class="p-4 sm:p-6 border-b border-gray-100 bg-gray-50/60">
+                <div class="flex flex-col md:flex-row gap-3 sm:gap-4">
+                    <input type="text" id="unit-search" placeholder="Search by unit number..." class="flex-1 text-sm rounded-xl sm:rounded-2xl border border-gray-200 px-4 py-2.5 sm:py-3 focus:ring-4 focus:ring-green-100 focus:border-green-600 outline-none">
+                    <select id="status-filter" class="rounded-xl sm:rounded-2xl text-sm border border-gray-200 px-4 py-2.5 sm:py-3 focus:ring-4 focus:ring-green-100 focus:border-green-600 outline-none bg-white">
+                        <option value="All Statuses">All Statuses</option>
+                        <option value="Available">Available</option>
+                        <option value="Occupied">Occupied</option>
+                        <option value="Booked">Booked</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Responsive Dynamic Data Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-100">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-100">
+                            <th class="px-4 py-4 sm:px-6 sm:py-5 text-left text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Unit Details</th>
+                            <th class="px-4 py-4 sm:px-6 sm:py-5 text-left text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Monthly Rent</th>
+                            <th class="px-4 py-4 sm:px-6 sm:py-5 text-left text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Deposit</th>
+                            <th class="px-4 py-4 sm:px-6 sm:py-5 text-left text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Status</th>
+                            <th class="px-4 py-4 sm:px-6 sm:py-5 text-left text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Available From</th>
+                            <th class="px-4 py-4 sm:px-6 sm:py-5 text-right text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 bg-white">
+                        {% for unit in units %}
+                        <tr class="hover:bg-green-50/50 transition duration-150">
+                            <!-- Detail Badge Layout -->
+                            <td class="px-4 py-4 sm:px-6 sm:py-5 whitespace-nowrap">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
+                                        <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7m-9 11V9m0 0L5 14m7-5l7 5"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-gray-900">{{ unit.get_unit_type_display }}</p>
+                                        <p class="text-xs text-gray-500">Unit {{ unit.unit_number|default:"—" }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- Base Pricing -->
+                            <td class="px-4 py-4 sm:px-6 sm:py-5 font-bold text-green-700 text-sm whitespace-nowrap">KES {{ unit.monthly_rent }}</td>
+                            <!-- Security Pricing -->
+                            <td class="px-4 py-4 sm:px-6 sm:py-5 text-gray-700 text-sm whitespace-nowrap">KES {{ unit.deposit|default:"—" }}</td>
+                            <!-- Micro Colored Status Badge -->
+                            <td class="px-4 py-4 sm:px-6 sm:py-5 whitespace-nowrap">
+                                {% if unit.status == 'available' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200 text-green-700 text-xs font-semibold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Available
+                                </span>
+                                {% elif unit.status == 'occupied' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>Occupied
+                                </span>
+                                {% elif unit.status == 'maintenance' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-xs font-semibold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>Maintenance
+                                </span>
+                                {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-50 border border-yellow-200 text-yellow-700 text-xs font-semibold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>Booked
+                                </span>
+                                {% endif %}
+                            </td>
+                            <!-- Timeline Date Column -->
+                            <td class="px-4 py-4 sm:px-6 sm:py-5 text-gray-600 text-sm whitespace-nowrap">{{ unit.available_from|default:"—" }}</td>
+                            <!-- Controls Elements -->
+                            <td class="px-4 py-4 sm:px-6 sm:py-5 text-right whitespace-nowrap">
+                                <div class="flex justify-end gap-2 text-xs sm:text-sm">
+                                    <a href="{% url 'edit_unit' property.id unit.id %}" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold transition">Edit</a>
+                                    <a href="{% url 'delete_unit' property.id unit.id %}" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 font-semibold transition">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <!-- Empty Layout Standard State -->
+                        <tr>
+                            <td colspan="6" class="py-12 sm:py-20 px-4">
+                                <div class="flex flex-col items-center text-center">
+                                    <div class="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-green-100 flex items-center justify-center mb-4 sm:mb-6 shadow-inner">
+                                        <svg class="w-8 h-8 sm:w-12 sm:h-12 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4M4 10v10h16V10"/>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">No Units Yet</h3>
+                                    <p class="text-gray-500 text-xs sm:text-sm max-w-md px-2">Start by adding your first rental unit to begin managing occupancy and tenants.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+    // ========== MODE TOGGLE ==========
+    document.querySelectorAll('input[name="unit_mode"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            if (this.value === 'bulk') {
+                document.getElementById('bulk-mode').classList.remove('hidden');
+                document.getElementById('individual-mode').classList.add('hidden');
+            } else {
+                document.getElementById('bulk-mode').classList.add('hidden');
+                document.getElementById('individual-mode').classList.remove('hidden');
+            }
+        });
+    });
+
+    // ========== DYNAMIC UNIT TYPE FILTERING (for bulk) ==========
+    // ========== DYNAMIC UNIT TYPE FILTERING (disable, not remove) ==========
+function updateUnitTypeOptions() {
+    const selects = document.querySelectorAll('select.unit-type-select');
+    // Build a map of selected values to the selects that have them
+    const selectedValues = {};
+    selects.forEach(sel => {
+        const val = sel.value;
+        if (val) {
+            if (!selectedValues[val]) selectedValues[val] = [];
+            selectedValues[val].push(sel);
+        }
+    });
+
+    selects.forEach(sel => {
+        // First, enable all options
+        Array.from(sel.options).forEach(opt => opt.disabled = false);
+        
+        const currentVal = sel.value;
+        // Now disable options that are selected in other selects
+        Array.from(sel.options).forEach(opt => {
+            const val = opt.value;
+            if (val && val !== currentVal && selectedValues[val]) {
+                // Check if this value is selected in any other select (not this one)
+                const otherSelects = selectedValues[val].filter(s => s !== sel);
+                if (otherSelects.length > 0) {
+                    opt.disabled = true;
+                }
+            }
+        });
+
+        // If the current value got disabled (shouldn't happen), clear it
+        const selectedOption = Array.from(sel.options).find(opt => opt.value === currentVal);
+        if (currentVal && selectedOption && selectedOption.disabled) {
+            sel.value = '';
+        }
+    });
+}
+
+// Attach event listeners to all selects (including future ones)
+document.addEventListener('change', function(e) {
+    if (e.target.classList && e.target.classList.contains('unit-type-select')) {
+        updateUnitTypeOptions();
+    }
+});
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateUnitTypeOptions();
+});
+
+// ========== DYNAMIC BULK GROUP ADD (keep as is) ==========
+let groupCounter = 1;
+document.getElementById('add-unit-type-btn').addEventListener('click', function() {
+    const wrapper = document.getElementById('unit-inventory-wrapper');
+    const groupHTML = `
+        <div class="unit-type-card bg-gray-50 p-3 sm:p-5 rounded-2xl border border-gray-200 relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 border-t-4 border-t-emerald-600">
+            <button type="button" onclick="this.closest('.unit-type-card').remove(); updateUnitTypeOptions();" class="absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold text-xs uppercase bg-white/80 p-1 rounded">🗑️ Remove</button>
+            <div class="col-span-1 sm:col-span-2 lg:col-span-3 text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider">
+                Unit Inventory Group #${groupCounter + 1}
+            </div>
+            <div>
+                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Unit Config Style</label>
+                <select name="unit_type[]" class="unit-type-select w-full bg-white border border-gray-300 p-2 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600">
+                    <option value="studio">Bedsitter / Studio Room</option>
+                    <option value="single">Single Room</option>
+                    <option value="double">Double Room (shared)</option>
+                    <option value="1br">1 Bedroom House</option>
+                    <option value="2br">2 Bedroom House</option>
+                    <option value="3br">3 Bedroom House</option>
+                    <option value="short-single">Short-stay Single Room</option>
+                    <option value="short-1br">Short-stay 1 Bedroom</option>
+                    <option value="commercial">Commercial / Shop Front</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Rent (KES / Month)</label>
+                <input type="number" name="unit_rent[]" placeholder="15000" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+            </div>
+            <div>
+                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Total Built</label>
+                <input type="number" name="unit_total[]" placeholder="10" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+            </div>
+            <div>
+                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Occupied</label>
+                <input type="number" name="unit_occupied[]" placeholder="5" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+            </div>
+            <div>
+                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Booked</label>
+                <input type="number" name="unit_booked[]" placeholder="0" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+            </div>
+            <div>
+                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Under Maintenance</label>
+                <input type="number" name="unit_repair[]" placeholder="0" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+            </div>
+            <div class="flex items-center pt-1">
+                <label class="inline-flex items-center text-[10px] sm:text-xs font-semibold text-gray-700 cursor-pointer">
+                    <input type="checkbox" name="unit_furnished[]" class="rounded text-emerald-600 accent-emerald-600 mr-1.5"> Furnished?
+                </label>
+            </div>
+            <div class="col-span-1 sm:col-span-2 lg:col-span-3 border-t border-gray-200 pt-2 sm:pt-3 mt-1">
+                <p class="text-[10px] sm:text-xs font-medium text-gray-500 mb-1">Amenities in this unit type:</p>
+                <div class="flex flex-wrap gap-2 sm:gap-3">
+                    <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_water[]" checked class="accent-emerald-600 mr-1"> 💧 Water</label>
+                    <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_electricity[]" checked class="accent-emerald-600 mr-1"> ⚡ Electricity</label>
+                    <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_parking[]" class="accent-emerald-600 mr-1"> 🅿️ Parking</label>
+                    <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_security[]" class="accent-emerald-600 mr-1"> 🔒 Security</label>
+                </div>
+            </div>
+        </div>
+    `;
+    wrapper.insertAdjacentHTML('beforeend', groupHTML);
+    groupCounter++;
+    updateUnitTypeOptions();
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('unit-search');
+        const statusFilter = document.getElementById('status-filter');
+        const tableRows = document.querySelectorAll('tbody tr');
+
+        // If no rows (empty state), exit early
+        if (tableRows.length === 0) return;
+
+        function filterTable() {
+            const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const selectedStatus = statusFilter ? statusFilter.value : 'All Statuses';
+
+            let visibleCount = 0;
+
+            tableRows.forEach(row => {
+                // Get unit number from the row (second <p> in the first <td>)
+                const unitNumberElement = row.querySelector('td:first-child .text-xs.text-gray-500');
+                const statusBadge = row.querySelector('td:nth-child(4) span');
+
+                const unitNumber = unitNumberElement ? unitNumberElement.textContent.toLowerCase() : '';
+                const status = statusBadge ? statusBadge.textContent.trim() : '';
+
+                const matchesSearch = unitNumber.includes(searchTerm) || searchTerm === '';
+                const matchesStatus = selectedStatus === 'All Statuses' || status === selectedStatus;
+
+                if (matchesSearch && matchesStatus) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Handle "no results" message
+            let noResultsRow = document.getElementById('no-results-row');
+            if (visibleCount === 0) {
+                if (!noResultsRow) {
+                    const tbody = document.querySelector('tbody');
+                    noResultsRow = document.createElement('tr');
+                    noResultsRow.id = 'no-results-row';
+                    noResultsRow.innerHTML = `
+                        <td colspan="6" class="py-12 text-center">
+                            <p class="text-gray-500 text-sm">No units match your filters.</p>
+                        </td>
+                    `;
+                    tbody.appendChild(noResultsRow);
+                } else {
+                    noResultsRow.style.display = '';
+                }
+            } else {
+                if (noResultsRow) {
+                    noResultsRow.style.display = 'none';
+                }
+            }
+        }
+
+        // Attach event listeners
+        if (searchInput) {
+            searchInput.addEventListener('input', filterTable);
+        }
+        if (statusFilter) {
+            statusFilter.addEventListener('change', filterTable);
+        }
+
+        // Run initial filter
+        filterTable();
+    });
+</script>
+<style>
+    @media (max-width: 480px) {
+        .unit-type-card .grid {
+            grid-template-columns: 1fr !important;
+        }
+        .unit-type-card .col-span-1, .unit-type-card .col-span-2, .unit-type-card .col-span-3 {
+            grid-column: span 1 !important;
+        }
+    }
+</style>
+{% endblock %}

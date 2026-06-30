@@ -1,0 +1,209 @@
+<div class="mt-6 sm:mt-8 bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+    <!-- Premium Kenyan Green Header Section -->
+    <div class="bg-gradient-to-r from-[#005A2B] via-[#006633] to-[#003314] px-5 sm:px-8 py-5 sm:py-6 relative overflow-hidden">
+        <!-- Subtle decorative grid background for high-end SaaS feel -->
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        
+        <div class="relative z-10">
+            <h3 class="text-xl sm:text-2xl font-extrabold text-white flex items-center tracking-tight gap-3">
+                <div class="p-1.5 bg-white/10 rounded-xl border border-white/10 text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>
+                </div>
+                Landlord Workspace
+            </h3>
+            <p class="text-green-100/90 text-xs sm:text-sm mt-2 font-medium">Manage your properties, viewings, and rental verification pipelines.</p>
+        </div>
+    </div>
+
+    <div class="p-4 sm:p-6 lg:p-8 bg-white">
+        <!-- Quick Actions Grid (Auto-stacks smoothly on small viewports) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            <a href="{% url 'create_property' %}" class="group bg-gradient-to-br from-emerald-600 to-[#005A2B] rounded-2xl p-5 text-white shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <p class="text-emerald-100/80 text-xs font-medium tracking-wide">Property Management</p>
+                        <h4 class="font-bold text-base sm:text-lg mt-1 tracking-tight">Post Property</h4>
+                    </div>
+                    <div class="p-2 bg-white/10 rounded-xl group-hover:scale-105 transition duration-200 shrink-0">
+                        <i class="fa-solid fa-house-circle-check text-2xl sm:text-3xl"></i>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'verification_center' %}" class="group bg-gradient-to-br from-blue-600 to-cyan-700 rounded-2xl p-5 text-white shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <p class="text-blue-100/80 text-xs font-medium tracking-wide">Trust & Security</p>
+                        <h4 class="font-bold text-base sm:text-lg mt-1 tracking-tight">Get Verified</h4>
+                    </div>
+                    <div class="p-2 bg-white/10 rounded-xl group-hover:scale-105 transition duration-200 shrink-0">
+                        <i class="fa-solid fa-circle-check text-2xl sm:text-3xl"></i>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'manage_viewings' %}" class="group bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-5 text-white shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 sm:col-span-2 lg:col-span-1">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <p class="text-indigo-100/80 text-xs font-medium tracking-wide">Appointments</p>
+                        <h4 class="font-bold text-base sm:text-lg mt-1 tracking-tight">Manage Viewings</h4>
+                    </div>
+                    <div class="p-2 bg-white/10 rounded-xl group-hover:scale-105 transition duration-200 shrink-0">
+                        <i class="fa-solid fa-calendar-days text-2xl sm:text-3xl"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- KYC Status Card -->
+        <div class="bg-white border border-gray-100 rounded-2xl shadow-xs p-4 sm:p-5 mb-8">
+            <h4 class="font-bold text-gray-800 text-sm sm:text-base tracking-tight mb-3">KYC Verification Status</h4>
+            <div>
+                {% if user.kyc_status == 'verified' %}
+                <div class="flex flex-col items-start gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-[10px] sm:text-xs font-bold uppercase tracking-widest shadow-xs">
+                        <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        Verified Profile
+                    </span>
+                    <p class="text-xs sm:text-sm text-gray-500 font-medium">Your legal landlord identity identity has been fully secured and activated.</p>
+                </div>
+                {% elif user.kyc_status == 'pending' %}
+                <div class="flex flex-col items-start gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-amber-50 text-amber-700 border border-amber-200/60 text-[10px] sm:text-xs font-bold proper tracking-widest shadow-xs">
+                        <svg class="w-3.5 h-3.5 text-amber-600 animate-spin" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                        Pending Review
+                    </span>
+                    <p class="text-xs sm:text-sm text-gray-500 font-medium">Documents are under compliance review. You'll receive a push message upon authorization.</p>
+                </div>
+                {% elif user.kyc_status == 'rejected' %}
+                <div class="flex flex-col items-start gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-rose-50 text-rose-700 border border-rose-200/60 text-[10px] sm:text-xs font-bold uppercase tracking-widest shadow-xs">
+                        <svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        Rejected
+                    </span>
+                    <p class="text-xs sm:text-sm text-gray-500 font-medium">Your verification parameters were declined. Please inspect requirements and submit fresh data.</p>
+                    <a href="{% url 'kyc_submit' %}" class="inline-flex items-center font-bold text-xs sm:text-sm text-emerald-700 hover:text-emerald-800 transition gap-1 mt-1 bg-emerald-50 px-3 py-1.5 rounded-lg">
+                        <span>Resubmit KYC Docs</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </a>
+                </div>
+                {% else %}
+                <div class="flex flex-col items-start gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-gray-100 text-gray-700 border border-gray-200 text-[10px] sm:text-xs font-bold uppercase tracking-widest shadow-xs">
+                        <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                        </svg>
+                        Unverified Portfolio
+                    </span>
+                    <p class="text-xs sm:text-sm text-gray-500 font-medium">Complete account KYC setup to activate instant payments and portfolio visibility tracking.</p>
+                    <a href="{% url 'kyc_submit' %}" class="inline-flex items-center font-bold text-xs sm:text-sm text-emerald-700 hover:text-emerald-800 transition gap-1 mt-1 bg-emerald-50 px-3 py-1.5 rounded-lg">
+                        <span>Verify Account Portfolio</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- My Properties Layout Wrapper -->
+        {% if properties %}
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+            <h4 class="text-lg sm:text-xl font-extrabold text-gray-800 tracking-tight">Active Portfolios</h4>
+            <span class="bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-bold px-3 py-1 rounded-full self-start sm:self-auto">
+                {{ properties|length }} Registered Property{{ properties|length|pluralize }}
+            </span>
+        </div>
+        
+        <div class="space-y-4">
+            {% for prop in properties %}
+            <div class="bg-gray-50 border border-gray-100 rounded-2xl p-4 sm:p-5 transition duration-200 hover:bg-white hover:shadow-md">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div class="min-w-0">
+                        <h5 class="text-base sm:text-lg font-bold text-gray-800 tracking-tight truncate">{{ prop.title }}</h5>
+                        <p class="text-gray-400 text-xs sm:text-sm mt-1 flex items-center gap-1">
+                            <span>📍</span> {{ prop.town }}
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="bg-blue-50 text-blue-700 border border-blue-100 text-[11px] px-2.5 py-0.5 rounded-md font-bold uppercase tracking-wider">🏢 {{ prop.total_units_count }} Units</span>
+                            <span class="bg-blue-50 text-blue-700 border border-blue-100 text-[11px] px-2.5 py-0.5 rounded-md font-bold uppercase tracking-wider">🔑 {{ prop.available_units_count }} Vacant</span>
+
+                        </div>
+                    </div>
+                    <div class="shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-gray-200/50 flex justify-end">
+                        <a href="{% url 'manage_units' prop.id %}" class="inline-flex items-center justify-center px-4 py-2.5 bg-gray-800 hover:bg-black text-white rounded-xl font-bold transition-all text-xs sm:text-sm tracking-tight shadow-xs">
+                            Manage Units
+                            <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- Empty Portfolio state -->
+        <div class="bg-gray-50/60 rounded-2xl p-8 sm:p-12 text-center border border-dashed border-gray-200">
+            <div class="w-14 h-14 mx-auto bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl mb-4">🏘️</div>
+            <h4 class="text-lg sm:text-xl font-bold text-gray-800 tracking-tight mb-1.5">No Active Properties Linked</h4>
+            <p class="text-gray-400 text-xs sm:text-sm mb-5 max-w-sm mx-auto leading-relaxed">Kickstart your real estate yields across Kenya by onboarding your primary listings.</p>
+            <a href="{% url 'create_property' %}"
+            class="inline-flex items-center gap-2 bg-[#005A2B] hover:bg-[#003314] text-white px-5 py-2.5 rounded-xl font-bold shadow-md transition-all text-xs sm:text-sm">
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M10 3.5a.75.75 0 01.75.75v5h5a.75.75 0 010 1.5h-5v5a.75.75 0 01-1.5 0v-5h-5a.75.75 0 010-1.5h5v-5A.75.75 0 0110 3.5z" clip-rule="evenodd" />
+            </svg>
+            <span>List New Asset</span>
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Escrow Ledger Pipeline Section -->
+        <div class="mt-8">
+            <h4 class="text-lg sm:text-xl font-extrabold text-gray-800 tracking-tight mb-4 flex items-center gap-2">
+                <span>💰</span> Escrow Ledgers
+            </h4>
+            <div class="max-h-64 overflow-y-auto pr-1 space-y-3 divide-y divide-gray-50">
+                {% if escrow_transactions %}
+                    {% for escrow in escrow_transactions %}
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-xs hover:border-gray-200 transition">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="font-bold text-sm sm:text-base text-gray-800 truncate tracking-tight">{{ escrow.property.title }}</p>
+                                <p class="text-xs text-gray-400 font-medium mt-0.5">Tenant identity: <span class="text-gray-600 font-semibold">{{ escrow.tenant.username }}</span></p>
+                                <p class="text-xs text-gray-400 font-medium">Secured liquidity: <span class="text-emerald-700 font-bold">KES {{ escrow.amount|floatformat:0 }}</span></p>
+                                <span class="inline-block mt-2 text-[10px] font-bold px-2.5 py-0.5 rounded-md uppercase tracking-wider 
+                                    {% if escrow.status == 'pending' %}bg-amber-50 text-amber-700 border border-amber-100
+                                    {% elif escrow.status == 'paid' %}bg-emerald-50 text-emerald-700 border border-emerald-100
+                                    {% elif escrow.status == 'released' %}bg-blue-50 text-blue-700 border border-blue-100{% endif %}">
+                                    {{ escrow.get_status_display }}
+                                </span>
+                            </div>
+                            <div class="shrink-0 self-end sm:self-auto pt-2 sm:pt-0">
+                                {% if escrow.status == 'paid' %}
+                                <a href="{% url 'release_escrow' escrow.id %}" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-lg text-xs transition shadow-xs tracking-tight">Release Liquidity</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-gray-400 text-xs sm:text-sm font-medium py-2">No escrow settlements caught on record yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Integrated Messaging Module -->
+        <div class="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center flex-wrap gap-3">
+            <a href="{% url 'chat_list' %}" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm shadow-md transition-all duration-150">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785 4.75 4.75 0 0 0 3.292-1.354c.474.333.994.58 1.553.725a4.478 4.478 0 0 0 2.219-.031Z" />
+                </svg>
+                Tenant Enquiries
+            </a>
+        </div>
+    </div>
+</div>

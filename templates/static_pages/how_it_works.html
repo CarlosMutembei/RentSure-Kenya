@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}How RentSure Works | RentSure Kenya{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-slate-50 via-white to-zinc-100 overflow-hidden font-sans selection:bg-emerald-500 selection:text-white">
+    
+    <!-- ======== PREMIUM HERO ======== -->
+    <div class="relative bg-gradient-to-br from-kenya-green via-green-700 to-green-800 text-white py-16 md:py-24 overflow-hidden">
+        <!-- Abstract glow effects -->
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-emerald-500/10 rounded-full filter blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-1/4 w-48 h-48 md:w-64 md:h-64 bg-teal-500/10 rounded-full filter blur-2xl pointer-events-none"></div>
+        
+        <div class="relative z-10 container mx-auto px-4 md:px-6 text-center max-w-4xl">
+            <div class="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-emerald-400 text-[10px] md:text-sm font-medium tracking-wide mb-4 md:mb-6 shadow-inner">
+                <span class="flex h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                🛡️ Simple • Safe • Transparent Escrow
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-neutral-100 to-emerald-200">
+                How RentSure Works
+            </h1>
+            <p class="text-base md:text-xl text-neutral-300 mt-4 md:mt-6 max-w-2xl mx-auto font-light leading-relaxed">
+                A premium, secure ecosystem engineered to help you discover and secure your next home in Kenya with zero stress and absolute protection.
+            </p>
+        </div>
+        
+        <!-- Section divider curve -->
+        <div class="absolute bottom-0 left-0 right-0 w-full overflow-hidden line-height-0">
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" class="relative block w-full h-[40px] md:h-[60px] text-slate-50" fill="currentColor">
+                <path d="M0,60 C320,20 720,0 1440,60 L1440,60 L0,60 Z"></path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- ======== TIMELINE & STEPS ======== -->
+    <div class="container mx-auto px-4 md:px-6 py-16 md:py-24 max-w-6xl relative">
+        <!-- Vertical line for desktop -->
+        <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 top-16 bottom-16 w-[2px] bg-gradient-to-b from-green-200 via-slate-200 to-transparent"></div>
+
+        <div class="space-y-5 md:space-y-8">
+            
+            <!-- Step 1: Search & Discover -->
+            <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                <div class="w-full md:w-[45%] order-2 md:order-1">
+                    <div class="bg-white rounded-2xl border border-slate-100 p-5 md:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] group-hover:shadow-[0_20px_40px_-10px_rgba(0,107,63,0.12)] transition-all duration-500 transform group-hover:-translate-y-1">
+                        <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-kenya-green block mb-1.5 md:mb-2">Phase 01</span>
+                        <h3 class="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3">Search & Discover</h3>
+                        <p class="text-sm md:text-base text-slate-600 leading-relaxed">Use our smart filters to seamlessly pinpoint your perfect home. Filter by customized budgets, exact locations, or direct proximity to your workplace across Kenya.</p>
+                    </div>
+                </div>
+                <!-- Timeline Badge with premium SVG -->
+                <div class="z-10 mb-3 md:mb-0 w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-kenya-green to-green-700 border-2 border-emerald-500 flex items-center justify-center text-white shadow-xl transform group-hover:scale-110 transition-all duration-300 order-1 md:order-2">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                <div class="hidden md:block w-[45%] order-3"></div>
+            </div>
+
+            <!-- Step 2: Verified Listings -->
+            <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                <div class="hidden md:block w-[45%]"></div>
+                <div class="z-10 mb-3 md:mb-0 w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-kenya-green to-green-700 border-2 border-emerald-500 flex items-center justify-center text-white shadow-xl transform group-hover:scale-110 transition-all duration-300">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <div class="w-full md:w-[45%]">
+                    <div class="bg-white rounded-2xl border border-slate-100 p-5 md:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] group-hover:shadow-[0_20px_40px_-10px_rgba(0,107,63,0.12)] transition-all duration-500 transform group-hover:-translate-y-1">
+                        <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-kenya-green block mb-1.5 md:mb-2">Phase 02</span>
+                        <h3 class="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3">Verified Listings Only</h3>
+                        <p class="text-sm md:text-base text-slate-600 leading-relaxed">Every property undergoes a strict verification vetting layout. We actively purge duplicate and fraudulent agents, keeping your search 100% genuine.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Secure Escrow -->
+            <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                <div class="w-full md:w-[45%] order-2 md:order-1">
+                    <div class="bg-white rounded-2xl border border-slate-100 p-5 md:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] group-hover:shadow-[0_20px_40px_-10px_rgba(0,107,63,0.12)] transition-all duration-500 transform group-hover:-translate-y-1">
+                        <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-kenya-green block mb-1.5 md:mb-2">Phase 03</span>
+                        <h3 class="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3">Secure Escrow Payment</h3>
+                        <p class="text-sm md:text-base text-slate-600 leading-relaxed">Your deposit and commitment funds are locked securely within our secure escrow network. The landlord only gets compensated once you give the green light.</p>
+                    </div>
+                </div>
+                <div class="z-10 mb-3 md:mb-0 w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-kenya-green to-green-700 border-2 border-emerald-500 flex items-center justify-center text-white shadow-xl transform group-hover:scale-110 transition-all duration-300 order-1 md:order-2">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+                <div class="hidden md:block w-[45%] order-3"></div>
+            </div>
+
+            <!-- Step 4: View, Confirm & Move In -->
+            <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                <div class="hidden md:block w-[45%]"></div>
+                <div class="z-10 mb-3 md:mb-0 w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-kenya-green to-green-700 border-2 border-emerald-500 flex items-center justify-center text-white shadow-xl transform group-hover:scale-110 transition-all duration-300">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                </div>
+                <div class="w-full md:w-[45%]">
+                    <div class="bg-white rounded-2xl border border-slate-100 p-5 md:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] group-hover:shadow-[0_20px_40px_-10px_rgba(0,107,63,0.12)] transition-all duration-500 transform group-hover:-translate-y-1">
+                        <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-kenya-green block mb-1.5 md:mb-2">Phase 04</span>
+                        <h3 class="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3">View, Confirm & Move In</h3>
+                        <p class="text-sm md:text-base text-slate-600 leading-relaxed">Conduct your physical walkthrough safely. Once you confirm the space matches your exact specifications, release the payment effortlessly from your dashboard.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Review & Build Trust -->
+            <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                <div class="w-full md:w-[45%] order-2 md:order-1">
+                    <div class="bg-white rounded-2xl border border-slate-100 p-5 md:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] group-hover:shadow-[0_20px_40px_-10px_rgba(0,107,63,0.12)] transition-all duration-500 transform group-hover:-translate-y-1">
+                        <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-kenya-green block mb-1.5 md:mb-2">Phase 05</span>
+                        <h3 class="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3">Review & Build Trust</h3>
+                        <p class="text-sm md:text-base text-slate-600 leading-relaxed">Leave transparent feedback on your landlord and property. Share your experience to safeguard and guide the rest of the Kenyan rental community.</p>
+                    </div>
+                </div>
+                <div class="z-10 mb-3 md:mb-0 w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-kenya-green to-green-700 border-2 border-emerald-500 flex items-center justify-center text-white shadow-xl transform group-hover:scale-110 transition-all duration-300 order-1 md:order-2">
+                    <svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                </div>
+                <div class="hidden md:block w-[45%] order-3"></div>
+            </div>
+
+        </div>
+
+        <!-- ======== PREMIUM SAFETY BANNER (Kenyan green + red accent) ======== -->
+        <div class="mt-12 md:mt-20 relative rounded-3xl bg-gradient-to-br from-kenya-green via-green-800 to-slate-900 text-white p-6 md:p-14 shadow-2xl border border-emerald-500/20 overflow-hidden">
+            <!-- Decorative blobs -->
+            <div class="absolute -top-10 -right-10 w-32 h-32 md:w-40 md:h-40 bg-emerald-500/20 rounded-full filter blur-2xl"></div>
+            <div class="absolute -bottom-10 -left-10 w-32 h-32 md:w-40 md:h-40 bg-[#BB0000]/10 rounded-full filter blur-2xl"></div>
+
+            <div class="relative z-10 grid md:grid-cols-3 gap-6 md:gap-8 items-center">
+                <div class="md:col-span-2">
+                    <h3 class="text-xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2 md:gap-3">
+                        <span class="p-2 bg-gradient-to-r from-emerald-600 to-green-700 rounded-2xl">🛡️</span> 
+                        The RentSure Vision
+                    </h3>
+                    <p class="text-neutral-300 mt-3 md:mt-4 text-sm md:text-lg leading-relaxed font-light">
+                        We built RentSure to decisively eliminate rental scams, control unexpected agent exploitation fees, and orchestrate an authentic, transparent real-estate marketplace for Kenya.
+                    </p>
+                </div>
+                <div class="flex flex-col sm:flex-row md:flex-col gap-3 md:gap-4 justify-end w-full">
+                    <a href="{% url 'register' %}" 
+                       class="inline-flex items-center justify-center text-center bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold px-5 md:px-6 py-2.5 md:py-3.5 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 transform hover:-translate-y-0.5 active:translate-y-0 text-sm md:text-base">
+                        Get Started Instantly
+                    </a>
+                    <a href="{% url 'search' %}" 
+                       class="inline-flex items-center justify-center text-center border border-white/20 bg-white/5 hover:bg-white/10 backdrop-blur-sm text-white font-medium px-5 md:px-6 py-2.5 md:py-3.5 rounded-xl transition-all duration-300 text-sm md:text-base">
+                        Browse Properties
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,664 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto p-3 sm:p-4 max-w-4xl">
+
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+        
+        <!-- ======== HEADER ======== -->
+        <div class="bg-gradient-to-r from-emerald-800 to-green-800 p-4 sm:p-8 text-white relative">
+            <h2 class="text-xl sm:text-3xl font-extrabold tracking-tight flex items-center gap-2">
+                <span>🏢</span> Register Your Property Block
+            </h2>
+            <p class="text-emerald-100 mt-1 sm:mt-2 text-xs sm:text-base">
+                Register your apartment building, flat, or commercial plot and manage all its unit inventories effortlessly.
+            </p>
+        </div>
+
+        <!-- ======== LISTING FEE NOTICE ======== -->
+        <div class="bg-emerald-50 border-l-4 border-emerald-600 p-3 sm:p-4 mx-4 sm:mx-8 mt-4 sm:mt-6 rounded-r-xl">
+            <p class="text-xs sm:text-sm font-medium text-gray-700">
+                Listing Fee: <strong class="text-emerald-700 font-extrabold">KES 200</strong> per property block. Paid via M-Pesa STK push.
+            </p>
+        </div>
+
+        <!-- ======== MAIN FORM ======== -->
+        <form method="post" enctype="multipart/form-data" id="propertyForm" class="p-4 sm:p-8 space-y-6 sm:space-y-8">
+            {% csrf_token %}
+
+            <!-- ==========================================================
+                 1. BUILDING LOCATION & GLOBAL DETAILS
+            ========================================================== -->
+            <div class="space-y-4 sm:space-y-6">
+                <h3 class="text-base sm:text-lg font-bold text-emerald-900 border-b border-gray-100 pb-2 flex items-center gap-2">
+                    <span class="text-sm sm:text-base">📍</span> 1. Building Location & Global Details
+                </h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div class="django-styled-field">
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Apartment Block / Building Name</label>
+                        {{ form.title }}
+                    </div>
+                    <div class="django-styled-field">
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Town / City</label>
+                        {{ form.town }}
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div class="django-styled-field">
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Specific Estate / Area</label>
+                        {{ form.estate }}
+                    </div>
+                    <div class="django-styled-field">
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Physical Address</label>
+                        {{ form.address_text }}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div class="django-styled-field">
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Monthly Service Charge (KES)</label>
+                        {{ form.service_charge }}
+                    </div>
+                </div>
+
+                <div class="django-styled-field">
+                    <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Property Overview / Description</label>
+                    {{ form.description }}
+                </div>
+
+                <!-- Shared Building Amenities -->
+                <div>
+                    <label class="block font-semibold mb-2 text-gray-700 text-xs sm:text-sm">Shared Building Amenities</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+                        <label class="flex items-center p-2 sm:p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-xs sm:text-sm">
+                            {{ form.has_water }} <span class="ml-1.5">💧 Water</span>
+                        </label>
+                        <label class="flex items-center p-2 sm:p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-xs sm:text-sm">
+                            {{ form.has_electricity }} <span class="ml-1.5">⚡ Power</span>
+                        </label>
+                        <label class="flex items-center p-2 sm:p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-xs sm:text-sm">
+                            {{ form.has_parking }} <span class="ml-1.5">🅿️ Parking</span>
+                        </label>
+                        <label class="flex items-center p-2 sm:p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-xs sm:text-sm">
+                            {{ form.has_security }} <span class="ml-1.5">🔒 Security</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================================
+                 MAP
+            ========================================================== -->
+            <div class="space-y-3 sm:space-y-4">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="location-search" placeholder="Search area map (e.g. Kilimani, Nairobi)..." class="flex-1 border border-gray-300 p-2.5 sm:p-3 rounded-xl text-sm">
+                    <button type="button" id="search-location-btn" class="bg-emerald-700 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm hover:bg-emerald-800 transition">Find</button>
+                </div>
+                <div id="locationPicker" style="height: 250px;" class="rounded-2xl border border-gray-300 overflow-hidden z-10"></div>
+                <input type="hidden" name="lat" id="lat">
+                <input type="hidden" name="lng" id="lng">
+            </div>
+
+            <!-- ==========================================================
+                 2. UNIT TYPES & QUANTITIES
+            ========================================================== -->
+            <div class="space-y-4 sm:space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-gray-100 pb-2">
+                    <h3 class="text-base sm:text-lg font-bold text-emerald-900 flex items-center gap-2">
+                        <span>🔢</span> 2. Define Unit Types & Quantities
+                    </h3>
+                </div>
+
+                <!-- Mode toggle -->
+                <div class="bg-gray-50 p-3 sm:p-4 rounded-xl border border-gray-200">
+                    <p class="text-xs sm:text-sm font-medium text-gray-700 mb-2">Choose how you want to add units:</p>
+                    <div class="flex flex-wrap gap-3 sm:gap-4">
+                        <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                            <input type="radio" name="unit_mode" value="bulk" checked class="accent-emerald-600">
+                            <span class="text-sm font-semibold">Bulk Add</span>
+                            <span class="text-[10px] sm:text-xs text-gray-400 hidden xs:inline">(5+ units)</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                            <input type="radio" name="unit_mode" value="individual" class="accent-emerald-600">
+                            <span class="text-sm font-semibold">Individual Add</span>
+                            <span class="text-[10px] sm:text-xs text-gray-400 hidden xs:inline">(≤4 units)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- ====== BULK MODE ====== -->
+                <div id="bulk-mode">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                        <p class="text-xs sm:text-sm text-gray-500">Define each type of unit. Auto‑generates units with correct statuses.</p>
+                        <button type="button" id="add-unit-type-btn" class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition w-full sm:w-auto text-center">
+                            ➕ Add Unit Type Group
+                        </button>
+                    </div>
+
+                    <div id="unit-inventory-wrapper" class="space-y-4">
+                        <!-- Default group -->
+                        <div class="unit-type-card bg-gray-50 p-3 sm:p-5 rounded-2xl border border-gray-200 relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                            <div class="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-between items-center text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                <span>Unit Inventory Group #1</span>
+                            </div>
+                            <div>
+                                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Unit Config Style</label>
+                                <select name="unit_type[]" class="unit-type-select w-full bg-white border border-gray-300 p-2 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600">
+                                    <option value="studio">Bedsitter / Studio Room</option>
+                                    <option value="single">Single Room</option>
+                                    <option value="double">Double Room (shared)</option>
+                                    <option value="1br">1 Bedroom House</option>
+                                    <option value="2br">2 Bedroom House</option>
+                                    <option value="3br">3 Bedroom House</option>
+                                    <option value="short-single">Short-stay Single Room</option>
+                                    <option value="short-1br">Short-stay 1 Bedroom</option>
+                                    <option value="commercial">Commercial / Shop Front</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Rent (KES / Month)</label>
+                                <input type="number" name="unit_rent[]" placeholder="12000" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Total Built</label>
+                                <input type="number" name="unit_total[]" placeholder="25" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Occupied</label>
+                                <input type="number" name="unit_occupied[]" placeholder="18" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Booked</label>
+                                <input type="number" name="unit_booked[]" placeholder="0" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Under Maintenance</label>
+                                <input type="number" name="unit_repair[]" placeholder="2" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl">
+                            </div>
+                            <div class="flex items-center pt-1">
+                                <label class="inline-flex items-center text-[10px] sm:text-xs font-semibold text-gray-700 cursor-pointer">
+                                    <input type="checkbox" name="unit_furnished[]" class="rounded text-emerald-600 accent-emerald-600 mr-1.5"> Furnished?
+                                </label>
+                            </div>
+                            <!-- Amenities per category -->
+                            <div class="col-span-1 sm:col-span-2 lg:col-span-3 border-t border-gray-200 pt-2 sm:pt-3 mt-1">
+                                <p class="text-[10px] sm:text-xs font-medium text-gray-500 mb-1">Amenities in this unit type:</p>
+                                <div class="flex flex-wrap gap-2 sm:gap-3">
+                                    <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_water[]" checked class="accent-emerald-600 mr-1"> 💧 Water</label>
+                                    <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_electricity[]" checked class="accent-emerald-600 mr-1"> ⚡ Electricity</label>
+                                    <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_parking[]" class="accent-emerald-600 mr-1"> 🅿️ Parking</label>
+                                    <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_security[]" class="accent-emerald-600 mr-1"> 🔒 Security</label>
+                                </div>
+                            </div>
+                            <button type="button" onclick="this.closest('.unit-type-card').remove(); updateUnitTypeOptions();" class="absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold text-xs uppercase bg-white/80 p-1 rounded">🗑️ Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====== INDIVIDUAL MODE ====== -->
+                <div id="individual-mode" class="hidden bg-gray-50 p-3 sm:p-5 rounded-2xl border border-gray-200 space-y-4">
+                    <p class="text-xs sm:text-sm text-gray-500">Add units one by one with full details. Great for properties with few units.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div>
+                            <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Unit Type</label>
+                            <select name="unit_type" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600">
+                                <option value="studio">Bedsitter / Studio Room</option>
+                                <option value="single">Single Room</option>
+                                <option value="double">Double Room (shared)</option>
+                                <option value="1br">1 Bedroom House</option>
+                                <option value="2br">2 Bedroom House</option>
+                                <option value="3br">3 Bedroom House</option>
+                                <option value="short-single">Short-stay Single Room</option>
+                                <option value="short-1br">Short-stay 1 Bedroom</option>
+                                <option value="commercial">Commercial / Shop Front</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Unit Number</label>
+                            <input type="text" name="unit_number" placeholder="e.g. A-12" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Monthly Rent (KES)</label>
+                            <input type="number" name="monthly_rent" placeholder="15000" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Deposit (KES)</label>
+                            <input type="number" name="deposit" placeholder="15000" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Status</label>
+                            <select name="status" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600">
+                                <option value="available">Available</option>
+                                <option value="occupied">Occupied</option>
+                                <option value="booked">Booked</option>
+                                <option value="maintenance">Under Maintenance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-medium text-[10px] sm:text-xs text-gray-600 mb-1">Available From</label>
+                            <input type="date" name="available_from" class="w-full bg-white border border-gray-300 p-2 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600">
+                        </div>
+                        <div class="col-span-1 sm:col-span-2 flex flex-wrap gap-3 sm:gap-4 items-center pt-2">
+                            <label class="inline-flex items-center text-xs font-semibold text-gray-700 cursor-pointer">
+                                <input type="checkbox" name="furnished" class="rounded text-emerald-600 accent-emerald-600 mr-1.5"> Furnished?
+                            </label>
+                            <span class="text-gray-300">|</span>
+                            <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_water" checked class="accent-emerald-600 mr-1"> 💧 Water</label>
+                            <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_electricity" checked class="accent-emerald-600 mr-1"> ⚡ Electricity</label>
+                            <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_parking" class="accent-emerald-600 mr-1"> 🅿️ Parking</label>
+                            <label class="inline-flex items-center text-[10px] sm:text-xs"><input type="checkbox" name="has_security" class="accent-emerald-600 mr-1"> 🔒 Security</label>
+                        </div>
+                    </div>
+                    <p class="text-[10px] sm:text-xs text-gray-400">You can add more units later from the Manage Units page.</p>
+                </div>
+            </div>
+
+            <!-- ==========================================================
+                 MEDIA
+            ========================================================== -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 bg-gray-50/50 p-4 sm:p-5 rounded-2xl border border-gray-100">
+                <!-- Images -->
+                <div class="flex flex-col">
+                    <label class="block font-semibold mb-2 text-gray-700 text-xs sm:text-sm flex items-center gap-1.5">
+                        <span>📸</span> Building Gallery <span class="text-xs font-normal text-gray-400">(multiple)</span>
+                    </label>
+                    <input type="file" name="images" multiple accept="image/*" 
+                        class="block w-full text-xs text-gray-500 bg-white border border-gray-200 rounded-xl cursor-pointer
+                        file:mr-3 file:py-2.5 file:px-4
+                        file:rounded-l-xl file:border-0
+                        file:text-xs file:font-semibold
+                        file:bg-blue-50 file:text-blue-700
+                        hover:file:bg-blue-100/80 transition">
+                </div>
+
+                <!-- Video -->
+                <div class="flex flex-col max-w-md w-full">
+                    <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm flex items-center gap-1.5">
+                        <span>🎬</span> Walkthrough Video <span class="text-xs font-normal text-gray-400">(optional)</span>
+                    </label>
+                    <div class="relative w-full h-10 sm:h-11 flex items-center">
+                        <input type="file" name="video" id="video-input" accept="video/*" 
+                            class="block w-full text-xs text-gray-500 bg-white border border-gray-200 rounded-xl cursor-pointer h-full
+                            file:mr-3 file:h-full file:px-4
+                            file:rounded-l-xl file:border-0
+                            file:text-xs file:font-semibold
+                            file:bg-purple-50 file:text-purple-700
+                            hover:file:bg-purple-100/80 transition">
+                    </div>
+                    <div id="video-preview-wrapper" class="hidden mt-3 w-full aspect-video max-h-[250px] bg-black rounded-xl overflow-hidden border border-gray-200 shadow-inner relative flex items-center justify-center">
+                        <video id="video-preview" controls class="w-full h-full object-contain"></video>
+                        <button type="button" id="clear-video-btn" class="absolute top-2 right-2 bg-black/60 hover:bg-red-600 text-white text-[10px] px-2.5 py-1 rounded-lg font-bold transition shadow-md">✕ Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======== SUBMIT BUTTON ======== -->
+            <button type="submit" 
+                class="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 active:from-emerald-800 active:to-green-800 text-white py-3.5 sm:py-4 rounded-xl font-bold text-sm sm:text-base tracking-wide shadow-md hover:shadow-lg hover:shadow-emerald-900/10 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                <span>🚀</span> Save Building & Initialize Units Inventory
+            </button>
+        </form>
+    </div>
+
+    <!-- ==========================================================
+     CUSTOM ERROR MODAL
+========================================================== -->
+    <!-- ==========================================================
+     PREMIUM ERROR/VALIDATION MODAL
+     ========================================================== -->
+
+    <!-- ==========================================================
+     ENTERPRISE VALIDATION ENGINE MODAL
+     ========================================================== -->
+    <div id="errorModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300 hidden" aria-modal="true" role="dialog">
+        
+    <!-- Modal Card Container -->
+    <div id="modalContent" class="bg-white rounded-xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden transform scale-95 opacity-0 transition-all duration-300 ease-out">
+        
+        <!-- Header: Kenyan Red Banner -->
+        <div class="bg-[#BE0A1E] px-6 py-5 flex items-center gap-4">
+            <!-- Icon Wrapper with Green Accent -->
+            <div class="w-10 h-10 rounded-xl bg-[#BE0A1E]/70 border border-white flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="white" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" 
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-white tracking-tight">Configuration Error</h3>
+                <p class="text-xs text-green-200/80 mt-0.5">Please adjust your unit inventory allocation metrics.</p>
+            </div>
+        </div>
+
+        <!-- Body Content -->
+        <div class="p-6 space-y-4">
+            <p class="text-xs font-semibold text-slate-500 proper tracking-wider">Validation Summary</p>
+            
+            <div id="errorList" class="space-y-3 max-h-[320px] overflow-y-auto pr-1">
+                <!-- Dynamic error cards render here -->
+            </div>
+        </div>
+
+        <!-- Action Tray -->
+        <div class="px-6 py-4 bg-slate-100 border-t border-slate-200 flex justify-end gap-2.5">
+            <button type="button" onclick="closeErrorModal()" 
+                    class="w-full sm:w-auto bg-green-700 hover:bg-green-800 text-white px-5 py-2.5 rounded-lg font-bold text-xs tracking-wide shadow-sm transition-all duration-150">
+                Dismiss and Modify
+            </button>
+        </div>
+
+    </div>
+</div>
+
+</div>
+
+<!-- ========== MAP & SCRIPTS ========== -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // ==========================================================
+    // 1. MAP SETUP
+    // ==========================================================
+    var defaultCenter = [-1.286389, 36.817223];
+    var map = L.map('locationPicker').setView(defaultCenter, 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    var marker = L.marker(defaultCenter, {draggable: true}).addTo(map);
+
+    function updateHiddenCoordinates(lat, lng) {
+        document.getElementById('lat').value = lat;
+        document.getElementById('lng').value = lng;
+    }
+    updateHiddenCoordinates(defaultCenter[0], defaultCenter[1]);
+
+    marker.on('dragend', function (e) {
+        var coord = marker.getLatLng();
+        updateHiddenCoordinates(coord.lat, coord.lng);
+    });
+    map.on('click', function(e) {
+        marker.setLatLng(e.latlng);
+        updateHiddenCoordinates(e.latlng.lat, e.latlng.lng);
+    });
+
+    // ==========================================================
+    // 2. MAP SEARCH
+    // ==========================================================
+    document.getElementById('search-location-btn').addEventListener('click', executeMapSearch);
+    document.getElementById('location-search').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); executeMapSearch(); }
+    });
+
+    function executeMapSearch() {
+        var query = document.getElementById('location-search').value;
+        if (!query) return;
+        var searchBtn = document.getElementById('search-location-btn');
+        searchBtn.innerText = "⏳ Running...";
+        searchBtn.disabled = true;
+        var targetQuery = query.toLowerCase().includes('kenya') ? query : query + ", Kenya";
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(targetQuery)}&limit=1`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    var location = data[0];
+                    var lat = parseFloat(location.lat);
+                    var lon = parseFloat(location.lon);
+                    map.setView([lat, lon], 15);
+                    marker.setLatLng([lat, lon]);
+                    updateHiddenCoordinates(lat, lon);
+                } else {
+                    alert("⚠️ Location not found. Try adding city details, e.g., 'Kilimani, Nairobi'.");
+                }
+            })
+            .catch(error => console.error("Search API failed:", error))
+            .finally(() => {
+                searchBtn.innerText = "Find";
+                searchBtn.disabled = false;
+            });
+    }
+
+    // ==========================================================
+    // 3. MODE TOGGLE
+    // ==========================================================
+    document.querySelectorAll('input[name="unit_mode"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            if (this.value === 'bulk') {
+                document.getElementById('bulk-mode').classList.remove('hidden');
+                document.getElementById('individual-mode').classList.add('hidden');
+            } else {
+                document.getElementById('bulk-mode').classList.add('hidden');
+                document.getElementById('individual-mode').classList.remove('hidden');
+            }
+        });
+    });
+
+    // ==========================================================
+    // 4. DUPLICATE UNIT TYPE PREVENTION (DISABLING)
+    // ==========================================================
+    function updateUnitTypeOptions() {
+        const selects = document.querySelectorAll('select.unit-type-select');
+        const selectedValues = {};
+        selects.forEach(sel => {
+            const val = sel.value;
+            if (val) {
+                if (!selectedValues[val]) selectedValues[val] = [];
+                selectedValues[val].push(sel);
+            }
+        });
+
+        selects.forEach(sel => {
+            // Enable all options first
+            Array.from(sel.options).forEach(opt => opt.disabled = false);
+            const currentVal = sel.value;
+            Array.from(sel.options).forEach(opt => {
+                const val = opt.value;
+                if (val && val !== currentVal && selectedValues[val]) {
+                    const otherSelects = selectedValues[val].filter(s => s !== sel);
+                    if (otherSelects.length > 0) {
+                        opt.disabled = true;
+                    }
+                }
+            });
+            // If the current value got disabled, clear it
+            const selectedOption = Array.from(sel.options).find(opt => opt.value === currentVal);
+            if (currentVal && selectedOption && selectedOption.disabled) {
+                sel.value = '';
+            }
+        });
+    }
+
+    document.addEventListener('change', function(e) {
+        if (e.target.classList && e.target.classList.contains('unit-type-select')) {
+            updateUnitTypeOptions();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        updateUnitTypeOptions();
+    });
+
+    // ==========================================================
+    // 5. ADD NEW UNIT TYPE GROUP (Bulk)
+    // ==========================================================
+    document.addEventListener('DOMContentLoaded', function () {
+    // Track how many bulk unit groups have been added
+    let groupCounter = 1;
+
+    // Handle adding a new unit group
+    const addBtn = document.getElementById('add-unit-type-btn');
+    if (addBtn) {
+        addBtn.addEventListener('click', function () {
+            const wrapper = document.getElementById('unit-inventory-wrapper');
+
+            const groupHTML = `
+                <div class="unit-type-card bg-gray-50 p-3 sm:p-5 rounded-2xl border border-gray-200 relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 border-t-4 border-t-emerald-600">
+                    <button type="button" onclick="this.closest('.unit-type-card').remove(); updateUnitTypeOptions();" class="absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold text-xs uppercase bg-white/80 p-1 rounded">🗑️ Remove</button>
+                    <div class="col-span-1 sm:col-span-2 lg:col-span-3 text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        Unit Inventory Group #${groupCounter + 1}
+                    </div>
+                    ...
+                </div>
+            `;
+
+            wrapper.insertAdjacentHTML('beforeend', groupHTML);
+            groupCounter++;
+            updateUnitTypeOptions();
+        });
+    }
+});
+
+    // ==========================================================
+// 6. COUNT VALIDATION WITH CUSTOM MODAL
+// ==========================================================
+document.getElementById('propertyForm').addEventListener('submit', function(e) {
+    const cards = document.querySelectorAll('.unit-type-card');
+    let valid = true;
+    const errors = [];
+
+    cards.forEach((card, index) => {
+        const total = parseInt(card.querySelector('input[name="unit_total[]"]').value) || 0;
+        const occupied = parseInt(card.querySelector('input[name="unit_occupied[]"]').value) || 0;
+        const booked = parseInt(card.querySelector('input[name="unit_booked[]"]').value) || 0;
+        const maintenance = parseInt(card.querySelector('input[name="unit_repair[]"]').value) || 0;
+
+        if (occupied + booked + maintenance > total) {
+            valid = false;
+            errors.push(`Group #${index+1}: Occupied (${occupied}) + Booked (${booked}) + Maintenance (${maintenance}) exceeds Total (${total}).`);
+            card.classList.add('border-red-500', 'bg-red-50');
+        } else {
+            card.classList.remove('border-red-500', 'bg-red-50');
+        }
+    });
+
+    if (!valid) {
+        e.preventDefault();
+        // Show custom modal instead of alert
+        showErrorModal(errors);
+    }
+});
+
+// ==========================================================
+// 7. CUSTOM MODAL CONTROLS
+// ==========================================================
+// ==========================================================
+// CUSTOM SYSTEM CONTROLS & PARSING ENGINE
+// ==========================================================
+
+function showErrorModal(errors) {
+    const modal = document.getElementById('errorModal');
+    const list = document.getElementById('errorList');
+    if (!modal || !list) return;
+
+    list.innerHTML = '';
+
+    errors.forEach(msg => {
+        // Regex to check if the error is an allocation limit overflow (matches image_ced1d6.png format)
+        const pattern = /Group\s+#?(\d+):\s+Occupied\s*\((\d+)\)\s*\+\s*Booked\s*\((\d+)\)\s*\+\s*Maintenance\s*\((\d+)\)\s+exceeds\s+Total\s*\((\d+)\)/i;
+        const match = msg.match(pattern);
+
+        if (match) {
+            // Unpack numerical parameters dynamically
+            const [_, groupNum, occupied, booked, maintenance, total] = match;
+            const allocatedSum = parseInt(occupied) + parseInt(booked) + parseInt(maintenance);
+
+            // Generate clean, data-dense status matrix cards
+            const dashboardCard = document.createElement('div');
+            dashboardCard.className = "border border-slate-200 rounded-xl bg-white p-4 shadow-sm space-y-3";
+            dashboardCard.innerHTML = `
+                <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                    <span class="text-xs font-bold text-slate-700 tracking-tight">Inventory Group Allocation #${groupNum}</span>
+                    <span class="px-2 py-0.5 text-[10px] font-bold bg-rose-50 text-rose-600 rounded border border-rose-100">Limit Overflow</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                        <p class="text-[10px] font-medium text-slate-400 proper">Occupied</p>
+                        <p class="text-sm font-bold text-slate-800">${occupied}</p>
+                    </div>
+                    <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                        <p class="text-[10px] font-medium text-slate-400 proper">Booked</p>
+                        <p class="text-sm font-bold text-slate-800">${booked}</p>
+                    </div>
+                    <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                        <p class="text-[10px] font-medium text-slate-400 proper">Maintenance</p>
+                        <p class="text-sm font-bold text-slate-800">${maintenance}</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center text-xs pt-1">
+                    <span class="text-slate-500 font-medium">Total Allocated: <strong class="text-rose-600 font-semibold">${allocatedSum} Units</strong></span>
+                    <span class="text-slate-500 font-medium">Maximum Allowed: <strong class="text-slate-800 font-semibold">${total} Units</strong></span>
+                </div>
+            `;
+            list.appendChild(dashboardCard);
+        } else {
+            // Standard elegant text fallback if string format changes
+            const standardCard = document.createElement('div');
+            standardCard.className = "flex items-start gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg";
+            standardCard.innerHTML = `
+                <div class="text-rose-500 shrink-0 mt-0.5">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                </div>
+                <p class="text-xs font-medium text-slate-600 leading-normal">${msg}</p>
+            `;
+            list.appendChild(standardCard);
+        }
+    });
+
+    // Modal view initialization transitions
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        const content = document.getElementById('modalContent');
+        if (content) content.classList.remove('scale-95', 'opacity-0');
+    }, 20);
+    document.body.classList.add('overflow-hidden');
+}
+
+function closeErrorModal() {
+    const modal = document.getElementById('errorModal');
+    const content = document.getElementById('modalContent');
+    if (!modal || !content) return;
+
+    content.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }, 250);
+}
+
+// Global Lifecycle Bindings
+document.addEventListener('DOMContentLoaded', () => {
+    const backdrop = document.getElementById('errorModal');
+    if (backdrop) {
+        backdrop.addEventListener('click', function(e) {
+            if (e.target === this) closeErrorModal();
+        });
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeErrorModal();
+    });
+});
+</script>
+
+<style>
+    .django-styled-field input, .django-styled-field select, .django-styled-field textarea {
+        width: 100%; border: 1px solid #d1d5db; padding: 0.6rem 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; background-color: #fff;
+    }
+    .django-styled-field input:focus, .django-styled-field select:focus, .django-styled-field textarea:focus {
+        outline: none; border-color: #047857; box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.2);
+    }
+    #individual-mode .grid input, #individual-mode .grid select {
+        background: white;
+    }
+    @media (max-width: 480px) {
+        .unit-type-card .grid {
+            grid-template-columns: 1fr !important;
+        }
+        .unit-type-card .col-span-1, .unit-type-card .col-span-2, .unit-type-card .col-span-3 {
+            grid-column: span 1 !important;
+        }
+    }
+</style>
+{% endblock %}

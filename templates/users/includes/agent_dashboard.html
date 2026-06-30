@@ -1,0 +1,247 @@
+<div class="mt-8 overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.08)]">
+  <div class="bg-gradient-to-r from-amber-600 to-orange-600 px-6 py-6">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-100 ring-1 ring-white/10">
+          <span class="h-2 w-2 rounded-full bg-amber-300"></span>
+          Agent Workspace
+        </div>
+        <h3 class="mt-3 flex items-center text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+          <svg class="mr-3 h-7 w-7 text-white/95" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9.5L13.5 3z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 3V9.5H19"/>
+          </svg>
+          Agent Dashboard
+        </h3>
+        <p class="mt-1 max-w-2xl text-sm sm:text-base text-amber-100/90">
+          Manage properties on behalf of landlords and track your commissions.
+        </p>
+      </div>
+
+      <div class="hidden sm:flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white ring-1 ring-white/10 backdrop-blur">
+        <i class="fa-solid fa-handshake text-lg"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-4 sm:p-6">
+    <!-- Quick Actions -->
+    <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <a href="{% url 'create_property' %}" class="group rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 p-5 text-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
+        <div class="flex items-center justify-between gap-4">
+          <div class="min-w-0">
+            <p class="text-sm text-amber-100">Property Management</p>
+            <h4 class="mt-1 text-lg font-bold">List Property</h4>
+          </div>
+          <svg class="h-10 w-10 shrink-0 text-white/95 transition duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-8h6v8"/>
+          </svg>
+        </div>
+      </a>
+
+      <a href="{% url 'verification_center' %}" class="group rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 p-5 text-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
+        <div class="flex items-center justify-between gap-4">
+          <div class="min-w-0">
+            <p class="text-sm text-blue-100">Trust & Security</p>
+            <h4 class="mt-1 text-lg font-bold">Get Verified</h4>
+          </div>
+          <svg class="h-10 w-10 shrink-0 text-white/95 transition duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2.25l7.5 4.5v5.25c0 4.69-3.23 8.99-7.5 9.75-4.27-.76-7.5-5.06-7.5-9.75V6.75L12 2.25z"/>
+          </svg>
+        </div>
+      </a>
+
+      <a href="{% url 'manage_viewings' %}" class="group rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 p-5 text-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
+        <div class="flex items-center justify-between gap-4">
+          <div class="min-w-0">
+            <p class="text-sm text-indigo-100">Appointments</p>
+            <h4 class="mt-1 text-lg font-bold">Manage Viewings</h4>
+          </div>
+          <svg class="h-10 w-10 shrink-0 text-white/95 transition duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 2v4M16 2v4M3 10h18M5 6h14a2 2 0 012 2v12H3V8a2 2 0 012-2z"/>
+          </svg>
+        </div>
+      </a>
+    </div>
+
+    <!-- KYC Status -->
+    <div class="mb-8 rounded-2xl border border-slate-100 bg-slate-50 p-5">
+      <div class="mb-3 flex items-center justify-between gap-3">
+        <h4 class="text-sm font-bold uppercase tracking-wider text-slate-800">KYC Verification Status</h4>
+        <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Compliance</span>
+      </div>
+
+      <div>
+        {% if user.kyc_status == 'verified' %}
+          <div class="flex items-start gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-700">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2.25l7.5 4.5v5.25c0 4.69-3.23 8.99-7.5 9.75-4.27-.76-7.5-5.06-7.5-9.75V6.75L12 2.25z"/>
+              </svg>
+              Verified
+            </span>
+            <p class="pt-1 text-sm text-slate-500">Your identity has been verified.</p>
+          </div>
+        {% elif user.kyc_status == 'pending' %}
+          <div class="flex items-start gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700">
+              <svg class="h-4 w-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6h4.5"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Pending Review
+            </span>
+            <p class="pt-1 text-sm text-slate-500">Your documents are being reviewed. You will be notified once approved.</p>
+          </div>
+        {% elif user.kyc_status == 'rejected' %}
+          <div class="flex flex-col items-start gap-2">
+            <span class="inline-flex items-center gap-2 rounded-full bg-rose-100 px-3 py-1 text-sm font-semibold text-rose-700">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              Rejected
+            </span>
+            <p class="text-sm text-slate-500">Your KYC was not approved. Please resubmit with correct documents.</p>
+            <a href="{% url 'kyc_submit' %}" class="inline-flex items-center gap-1 text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+              Resubmit KYC
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </a>
+          </div>
+        {% else %}
+          <div class="flex flex-col items-start gap-2">
+            <span class="inline-flex items-center gap-2 rounded-full bg-slate-200 px-3 py-1 text-sm font-semibold text-slate-700">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m0 3.75h.008v.008H12v-.008z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              </svg>
+              Not Verified
+            </span>
+            <p class="text-sm text-slate-500">Complete KYC to unlock full platform features.</p>
+            <a href="{% url 'kyc_submit' %}" class="inline-flex items-center gap-1 text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+              Submit KYC
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Properties Managed -->
+    <div class="mb-8">
+      {% if properties %}
+        <div class="mb-5 flex items-center justify-between gap-3">
+          <h4 class="text-xl font-bold text-slate-900">Properties Managed</h4>
+          <span class="inline-flex items-center rounded-full border border-emerald-100 bg-emerald-50 px-4 py-1.5 text-sm font-bold text-emerald-700">
+            {{ properties|length }} Property{{ properties|length|pluralize }}
+          </span>
+        </div>
+
+        <div class="space-y-4">
+          {% for prop in properties %}
+            <div class="rounded-2xl border border-slate-200/80 bg-slate-50 p-5 transition duration-300 hover:bg-white hover:shadow-md">
+              <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div class="min-w-0">
+                  <h5 class="text-lg font-bold text-slate-900">{{ prop.title }}</h5>
+                  <p class="mt-1 flex items-center gap-1 text-sm text-slate-500">
+                    <span>📍</span>
+                    <span>{{ prop.town }}</span>
+                  </p>
+
+                  <div class="mt-3 flex flex-wrap gap-3">
+                    <span class="inline-flex items-center rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                      🏢 {{ prop.total_units_count }} Units
+                    </span>
+                    <span class="inline-flex items-center rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                      ✅ {{ prop.available_units_count }} Available
+                    </span>
+                  </div>
+                </div>
+
+                <div class="shrink-0">
+                  <a href="{% url 'manage_units' prop.id %}" class="inline-flex items-center rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-950 hover:shadow-lg">
+                    Manage Units
+                    <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="rounded-3xl border border-slate-200/60 bg-gradient-to-br from-slate-50 to-slate-100 p-10 text-center">
+          <div class="mb-4 text-5xl">🏘️</div>
+          <h4 class="mb-2 text-xl font-bold text-slate-900">No Properties Managed</h4>
+          <p class="mx-auto mb-6 max-w-md text-sm text-slate-500">
+            Start by adding properties for your clients to track activity and performance.
+          </p>
+          <a href="{% url 'create_property' %}"
+                class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:shadow-lg hover:from-amber-700 hover:to-orange-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fill-rule="evenodd" d="M10 3.5a.75.75 0 01.75.75v5h5a.75.75 0 010 1.5h-5v5a.75.75 0 01-1.5 0v-5h-5a.75.75 0 010-1.5h5v-5A.75.75 0 0110 3.5z" clip-rule="evenodd"/>
+            </svg>
+                <span>List a Property</span>
+            </a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Escrow Transactions -->
+    <div class="border-t border-slate-100 pt-6">
+      <h4 class="mb-4 text-xl font-bold text-slate-900">💰 Escrow Transactions</h4>
+
+      {% if escrow_transactions %}
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {% for escrow in escrow_transactions %}
+            <div class="flex flex-col justify-between gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:shadow-md">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="font-bold text-slate-900">{{ escrow.property.title }}</p>
+                  <p class="mt-1 text-xs text-slate-500">
+                    Tenant: <span class="font-medium text-slate-700">{{ escrow.tenant.username }}</span>
+                  </p>
+                  <p class="mt-2 text-sm font-semibold text-slate-900">
+                    KES {{ escrow.amount|floatformat:0 }}
+                  </p>
+                </div>
+
+                <span class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-bold whitespace-nowrap
+                  {% if escrow.status == 'pending' %}border-amber-100 bg-amber-50 text-amber-700
+                  {% elif escrow.status == 'paid' %}border-emerald-100 bg-emerald-50 text-emerald-700
+                  {% elif escrow.status == 'released' %}border-blue-100 bg-blue-50 text-blue-700
+                  {% else %}border-rose-100 bg-rose-50 text-rose-700{% endif %}">
+                  {{ escrow.get_status_display }}
+                </span>
+              </div>
+
+              {% if escrow.status == 'paid' %}
+                <div>
+                  <a href="{% url 'release_escrow' escrow.id %}" class="inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+                    Release Funds
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-sm italic text-slate-400">No escrow transactions registered yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- Messages -->
+    <div class="mt-8 border-t border-slate-100 pt-6">
+      <a href="{% url 'chat_list' %}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md">
+        <i class="fa-regular fa-comment-dots"></i>
+        Messages
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="bg-gradient-to-br from-slate-50 via-white to-slate-100 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-7xl">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Admin Analytics Dashboard</h1>
+                <p class="text-slate-500 mt-1 text-sm sm:text-base">Real‑time insights & platform metrics</p>
+            </div>
+            <button onclick="location.reload();" class="inline-flex items-center justify-center self-start sm:self-auto bg-white hover:bg-slate-50 text-slate-700 font-medium px-4 py-2.5 border border-slate-200 rounded-xl transition duration-200 shadow-sm gap-2">
+                <i class="fas fa-sync-alt text-slate-400 text-xs"></i>
+                <span>Refresh Dashboard</span>
+            </button>
+        </div>
+        
+        <!-- KPI Cards Grid (Fixed Nested Anchor Layout) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            
+            <!-- Total Users -->
+            <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-200/60 p-6 flex flex-col justify-between h-full relative">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Users</p>
+                            <h3 class="text-3xl font-bold text-slate-800 mt-2 tracking-tight">{{ total_users|default:0 }}</h3>
+                        </div>
+                        <div class="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+                            <i class="fas fa-users text-lg"></i>
+                        </div>
+                    </div>
+                    <!-- Sub-links work perfectly now because the parent element is a standard div -->
+                    <div class="flex flex-wrap gap-1.5 mt-4 pt-4 border-t border-slate-100 text-[11px] font-medium relative z-10">
+                        <a href="/admin/users/user/?role=landlord" class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md hover:bg-emerald-100 transition">👥 Landlords {{ landlords|default:0 }}</a>
+                        <a href="/admin/users/user/?role=tenant" class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md hover:bg-blue-100 transition">👤 Tenants {{ tenants|default:0 }}</a>
+                        <a href="/admin/users/user/?role=agent" class="bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md hover:bg-amber-100 transition">🤝 Agents {{ agents|default:0 }}</a>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="/admin/users/user/" class="text-xs text-indigo-600 font-medium hover:underline inline-block">View all users →</a>
+                </div>
+            </div>
+
+            <!-- KYC Pending -->
+            <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-200/60 p-6 flex flex-col justify-between h-full relative group">
+                <!-- Invisible full-card link overlay -->
+                <a href="/admin/users/user/?kyc_status=pending" class="absolute inset-0 z-0 rounded-2xl"></a>
+                <div class="flex justify-between items-start relative z-10">
+                    <div>
+                        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">KYC Pending</p>
+                        <h3 class="text-3xl font-bold text-amber-600 mt-2 tracking-tight">{{ pending_kyc|default:0 }}</h3>
+                    </div>
+                    <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                        <i class="fas fa-id-card text-lg"></i>
+                    </div>
+                </div>
+                <p class="text-xs text-amber-600 mt-4 pt-4 border-t border-slate-100 group-hover:underline relative z-10">Review pending verifications →</p>
+            </div>
+
+            <!-- Total Properties -->
+            <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-200/60 p-6 flex flex-col justify-between h-full relative">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Properties</p>
+                            <h3 class="text-3xl font-bold text-slate-800 mt-2 tracking-tight">{{ total_properties|default:0 }}</h3>
+                        </div>
+                        <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                            <i class="fas fa-building text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-3 mt-4 pt-4 border-t border-slate-100 text-xs font-semibold relative z-10">
+                        <a href="/admin/properties/property/?is_verified__exact=1" 
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 hover:bg-emerald-100 hover:border-emerald-200 transition-colors shadow-sm">
+                            <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                            </svg>
+                            <span>Verified: <span class="font-bold ml-0.5">{{ verified_properties|default:0 }}</span></span>
+                        </a>
+
+                        <a href="/admin/properties/property/?is_featured__exact=1" 
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100 hover:bg-amber-100 hover:border-amber-200 transition-colors shadow-sm">
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+                            </svg>
+                            <span>Featured: <span class="font-bold ml-0.5">{{ featured_properties|default:0 }}</span></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="/admin/properties/property/" class="text-xs text-emerald-600 font-medium hover:underline inline-block">Manage all properties →</a>
+                </div>
+            </div>
+
+            <!-- Escrow Volume -->
+            <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-200/60 p-6 flex flex-col justify-between h-full relative">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Escrow Volume</p>
+                            <h3 class="text-2xl font-bold text-slate-800 mt-2 tracking-tight">KES {{ total_escrow_amount|default:0|floatformat:0 }}</h3>
+                        </div>
+                        <div class="w-11 h-11 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+                            <i class="fas fa-hand-holding-usd text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-1 mt-4 pt-4 border-t border-slate-100 text-[10px] font-medium relative z-10">
+                        <a href="/admin/payments/escrowtransaction/?status=paid" class="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded hover:bg-emerald-100 transition">💰 Paid: {{ paid_escrow|default:0 }}</a>
+                        <a href="/admin/payments/escrowtransaction/?status=pending" class="bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded hover:bg-amber-100 transition">🟡 Pend: {{ pending_escrow|default:0 }}</a>
+                        <a href="/admin/payments/escrowtransaction/?status=released" class="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded hover:bg-blue-100 transition">🔓 Rel: {{ released_escrow|default:0 }}</a>
+                        <a href="/admin/payments/escrowtransaction/?status=disputed" class="bg-rose-50 text-rose-700 px-1.5 py-0.5 rounded hover:bg-rose-100 transition">⚠️ Disp: {{ disputed_escrow|default:0 }}</a>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="/admin/payments/escrowtransaction/" class="text-xs text-purple-600 font-medium hover:underline inline-block">View all escrows →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secondary stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-5 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500">
+                    <i class="fas fa-star text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Average Property Rating</p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-0.5">{{ avg_rating|default:"0.0" }}/5.0</h3>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-5 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500">
+                    <i class="fas fa-chart-line text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Avg Properties Per Landlord</p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-0.5">{{ avg_properties_per_landlord|default:"0.0" }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-chart-pie text-indigo-500"></i> User Mix Breakdown
+                </h3>
+                <div class="relative h-64 w-full flex items-center justify-center">
+                    <canvas id="userChart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-chart-bar text-indigo-500"></i> Escrow Operational Status
+                </h3>
+                <div class="relative h-64 w-full">
+                    <canvas id="escrowChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Escrow Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-history text-emerald-500"></i> Recent Escrow Transactions
+                </h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm divide-y divide-slate-100">
+                    <thead class="bg-slate-50/70 text-slate-500 font-medium">
+                        <tr>
+                            <th class="text-left py-3.5 px-6">Transaction ID</th>
+                            <th class="text-left py-3.5 px-6">Property Profile</th>
+                            <th class="text-left py-3.5 px-6">Tenant Account</th>
+                            <th class="text-left py-3.5 px-6">Amount Secured</th>
+                            <th class="text-left py-3.5 px-6">Escrow Status</th>
+                            <th class="text-left py-3.5 px-6">Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-slate-700">
+                        {% for escrow in recent_escrows %}
+                        <tr class="hover:bg-slate-50/80 transition duration-150">
+                            <td class="py-4 px-6 font-mono text-xs text-slate-400">#{{ escrow.id }}</td>
+                            <td class="py-4 px-6 font-medium text-slate-800 max-w-xs truncate">{{ escrow.property.title|truncatechars:35 }}</td>
+                            <td class="py-4 px-6 text-slate-500">{{ escrow.tenant.username }}</td>
+                            <td class="py-4 px-6 font-semibold text-slate-900 whitespace-nowrap">KES {{ escrow.amount|floatformat:0 }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold
+                                    {% if escrow.status == 'paid' %}bg-emerald-50 text-emerald-700
+                                    {% elif escrow.status == 'pending' %}bg-amber-50 text-amber-700
+                                    {% elif escrow.status == 'released' %}bg-blue-50 text-blue-700
+                                    {% else %}bg-rose-50 text-rose-700{% endif %}">
+                                    {{ escrow.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-slate-400 whitespace-nowrap">{{ escrow.created_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="py-12 text-center text-slate-400 font-medium">
+                                <div class="flex flex-col items-center justify-center gap-2">
+                                    <i class="fas fa-folder-open text-2xl text-slate-300"></i>
+                                    <span>No recent escrow transactions registered.</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // User Doughnut Chart
+    new Chart(document.getElementById('userChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Landlords', 'Tenants', 'Agents'],
+            datasets: [{
+                data: [{{ landlords|default:0 }}, {{ tenants|default:0 }}, {{ agents|default:0 }}],
+                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'],
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+
+    // Escrow Bar Chart
+    new Chart(document.getElementById('escrowChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Pending', 'Paid (Held)', 'Released', 'Disputed'],
+            datasets: [{
+                label: 'Number of Transactions',
+                data: [{{ pending_escrow|default:0 }}, {{ paid_escrow|default:0 }}, {{ released_escrow|default:0 }}, {{ disputed_escrow|default:0 }}],
+                backgroundColor: ['#eab308', '#10b981', '#3b82f6', '#ef4444'],
+                borderRadius: 8,
+                barPercentage: 0.6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, grid: { color: '#e5e7eb' } } }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto p-4 max-w-md">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+
+        <div class="bg-gradient-to-r from-red-700 to-red-800 p-6 text-white text-center">
+            <div class="text-6xl mb-3">⚠️</div>
+            <h2 class="text-2xl font-extrabold">Confirm Deletion</h2>
+        </div>
+
+        <div class="p-6 text-center">
+            {% if has_active_issues %}
+                <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl mb-4 text-left">
+                    <p class="font-bold mb-2">Cannot delete this property:</p>
+                    <ul class="list-disc list-inside text-sm">
+                        {% for msg in error_messages %}
+                            <li>{{ msg }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <a href="{% url 'property_detail' property.id %}" class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-xl font-bold transition">
+                    Go Back
+                </a>
+            {% else %}
+                <p class="text-gray-700 text-lg font-semibold">
+                    Are you sure you want to delete <strong>{{ property.title }}</strong>?
+                </p>
+                <p class="text-gray-500 text-sm mt-1">
+                    This will remove the property from search results and deactivate it.
+                </p>
+                <p class="text-red-500 text-xs mt-3">
+                    ⚠️ This action cannot be undone. All associated units will be hidden.
+                </p>
+
+                <form method="post" class="mt-6">
+                    {% csrf_token %}
+                    <div class="flex gap-3">
+                        <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-bold transition">
+                            🗑️ Yes, Delete
+                        </button>
+                        <a href="{% url 'property_detail' property.id %}" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-xl font-bold text-center transition">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

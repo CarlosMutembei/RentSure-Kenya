@@ -1,0 +1,336 @@
+{% extends "admin/delete_selected_confirmation.html" %}
+{% load static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/custom-admin.css' %}">
+<style>
+    /* ============================================================
+       DELETE MULTIPLE OBJECTS – Professional Styling
+    ============================================================ */
+
+    #content {
+        max-width: 900px !important;
+        margin: 40px auto !important;
+        padding: 0 !important;
+    }
+
+    .delete-multiple-card {
+        background: white !important;
+        border-radius: 16px !important;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08) !important;
+        overflow: hidden !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .delete-header {
+        background: linear-gradient(135deg, #BB0000, #990000) !important;
+        padding: 28px 32px !important;
+        color: white !important;
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 16px !important;
+        border-bottom: none !important;
+    }
+
+    .delete-header .icon {
+        font-size: 2.6rem !important;
+        line-height: 1 !important;
+        flex-shrink: 0 !important;
+    }
+
+    .delete-header h2 {
+        margin: 0 !important;
+        font-weight: 700 !important;
+        font-size: 1.4rem !important;
+        color: white !important;
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    .delete-header p {
+        margin: 4px 0 0 !important;
+        opacity: 0.85 !important;
+        font-size: 0.95rem !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .delete-header .badge {
+        background: rgba(255, 255, 255, 0.15) !important;
+        padding: 4px 14px !important;
+        border-radius: 30px !important;
+        font-size: 0.7rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        white-space: nowrap !important;
+        margin-top: 6px !important;
+        display: inline-block !important;
+    }
+
+    .delete-body {
+        padding: 32px !important;
+    }
+
+    .summary-grid {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+        gap: 12px !important;
+        margin-bottom: 24px !important;
+        padding: 16px 20px !important;
+        background: #f8fafc !important;
+        border-radius: 12px !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .summary-item {
+        text-align: center !important;
+    }
+
+    .summary-item .count {
+        font-size: 1.6rem !important;
+        font-weight: 800 !important;
+        color: #1e293b !important;
+        line-height: 1.2 !important;
+    }
+
+    .summary-item .label {
+        font-size: 0.7rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        color: #64748b !important;
+        font-weight: 500 !important;
+    }
+
+    .summary-item .label.highlight {
+        color: #BB0000 !important;
+        font-weight: 700 !important;
+    }
+
+    .objects-list {
+        margin: 20px 0 24px !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        max-height: 320px !important;
+        overflow-y: auto !important;
+    }
+
+    .objects-list .object-item {
+        padding: 12px 20px !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 12px !important;
+        transition: background 0.2s !important;
+        flex-wrap: wrap !important;
+    }
+
+    .objects-list .object-item:last-child {
+        border-bottom: none !important;
+    }
+
+    .objects-list .object-item:hover {
+        background: #f8fafc !important;
+    }
+
+    .objects-list .object-name {
+        font-weight: 600 !important;
+        color: #1e293b !important;
+        font-size: 0.9rem !important;
+    }
+
+    .objects-list .object-type {
+        font-size: 0.7rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        color: #64748b !important;
+        background: #f1f5f9 !important;
+        padding: 2px 12px !important;
+        border-radius: 30px !important;
+        font-weight: 500 !important;
+    }
+
+    .delete-buttons {
+        display: flex !important;
+        gap: 14px !important;
+        flex-wrap: wrap !important;
+        margin-top: 8px !important;
+        padding-top: 20px !important;
+        border-top: 1px solid #e2e8f0 !important;
+    }
+
+    .delete-buttons .btn-danger {
+        background: linear-gradient(135deg, #BB0000, #990000) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 12px 32px !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        box-shadow: 0 4px 14px rgba(187, 0, 0, 0.2) !important;
+        transition: all 0.25s ease !important;
+        cursor: pointer !important;
+    }
+
+    .delete-buttons .btn-danger:hover {
+        background: linear-gradient(135deg, #990000, #7a0000) !important;
+        box-shadow: 0 6px 20px rgba(187, 0, 0, 0.3) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    .delete-buttons .btn-danger:active {
+        transform: scale(0.98) !important;
+    }
+
+    .delete-buttons .btn-secondary {
+        background: transparent !important;
+        color: #1e293b !important;
+        border: 1.5px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        padding: 12px 32px !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        transition: all 0.25s ease !important;
+        text-decoration: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+    }
+
+    .delete-buttons .btn-secondary:hover {
+        background: #f8fafc !important;
+        border-color: #BB0000 !important;
+        color: #BB0000 !important;
+    }
+
+    @media (max-width: 640px) {
+        #content {
+            margin: 20px auto !important;
+            padding: 0 16px !important;
+        }
+
+        .delete-header {
+            padding: 20px 24px !important;
+            flex-wrap: wrap !important;
+        }
+
+        .delete-header .icon {
+            font-size: 2.2rem !important;
+        }
+
+        .delete-header h2 {
+            font-size: 1.2rem !important;
+        }
+
+        .delete-body {
+            padding: 20px !important;
+        }
+
+        .summary-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 8px !important;
+            padding: 12px !important;
+        }
+
+        .summary-item .count {
+            font-size: 1.3rem !important;
+        }
+
+        .delete-buttons {
+            flex-direction: column !important;
+        }
+
+        .delete-buttons .btn-danger,
+        .delete-buttons .btn-secondary {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+
+        .objects-list .object-item {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 4px !important;
+        }
+
+        .objects-list .object-children {
+            padding-left: 12px !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="delete-multiple-card">
+    <!-- Header -->
+    <div class="delete-header">
+        <span class="icon">🗑️</span>
+        <div style="flex: 1;">
+            <h2>Delete Multiple Objects</h2>
+            <p>This action is permanent and cannot be undone.</p>
+        </div>
+        <span class="badge">⚠️ Destructive</span>
+    </div>
+
+    <!-- Body -->
+    <div class="delete-body">
+        <!-- Warning -->
+        <div style="background: #fef2f2; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; border-left: 4px solid #BB0000;">
+            <p style="margin: 0; color: #991b1b; font-weight: 500; font-size: 0.9rem;">
+                ⚠️ You are about to delete multiple objects. This will also remove all related data.
+            </p>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary-grid">
+            <div class="summary-item">
+                <div class="count">{{ objects|length }}</div>
+                <div class="label">Total Objects</div>
+            </div>
+            <div class="summary-item">
+                <div class="count">{{ deleted_objects|length }}</div>
+                <div class="label">Related Items</div>
+            </div>
+            <div class="summary-item">
+                <div class="count">{{ perms_lacking|length|add:protected|length }}</div>
+                <div class="label highlight">⚠️ Issues</div>
+            </div>
+        </div>
+
+        <!-- Objects list -->
+        <div class="objects-list">
+            {% for obj in objects %}
+                <div class="object-item">
+                    <span class="object-name">{{ obj }}</span>
+                    <span class="object-type">{{ obj|capfirst }}</span>
+                </div>
+            {% endfor %}
+            {% if deleted_objects %}
+                <div class="object-item" style="background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 8px 20px;">
+                    <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">
+                        + {{ deleted_objects|length }} related object{{ deleted_objects|length|pluralize }}
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Buttons -->
+        <form method="post" style="margin: 0;">
+            {% csrf_token %}
+            <div class="delete-buttons">
+                <button type="submit" class="btn-danger">🗑️ Yes, I'm Sure</button>
+                <a href="javascript:history.back()" class="btn-secondary">No, Take Me Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

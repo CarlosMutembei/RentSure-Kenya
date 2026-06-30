@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications Management | RentSure Kenya{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50/50 py-6 sm:py-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-emerald-600 to-green-700 rounded-2xl p-4 sm:p-6 text-white shadow-lg mb-6 sm:mb-8 border border-emerald-500/30">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-white/10 rounded-lg backdrop-blur-md border border-white/15">
+                            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                        </div>
+                        <h1 class="text-xl sm:text-2xl font-black tracking-tight">Notification Center</h1>
+                    </div>
+                    <p class="mt-2 text-slate-300 text-xs sm:text-sm max-w-xl font-medium leading-relaxed">
+                        Stay updated with property inquiries, viewing requests, and real-time portal transactions.
+                    </p>
+                </div>
+
+                {% if notifications %}
+                <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
+                    <form method="post" action="{% url 'mark_all_notifications_read' %}" class="flex-1 md:flex-none">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/25 border border-white/10 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition duration-200 shadow-sm backdrop-blur-sm">
+                            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Mark All Read
+                        </button>
+                    </form>
+                    <form method="post" action="{% url 'delete_all_notifications' %}" class="flex-1 md:flex-none">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition duration-200 shadow-md hover:shadow-lg border border-red-500/30">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                            Clear All
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if notifications %}
+
+        <!-- Stats Grid Container (Centered, responsive gap and max-width) -->
+<div class="max-w-5xl mx-auto grid grid-cols-3 gap-3 sm:gap-6 mb-8 text-center px-1 sm:px-4">
+    
+    <!-- Total Notifications Card -->
+    <div class="bg-white rounded-2xl p-4 sm:p-6 border border-gray-100/80 shadow-sm flex flex-col items-center justify-center transition-all duration-300 hover:shadow-md">
+        <!-- FontAwesome Icon replacing the SVG frame -->
+        <div class="text-slate-400 text-sm sm:text-lg mb-1.5">
+            <i class="fas fa-layer-group"></i>
+        </div>
+        <p class="text-slate-400 text-[11px] sm:text-xs font-bold uppercase tracking-widest">Total</p>
+        <h3 class="text-2xl sm:text-4xl font-black text-slate-800 mt-1 sm:mt-2 tracking-tight">{{ notifications|length }}</h3>
+    </div>
+    
+    <!-- Unread Notifications Card (With Top Accent Line & Pulsing Dot from image_33edfd.png) -->
+    <div class="bg-white rounded-2xl p-4 sm:p-6 border border-gray-100/80 shadow-sm flex flex-col items-center justify-center transition-all duration-300 hover:shadow-md relative overflow-hidden">
+        <!-- Top border accent line matching image_33edfd.png -->
+        <div class="absolute top-0 inset-x-0 h-[4px] bg-indigo-600"></div>
+        
+        <!-- FontAwesome Icon -->
+        <div class="text-indigo-600 text-sm sm:text-lg mb-1.5">
+            <i class="fas fa-envelope-open"></i>
+        </div>
+        <p class="text-indigo-600 text-[11px] sm:text-xs font-bold uppercase tracking-widest">Unread</p>
+        
+        <!-- Centered flex configuration to keep the pulsing dot right next to the number -->
+        <h3 class="text-2xl sm:text-4xl font-black text-indigo-600 mt-1 sm:mt-2 tracking-tight inline-flex items-center justify-center gap-1.5">
+            {{ unread_count }}
+            {% if unread_count > 0 %}
+                <span class="w-2.5 h-2.5 bg-indigo-600 rounded-full animate-pulse shrink-0"></span>
+            {% endif %}
+        </h3>
+    </div>
+    
+    <!-- Read Notifications Card -->
+    <div class="bg-white rounded-2xl p-4 sm:p-6 border border-gray-100/80 shadow-sm flex flex-col items-center justify-center transition-all duration-300 hover:shadow-md">
+        <!-- FontAwesome Icon -->
+        <div class="text-emerald-600 text-sm sm:text-lg mb-1.5">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <p class="text-emerald-600 text-[11px] sm:text-xs font-bold uppercase tracking-widest">Read</p>
+        <h3 class="text-2xl sm:text-4xl font-black text-emerald-700 mt-1 sm:mt-2 tracking-tight">{{ read_count }}</h3>
+    </div>
+
+</div>
+        
+
+        <!-- Notification List -->
+        <div class="space-y-3.5">
+            {% for note in notifications %}
+            <div class="bg-white rounded-xl border {% if not note.is_read %}border-l-4 border-l-blue-600 border-gray-200/90 shadow-md{% else %}border-gray-200/70 shadow-sm{% endif %} hover:shadow-md transition-all duration-200 overflow-hidden relative group">
+                
+                <div class="p-4 sm:p-5">
+                    <div class="flex items-start gap-4">
+                        
+                        <!-- Icon -->
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 {% if note.is_read %}bg-gray-100 text-gray-500{% else %}bg-blue-50 text-blue-600{% endif %}">
+                            {% if note.is_read %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l8-5.333a2 2 0 012.22 0l8 5.333A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"/>
+                            </svg>
+                            {% else %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                            {% endif %}
+                        </div>
+
+                        <!-- Content -->
+                        <div class="flex-1 min-w-0 pr-0 sm:pr-24">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="font-bold text-gray-900 text-sm sm:text-base tracking-tight leading-snug">
+                                    {{ note.title }}
+                                </h3>
+                                {% if not note.is_read %}
+                                <span class="bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md shadow-sm">
+                                    New
+                                </span>
+                                {% endif %}
+                            </div>
+                            
+                            <p class="text-gray-600 mt-1 text-xs sm:text-sm leading-relaxed font-medium">
+                                {{ note.message }}
+                            </p>
+
+                            <!-- Actions: Link + Timestamp -->
+                            <div class="flex items-center gap-3 mt-3 flex-wrap">
+                                {% if note.link %}
+                                <a href="{{ note.link }}" 
+                                    data-notification-id="{{ note.id }}"  
+                                    class="notification-link text-emerald-700 hover:text-emerald-800 font-bold text-xs inline-flex items-center gap-1 transition-colors group">
+                                        View details
+                                        <svg class="w-3 h-3 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                        </svg>
+                                    </a>
+                                
+                                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                {% endif %}
+                                <span class="text-[11px] text-gray-400 font-semibold">
+                                    {{ note.created_at|timesince }} ago
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Actions (Mark read / Delete) -->
+                <div class="sm:absolute sm:top-4 sm:right-4 flex items-center gap-1.5 px-4 pb-4 sm:p-0 border-t border-gray-50 sm:border-0 pt-3 sm:pt-0 justify-end">
+                    {% comment %} {% if not note.is_read %}
+                    <form method="post" action="{% url 'mark_notification_read' note.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="px-3 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-gray-600 hover:text-blue-600 border border-gray-200 hover:border-blue-200 text-xs font-bold transition duration-150">
+                            Mark read
+                        </button>
+                    </form>
+                    {% endif %} {% endcomment %}
+                    <form method="post" action="{% url 'delete_notification' note.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="p-1.5 rounded-lg bg-gray-50 hover:bg-red-50 text-gray-400 hover:text-red-600 border border-gray-200 hover:border-red-200 text-xs transition duration-150" title="Delete Notification">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+
+        <!-- Empty State -->
+        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-12 sm:p-20 text-center max-w-xl mx-auto mt-12">
+            <div class="w-16 h-16 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center mx-auto mb-6 shadow-inner text-slate-400">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0a2 2 0 01-2 2H6a2 2 0 01-2-2m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                </svg>
+            </div>
+            <h3 class="text-base sm:text-lg font-black text-slate-800">No Active Notifications</h3>
+            <p class="text-gray-400 text-xs sm:text-sm mt-1 max-w-sm mx-auto leading-relaxed font-medium">
+                Your archive is entirely cleared. New activities regarding listed inquiries or booking tasks will stream right here.
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Helper to get CSRF token
+        function getCSRFToken() {
+            const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
+            if (cookie) return cookie.split('=')[1];
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            if (meta) return meta.getAttribute('content');
+            return null;
+        }
+
+        const csrftoken = getCSRFToken();
+
+        // Select all notification links with the class 'notification-link'
+        document.querySelectorAll('.notification-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const notificationId = this.dataset.notificationId;
+                if (notificationId && csrftoken) {
+                    // Send request to mark as read
+                    fetch(`/notifications/mark/${notificationId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrftoken,
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'ok') {
+                            // Update the badge count
+                            const badge = document.querySelector('#notification-badge-icon');
+                            if (badge) {
+                                const current = parseInt(badge.textContent) || 0;
+                                if (current > 0) {
+                                    const newCount = current - 1;
+                                    badge.textContent = newCount;
+                                    if (newCount === 0) {
+                                        badge.classList.add('hidden');
+                                    }
+                                }
+                            }
+                            // Also update the mobile badge if present
+                            const mobileBadge = document.querySelector('#notification-badge-mobile');
+                            if (mobileBadge) {
+                                const currentMobile = parseInt(mobileBadge.textContent) || 0;
+                                if (currentMobile > 0) {
+                                    const newCount = currentMobile - 1;
+                                    mobileBadge.textContent = newCount;
+                                    if (newCount === 0) {
+                                        mobileBadge.classList.add('hidden');
+                                    }
+                                }
+                            }
+                            // Optionally remove the "New" badge from the notification item
+                            const notificationItem = this.closest('.bg-white.rounded-xl');
+                            if (notificationItem) {
+                                const newBadge = notificationItem.querySelector('.bg-blue-600.text-white');
+                                if (newBadge) newBadge.remove();
+                                // Remove the left border highlight
+                                notificationItem.classList.remove('border-l-4', 'border-l-blue-600');
+                            }
+                        }
+                    })
+                    .catch(err => console.error('Error marking notification read:', err));
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,865 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ property.title }} | RentSure Kenya{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-gray-50 via-white to-gray-100 py-6 sm:py-8">
+    <div class="container mx-auto px-3 sm:px-4 max-w-6xl">
+
+        <!-- Back button -->
+        <div class="mb-4 sm:mb-5">
+            <a href="{% url 'search' %}" class="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-800 font-medium transition group text-sm sm:text-base">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Back to search
+            </a>
+        </div>
+
+        <!-- Main card -->
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 p-4 sm:p-6">
+
+                <!-- Left column: images (unchanged) -->
+                <div class="lg:col-span-1">
+                    <div class="relative group">
+                        <div class="h-48 sm:h-64 md:h-72 rounded-xl overflow-hidden bg-gray-100 shadow-md">
+                            {% with property.images.first as primary %}
+                                {% if primary %}
+                                    <img id="mainImage" src="{{ primary.image.url }}" alt="{{ property.title }}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105 cursor-pointer" onclick="openLightbox(this.src)">
+                                {% else %}
+                                    <div class="w-full h-full flex flex-col items-center justify-center text-gray-400">
+                                        <svg class="w-12 h-12 sm:w-16 sm:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        <p class="mt-2 text-xs sm:text-sm">No images uploaded</p>
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        {% if property.images.count > 1 %}
+                        <div class="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-thin">
+                            {% for img in property.images.all %}
+                            <img src="{{ img.image.url }}" class="thumbnail-img w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover cursor-pointer border-2 border-transparent hover:border-emerald-500 transition-all hover:scale-105" data-index="{{ forloop.counter0 }}" onclick="document.getElementById('mainImage').src=this.src">
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Right column: details -->
+                <div class="lg:col-span-2 flex flex-col justify-between">
+                    <!-- Title and price range -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start gap-3">
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">{{ property.title }}</h1>
+                            <p class="text-gray-500 text-xs sm:text-sm flex items-center gap-1 mt-1 font-medium">
+                                📍 {{ property.town }}{% if property.estate %}, {{ property.estate }}{% endif %}
+                            </p>
+                        </div>
+                        
+                        <div class="sm:text-right bg-emerald-50 sm:bg-transparent p-3 sm:p-0 rounded-xl w-full sm:w-auto">
+                            <p class="text-[10px] sm:text-xs text-emerald-800 sm:text-gray-500 uppercase tracking-wide font-semibold">Monthly Rent</p>
+                            <p class="text-2xl sm:text-3xl font-black text-emerald-700">
+                                {% if price_range.min == price_range.max %}
+                                    KES {{ price_range.min|floatformat:0 }}
+                                {% else %}
+                                    KES {{ price_range.min|floatformat:0 }} – {{ price_range.max|floatformat:0 }}
+                                {% endif %}
+                            </p>
+                            
+                            {% if property.units.exists and property.units.first.deposit %}
+                                <p class="text-xs sm:text-sm text-gray-500 mt-0.5">
+                                    Deposit from KES {{ property.units.all|dictsort:"deposit"|first|floatformat:0 }}
+                                </p>
+                            {% endif %}
+
+                            {% if property.service_charge and property.service_charge > 0 %}
+                                <p class="text-xs sm:text-sm text-amber-700 mt-1 font-medium flex items-center gap-1">
+                                    <span class="bg-amber-100 px-2 py-0.5 rounded">💰 Service Charge</span>
+                                    <span class="font-bold">KES {{ property.service_charge|floatformat:0 }}</span>
+                                    <span class="text-[10px] text-gray-500">/month</span>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Unit Summary Cards -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-4 sm:mt-5">
+                        <div class="bg-gray-50 rounded-xl p-2 sm:p-3 text-center border border-gray-100">
+                            <p class="text-[10px] sm:text-xs text-gray-400 uppercase font-bold tracking-wider">Total Units</p>
+                            <p class="text-lg sm:text-xl font-black text-gray-800 mt-1">{{ property.units.count }}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-2 sm:p-3 text-center border border-gray-100">
+                            <p class="text-[10px] sm:text-xs text-gray-400 uppercase font-bold tracking-wider">Available</p>
+                            <p class="text-lg sm:text-xl font-black text-emerald-600 mt-1">{{ available_units|length }}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-2 sm:p-3 text-center border border-gray-100">
+                            <p class="text-[10px] sm:text-xs text-gray-400 uppercase font-bold tracking-wider">Available Types</p>
+                            <p class="text-xs sm:text-sm font-bold text-gray-700 mt-1">
+                                {{ unit_types_summary|default:"None available" }}
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-2 sm:p-3 text-center border border-gray-100">
+                            <p class="text-[10px] sm:text-xs text-gray-400 uppercase font-bold tracking-wider">Furnished</p>
+                            <p class="text-xs sm:text-sm font-bold text-amber-600 mt-1">
+                                {% if property.units.filter|length > 0 %}
+                                    {% if property.units.filter|length == property.units.count %}
+                                        All
+                                    {% else %}
+                                        Some
+                                    {% endif %}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Property-wide amenities (wifi, pets) -->
+                    <div class="flex flex-wrap gap-1.5 sm:gap-2 mt-3 sm:mt-4">
+                        {% if property.wifi %}<span class="bg-blue-50 text-blue-700 text-[10px] sm:text-xs font-semibold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border border-blue-100">📶 WiFi</span>{% endif %}
+                        {% if property.pets_allowed %}<span class="bg-amber-50 text-amber-700 text-[10px] sm:text-xs font-semibold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border border-amber-100">🐾 Pets allowed</span>{% endif %}
+                    </div>
+
+                    <!-- Owner & Trust Score -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-4 sm:mt-5 pt-4 border-t border-gray-100">
+
+                        <!-- Owner Card -->
+                        <div class="flex items-center gap-3 rounded-2xl border p-4 shadow-sm transition hover:shadow-md
+                            {% if property.landlord.kyc_status == 'verified' %}
+                                border-emerald-200 bg-emerald-50/70
+                            {% else %}
+                                border-rose-200 bg-rose-50/70
+                            {% endif %}">
+                            
+                            <!-- Avatar / Status Icon -->
+                            <div class="relative shrink-0">
+                                <div class="flex h-12 w-12 items-center justify-center rounded-2xl ring-1
+                                    {% if property.landlord.kyc_status == 'verified' %}
+                                        bg-emerald-100 text-emerald-700 ring-emerald-200
+                                    {% else %}
+                                        bg-rose-100 text-rose-700 ring-rose-200
+                                    {% endif %}">
+                                    {% if property.landlord.kyc_status == 'verified' %}
+                                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622C17.176 19.29 21 14.591 21 9c0-1.042-.133-2.052-.382-3.016z"/>
+                                        </svg>
+                                    {% else %}
+                                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z"/>
+                                        </svg>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Text -->
+                            <div class="min-w-0 flex-1">
+                                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                    Owner
+                                </p>
+
+                                <div class="mt-1 flex flex-wrap items-center gap-2">
+                                    <p class="truncate text-sm font-bold text-slate-900 sm:text-base">
+                                        {{ property.landlord.username }}
+                                    </p>
+
+                                    <span class="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold
+                                        {% if property.landlord.kyc_status == 'verified' %}
+                                            bg-emerald-100 text-emerald-700
+                                        {% else %}
+                                            bg-rose-100 text-rose-700
+                                        {% endif %}">
+                                        {% if property.landlord.kyc_status == 'verified' %}
+                                            Verified
+                                        {% else %}
+                                            Unverified
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                <p class="mt-1 text-xs text-slate-500">
+                                    {% if property.landlord.kyc_status == 'verified' %}
+                                        Identity verified and approved
+                                    {% else %}
+                                        Verification pending review
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Trust Score Card -->
+                        <div class="rounded-2xl border p-4 shadow-sm transition hover:shadow-md
+                            {% if scam_score == 'Low Risk' %}border-emerald-200 bg-emerald-50/70
+                            {% elif scam_score == 'Medium Risk' %}border-amber-200 bg-amber-50/70
+                            {% else %}border-rose-200 bg-rose-50/70{% endif %}">
+
+                            <div class="flex items-start gap-3 sm:gap-4">
+                                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl
+                                    {% if scam_score == 'Low Risk' %}bg-emerald-100 text-emerald-700
+                                    {% elif scam_score == 'Medium Risk' %}bg-amber-100 text-amber-700
+                                    {% else %}bg-rose-100 text-rose-700{% endif %}">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622C17.176 19.29 21 14.591 21 9c0-.422-.026-.842-.076-1.256A11.955 11.955 0 0112 2.944z"/>
+                                    </svg>
+                                </div>
+
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                            Trust Score
+                                        </p>
+
+                                        <span class="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold
+                                            {% if scam_score == 'Low Risk' %}bg-emerald-100 text-emerald-700
+                                            {% elif scam_score == 'Medium Risk' %}bg-amber-100 text-amber-700
+                                            {% else %}bg-rose-100 text-rose-700{% endif %}">
+                                            {% if scam_score == 'Low Risk' %}
+                                                Low Risk
+                                            {% elif scam_score == 'Medium Risk' %}
+                                                Medium Risk
+                                            {% else %}
+                                                High Risk
+                                            {% endif %}
+                                        </span>
+                                    </div>
+
+                                    <p class="mt-1 text-sm font-semibold
+                                        {% if scam_score == 'Low Risk' %}text-emerald-700
+                                        {% elif scam_score == 'Medium Risk' %}text-amber-700
+                                        {% else %}text-rose-700{% endif %}">
+                                        {% if scam_score == 'Low Risk' %}
+                                            Low risk profile
+                                        {% elif scam_score == 'Medium Risk' %}
+                                            Review details carefully
+                                        {% else %}
+                                            Proceed with caution
+                                        {% endif %}
+                                    </p>
+
+                                    <div class="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-200/80">
+                                        <div class="h-full rounded-full transition-all duration-500
+                                            {% if scam_score == 'Low Risk' %}w-5/6 bg-emerald-600
+                                            {% elif scam_score == 'Medium Risk' %}w-1/2 bg-amber-500
+                                            {% else %}w-1/4 bg-rose-600{% endif %}">
+                                        </div>
+                                    </div>
+
+                                    <p class="mt-1.5 text-[11px] text-slate-400">
+                                        {% if scam_score == 'Low Risk' %}Low risk profile
+                                        {% elif scam_score == 'Medium Risk' %}Moderate risk profile
+                                        {% else %}High risk profile{% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if user == property.landlord or user == property.agent %}
+                    <div class="flex flex-wrap gap-2 sm:gap-3 mt-4">
+                        <a href="{% url 'edit_property' property.id %}" class="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm">
+                            ✏️ Edit Property
+                        </a>
+                        <button type="button" 
+                                onclick="toggleDeleteModal(true)" 
+                                class="inline-flex items-center gap-2 bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm">
+                            🗑️ Delete Property
+                        </button>
+                    </div>
+                    {% endif %}
+
+                    <!-- Landlord actions (unchanged) -->
+                    {% if user == property.landlord %}
+                    <div class="flex flex-wrap gap-2 sm:gap-3 mt-4">
+                        <a href="{% url 'manage_units' property_id=property.id %}" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm">
+                            🏢 Manage Units
+                        </a>
+                        <a href="{% url 'manage_property_images' property.id %}" class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm">
+                            🖼️ Manage Images
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <!-- PROPERTY ACTIONS SIDEBAR CONTAINER -->
+                        <div class="mt-6 border-t border-gray-100 pt-5 space-y-6">
+                            
+                            <!-- SECTION: SAVE / FAVORITE -->
+                            <div>
+                                <div class="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Property Actions</div>
+                                
+                                {% if not user.is_authenticated %}
+                                    <!-- Case 1: Logged Out -->
+                                    <a href="{% url 'login' %}?next={{ request.path }}" 
+                                    class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition duration-150 w-full sm:w-1/2">
+                                        <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+                                        </svg>
+                                        Login to Save Property
+                                    </a>
+
+                                {% elif property.landlord == user or property.agent == user %}
+                                    <!-- Case 2: The Direct Owner or Agent of this property -->
+                                    <span class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 text-xs font-semibold w-full sm:w-1/2 select-none">
+                                        <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                                        </svg>
+                                        {% if property.landlord == user %}Your Listing{% else %}Your Managed Property{% endif %}
+                                    </span>
+
+                                {% elif user.role == 'tenant' %}
+                                    <!-- Case 3: Legitimate Prospect Tenant -->
+                                    <button id="save-property-btn" data-property-id="{{ property.id }}"
+                                            class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-bold transition-all duration-300 shadow-sm w-full sm:w-1/2
+                                            {% if is_saved %} border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100
+                                            {% else %} border-gray-200 text-gray-700 bg-white hover:border-rose-300 hover:text-rose-600 hover:bg-rose-50/50 {% endif %}">
+                                        <svg class="w-4 h-4 shrink-0" fill="{% if is_saved %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+                                        </svg>
+                                        <span>{% if is_saved %}Saved{% else %}Save Property{% endif %}</span>
+                                    </button>
+                                    
+                                {% endif %}
+                            </div>
+
+                            <!-- SECTION: CONTACT & COMMUNICATIONS -->
+                            {% if user.is_authenticated %}
+                                {% if property.landlord != user and property.agent != user %}
+                                    <!-- Shown to any logged-in user who is NOT managing this specific property -->
+                                    <div>
+                                        <div class="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Contact & Enquiries</div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                                            
+                                            <!-- Only Tenants can schedule physical viewings -->
+                                            {% if user.role == 'tenant' %}
+                                                <a href="{% url 'request_viewing' property.id %}" 
+                                                class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-sm transition duration-150 text-xs sm:text-sm">
+                                                    📅 Request Viewing
+                                                </a>
+                                            {% endif %}
+                                            
+                                            <!-- Other Landlords / Agents can still message the owner for collaborations/inquiries -->
+                                            <a href="{% url 'chat_detail' property.id %}" 
+                                            class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-700 hover:bg-gray-800 text-white font-bold transition duration-150 text-xs sm:text-sm {% if user.role != 'tenant' %}col-span-1 sm:col-span-2{% endif %}">
+                                                💬 Message Owner
+                                            </a>
+                                            
+                                            <!-- Anyone logged in can report a listing -->
+                                            <a href="{% url 'report_scam' property.id %}" 
+                                            class="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-rose-50 text-rose-700 border border-rose-100 hover:bg-rose-100/70 font-semibold transition duration-150 text-xs sm:text-sm col-span-1 sm:col-span-2 text-center">
+                                                🚨 Report this Property
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                </div>
+            </div>
+
+            <!-- Tabs Section (unchanged) -->
+            <div class="border-t border-gray-100 bg-gray-50/50">
+                <div class="flex border-b border-gray-200 overflow-x-auto">
+                    <button class="tab-btn active px-4 sm:px-6 py-3 text-xs sm:text-sm font-bold text-emerald-700 border-b-2 border-emerald-500 whitespace-nowrap transition-all" data-tab="desc">📄 Description</button>
+                    <button class="tab-btn px-4 sm:px-6 py-3 text-xs sm:text-sm font-bold text-gray-500 hover:text-emerald-600 whitespace-nowrap border-b-2 border-transparent transition-all" data-tab="rules">📜 House Rules</button>
+                    <button class="tab-btn px-4 sm:px-6 py-3 text-xs sm:text-sm font-bold text-gray-500 hover:text-emerald-600 whitespace-nowrap border-b-2 border-transparent transition-all" data-tab="reviews">⭐ Reviews ({{ reviews.count }})</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 bg-white">
+                    <!-- Tab Content Description -->
+                    <div id="tab-desc" class="tab-content block animate-fadeIn">
+                        <p class="text-gray-700 leading-relaxed text-sm sm:text-base">{{ property.description|default:"No description provided." }}</p>
+                        {% if property.video %}
+                        <div class="mt-4 sm:mt-6">
+                            <p class="font-bold text-gray-800 mb-2 text-sm sm:text-base">📹 Video Tour</p>
+                            <video controls class="w-full max-w-2xl rounded-xl shadow-md border">
+                                <source src="{{ property.video.url }}" type="video/mp4">
+                            </video>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Tab Content Rules -->
+                    <div id="tab-rules" class="tab-content hidden animate-fadeIn">
+                        {% if property.rules %}
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                            <p class="text-gray-700 whitespace-pre-line text-sm sm:text-base">{{ property.rules|linebreaksbr }}</p>
+                        </div>
+                        {% else %}
+                        <p class="text-gray-400 italic text-sm">No specific house rules listed.</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Tab Content Reviews (unchanged) -->
+                    <div id="tab-reviews" class="tab-content hidden animate-fadeIn">
+                        <div class="flex justify-between items-center mb-4 gap-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">⭐</span>
+                                <span class="font-bold text-gray-800 text-sm sm:text-base">{{ avg_rating }}/5</span>
+                                <span class="text-gray-400 text-xs">({{ reviews.count }} reviews)</span>
+                            </div>
+                            {% if user.is_authenticated and user.role == 'tenant' %}
+                            <button onclick="toggleReviewForm()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm px-3 py-1.5 rounded-lg font-bold shadow-sm transition">+ Write a review</button>
+                            {% endif %}
+                        </div>
+                        
+                        <div id="review-form-container" class="hidden mb-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                            <form method="post" action="{% url 'add_review' property.id %}">
+                                {% csrf_token %}
+                                <label class="block text-xs sm:text-sm font-semibold mb-1">Your rating</label>
+                                <select name="rating" class="border p-2 rounded-lg text-xs sm:text-sm mb-3 w-full bg-white focus:border-emerald-500 focus:outline-none">
+                                    <option value="5">★★★★★ (5)</option>
+                                    <option value="4">★★★★☆ (4)</option>
+                                    <option value="3">★★★☆☆ (3)</option>
+                                    <option value="2">★★☆☆☆ (2)</option>
+                                    <option value="1">★☆☆☆☆ (1)</option>
+                                </select>
+                                <label class="block text-xs sm:text-sm font-semibold mb-1">Your comment</label>
+                                <textarea name="comment" rows="3" class="w-full border p-2 rounded-lg text-xs sm:text-sm bg-white focus:border-emerald-500 focus:outline-none" placeholder="Share your experience..."></textarea>
+                                <button type="submit" class="mt-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg text-xs sm:text-sm shadow-sm transition">Submit Review</button>
+                            </form>
+                        </div>
+                        
+                        <div class="space-y-4 max-h-96 overflow-y-auto pr-2 scrollbar-thin">
+                            {% for review in reviews %}
+                            <div class="border-b border-gray-100 pb-3 last:border-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-gray-800 text-xs sm:text-sm">{{ review.tenant.username }}</span>
+                                    <span class="text-yellow-500 text-xs">{% for i in "12345"|slice:":review.rating" %}★{% endfor %}</span>
+                                    <span class="text-gray-400 text-[10px] sm:text-xs ml-auto">{{ review.created_at|date:"M d, Y" }}</span>
+                                </div>
+                                <p class="text-gray-600 text-xs sm:text-sm mt-1 leading-relaxed">{{ review.comment }}</p>
+                            </div>
+                            {% empty %}
+                            <p class="text-gray-400 text-center py-6 text-sm italic">No reviews yet. Be the first to leave feedback!</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Units Container (REWRITTEN) -->
+            <div class="border-t border-gray-100 p-4 sm:p-6 bg-gray-50/30">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-gray-800 text-sm sm:text-base flex items-center gap-2">🏢 Available Units</h3>
+                    <span class="bg-gray-100 text-gray-600 text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full">{{ available_units|length }} available</span>
+                </div>
+
+                {% if available_units %}
+                <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm bg-white unit-table-wrapper">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Unit</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Rent (KES)</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Deposit</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Bedrooms</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Furnished</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Amenities</th>
+                                <th class="px-4 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for unit in available_units %}
+                            <tr class="hover:bg-emerald-50/20 transition-colors">
+                                <td class="px-4 py-3.5">
+                                    <div class="text-xs sm:text-sm font-bold text-gray-900">{{ unit.get_unit_type_display }}</div>
+                                    <div class="text-[10px] sm:text-xs text-gray-400 font-medium">#{{ unit.unit_number|default:"N/A" }}</div>
+                                </td>
+                                <td class="px-4 py-3.5 font-mono text-emerald-700 font-extrabold text-xs sm:text-sm">
+                                    {{ unit.monthly_rent|floatformat:0 }}
+                                </td>
+                                <td class="px-4 py-3.5 font-mono text-gray-600 font-medium text-xs">
+                                    {{ unit.deposit|floatformat:0|default:"—" }}
+                                </td>
+                                <td class="px-4 py-3.5 text-xs text-gray-600">
+                                    {{ unit.get_bedrooms }} bed{{ unit.get_bedrooms|pluralize }}
+                                </td>
+                                <td class="px-4 py-3.5 text-xs">
+                                    {% if unit.furnished %}
+                                        <span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">Furnished</span>
+                                    {% else %}
+                                        <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Unfurnished</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 py-3.5">
+                                    <div class="flex flex-wrap gap-1">
+                                        {% if unit.has_water %}<span class="text-xs text-blue-600">💧</span>{% endif %}
+                                        {% if unit.has_electricity %}<span class="text-xs text-green-600">⚡</span>{% endif %}
+                                        {% if unit.has_parking %}<span class="text-xs text-indigo-600">🅿️</span>{% endif %}
+                                        {% if unit.has_security %}<span class="text-xs text-emerald-600">🔒</span>{% endif %}
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 text-center align-middle whitespace-nowrap">
+                                    {% if user.is_authenticated %}
+                                        
+                                        {% if property.landlord == user %}
+                                            <!-- Authorized Lister (Owner) -->
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-slate-500 text-xs font-semibold italic">
+                                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                                                </svg>
+                                                Your unit
+                                            </span>
+
+                                        {% elif property.agent == user %}
+                                            <!-- Authorized Administrator (Agent) -->
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold italic">
+                                                <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.67 2.67 0 0021 17.25l-5.83-5.83m-3.75 3.75a2.67 2.67 0 01-3.75-3.75M11.42 15.17l-1.44-1.44A2.67 2.67 0 006.23 15.6l-3.84 3.84a1.5 1.5 0 102.12 2.12l3.84-3.84a2.67 2.67 0 002.12-2.12M15.17 11.42l1.44 1.44a2.67 2.67 0 003.75-3.75l-3.84-3.84a1.5 1.5 0 10-2.12 2.12l3.84 3.84a2.67 2.67 0 00-2.12 2.12m-3.75-3.75A2.67 2.67 0 019 9m3.75-3.75l5.83-5.83A2.67 2.67 0 0121 3.17l-5.83 5.83m-3.75-3.75a2.67 2.67 0 00-3.75 3.75l-3.84-3.84A1.5 1.5 0 101.4 5.38l3.84 3.84a2.67 2.67 0 002.12 2.12" />
+                                                </svg>
+                                                Managed by you
+                                            </span>
+
+                                        {% else %}
+                                            <!-- Public Interaction: Anyone logged in who does NOT own this listing (Tenants, or external Landlords/Agents like Risper) -->
+                                            <div class="flex flex-col sm:flex-row items-center gap-2 justify-center">
+                                                
+                                                <!-- Booking Action -->
+                                                <a href="{% url 'initiate_escrow_unit' property.id unit.id %}"
+                                                class="inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm hover:shadow-md transition duration-150 min-h-[36px] w-full sm:w-auto">
+                                                    Book Unit
+                                                </a>
+
+                                                <!-- Compare Actions -->
+                                                {% if unit.id in compare_unit_ids %}
+                                                    <a href="{% url 'remove_from_compare' unit.id %}"
+                                                    class="group inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-xs font-bold transition duration-150 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600 shadow-sm min-h-[36px] w-full sm:w-auto"
+                                                    title="Remove from comparison">
+                                                        <span class="inline-flex items-center gap-1 group-hover:hidden">
+                                                            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                                            </svg>
+                                                            Compared
+                                                        </span>
+                                                        <span class="hidden group-hover:inline-flex items-center gap-1">
+                                                            <svg class="w-3.5 h-3.5 text-rose-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                            Remove
+                                                        </span>
+                                                    </a>
+                                                {% else %}
+                                                    <a href="{% url 'add_to_compare' unit.id %}"
+                                                    <a class="inline-flex items-center justify-center gap-1.5 border border-[#006600] text-[#006600] text-xs font-bold px-3 py-2 rounded-xl transition duration-150 shadow-sm min-h-[36px] w-full sm:w-auto hover:bg-[#006600]/10">
+                                                        <svg class="w-3.5 h-3.5 opacity-80" fill="none" stroke="#006600" stroke-width="2" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-12-3h18m-18-6h18m-18-6h18" />
+                                                        </svg>
+                                                        Compare
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                        
+                                    {% else %}
+                                        <!-- Completely Logged Out -->
+                                        <a href="{% url 'login' %}?next={{ request.path }}" 
+                                        class="inline-flex items-center gap-1.5 text-indigo-600 text-xs font-bold hover:text-indigo-800 transition py-1 border-b border-dashed border-indigo-300 hover:border-indigo-600">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                            </svg>
+                                            Login to book
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="bg-white rounded-xl p-6 text-center border border-dashed border-gray-300">
+                    <svg class="mx-auto h-8 w-8 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    <p class="text-gray-500 font-semibold text-sm">No units available right now</p>
+                    <p class="text-xs text-gray-400 mt-1">All units are either occupied or under maintenance. Check back later or contact the owner.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Map Layout (unchanged) -->
+            <div class="border-t border-gray-100 p-4 sm:p-6">
+                <h3 class="font-bold text-gray-800 text-sm sm:text-base mb-2.5">📍 Location Map</h3>
+                <div id="detailMap" style="height: 280px;" class="rounded-xl overflow-hidden shadow-inner border border-gray-200"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div id="lightbox" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm hidden flex flex-col items-center justify-center p-4" onclick="closeLightbox()">
+    <button id="lightbox-close" class="absolute top-4 right-4 text-white hover:text-gray-300 transition focus:outline-none" onclick="closeLightbox()">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <img id="lightbox-img" src="" alt="Enlarged property view" class="max-w-full max-h-[85vh] rounded-lg object-contain shadow-2xl">
+</div>
+{% comment %} Modal Tag {% endcomment %}
+<div id="deleteAssetModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 ease-out" aria-modal="true" role="dialog">
+    
+    <div id="deleteModalContent" class="bg-white rounded-xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden transform scale-95 transition-all duration-300 ease-out">
+        
+        <!-- ======== HEADER: KENYAN RED ======== -->
+        <div class="bg-gradient-to-r from-[#BB0000] to-red-700 px-6 py-5 flex items-center gap-4 border-b border-red-900/30">
+            <div class="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-white tracking-tight">Confirm Asset Deactivation</h3>
+                <p class="text-xs text-red-200/80 mt-0.5">Asset ID: #{{ property.id }} — RentSure Kenya</p>
+            </div>
+        </div>
+
+        <!-- ======== BODY ======== -->
+        <div class="p-6">
+            {% if has_active_issues %}
+                <!-- Restricted deletion -->
+                <div class="space-y-4">
+                    <div class="p-3.5 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+                        <svg class="w-4 h-4 text-[#BB0000] mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <h4 class="text-xs font-bold text-[#BB0000] uppercase tracking-wide">Decommissioning Restricted</h4>
+                            <p class="text-xs text-red-700/90 mt-0.5 font-medium leading-relaxed">This property has active dependencies restricting automatic removal.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">System Constraints</p>
+                        <div class="space-y-1.5">
+                            {% for msg in error_messages %}
+                            <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#BB0000] shrink-0"></span>
+                                <span>{{ msg }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="button" onclick="toggleDeleteModal(false)" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-lg font-bold text-xs text-center border border-slate-200 shadow-sm transition">
+                            Dismiss and Return
+                        </button>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Confirmation -->
+                <div class="space-y-4">
+                    <p class="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+                        Are you sure you want to delete <strong class="text-slate-900 font-bold">{{ property.title }}</strong>? This action will immediately remove the property from public marketplace search listings and archive its historical records.
+                    </p>
+
+                    <!-- Destructive operation warning (red) -->
+                    <div class="p-3.5 bg-red-50/80 border border-red-200/80 rounded-xl flex items-start gap-3">
+                        <svg class="w-4 h-4 text-[#BB0000] mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        <div class="space-y-0.5">
+                            <h4 class="text-xs font-bold text-[#BB0000] uppercase tracking-wide">Destructive Operation</h4>
+                            <p class="text-xs text-red-700/90 font-medium leading-relaxed">This setup is permanent. All linked child units will be systematically unmapped and deactivated.</p>
+                        </div>
+                    </div>
+
+                    <form method="post" action="{% url 'delete_property' property.id %}" class="pt-4 border-t border-slate-100 flex gap-3">
+                        {% csrf_token %}
+                        <!-- Confirm button: Kenyan red -->
+                        <button type="submit" class="flex-1 bg-[#BB0000] hover:bg-red-800 text-white py-2.5 rounded-lg font-bold text-xs tracking-wide shadow-md transition transform active:translate-y-0 flex items-center justify-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                            Confirm Deletion
+                        </button>
+                        <!-- Cancel button: Kenyan green -->
+                        <button type="button" onclick="toggleDeleteModal(false)" class="bg-kenya-green hover:bg-green-800 text-white py-2.5 px-5 rounded-lg font-bold text-xs text-center transition shadow-sm">
+                            Cancel
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Vanilla JS Enhancements -->
+<script>
+    // ===================== TAB SWITCHING =====================
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(t => {
+                t.classList.remove('text-emerald-700', 'border-emerald-500', 'active');
+                t.classList.add('text-gray-500', 'border-transparent');
+            });
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+            btn.classList.add('text-emerald-700', 'border-emerald-500', 'active');
+            btn.classList.remove('text-gray-500', 'border-transparent');
+            
+            const targetedTab = document.getElementById(`tab-${btn.dataset.tab}`);
+            if (targetedTab) targetedTab.classList.remove('hidden');
+        });
+    });
+
+    // ===================== REVIEW FORM TOGGLE =====================
+    function toggleReviewForm() {
+        const form = document.getElementById('review-form-container');
+        form.classList.toggle('hidden');
+    }
+
+    // ===================== LIGHTBOX =====================
+    function openLightbox(src) {
+        const modal = document.getElementById('lightbox');
+        const img = document.getElementById('lightbox-img');
+        img.src = src;
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeLightbox() {
+        const modal = document.getElementById('lightbox');
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    // ===================== SAVE PROPERTY (AJAX) =====================
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveBtn = document.getElementById('save-property-btn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function() {
+                const propertyId = this.dataset.propertyId;
+                const icon = this.querySelector('i');
+                const span = this.querySelector('span');
+                const isSaved = span.textContent.trim() === 'Saved';
+
+                // CSRF token from cookie
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                                  getCookie('csrftoken');
+
+                fetch(`/properties/toggle-save/${propertyId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action: isSaved ? 'unsave' : 'save' })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'saved') {
+                        icon.className = 'fas fa-heart';
+                        span.textContent = 'Saved';
+                        this.classList.remove('border-gray-200', 'text-gray-700', 'hover:border-red-300', 'hover:text-red-600', 'hover:bg-red-50');
+                        this.classList.add('border-red-200', 'bg-red-50', 'text-red-600');
+                    } else if (data.status === 'unsaved') {
+                        icon.className = 'far fa-heart';
+                        span.textContent = 'Save Property';
+                        this.classList.remove('border-red-200', 'bg-red-50', 'text-red-600');
+                        this.classList.add('border-gray-200', 'text-gray-700', 'hover:border-red-300', 'hover:text-red-600', 'hover:bg-red-50');
+                    } else {
+                        alert('Something went wrong. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            });
+        }
+    });
+
+    // Helper to get cookie by name
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // ===================== MAP INITIALIZATION =====================
+    // (If you have a map script already, you can skip or replace this.)
+    // Example: Initialize Leaflet map if the container exists.
+    document.addEventListener('DOMContentLoaded', function() {
+        const mapContainer = document.getElementById('detailMap');
+        if (mapContainer && typeof L !== 'undefined') {
+            const lat = {{ property.location.y|default:"-1.286389" }};
+            const lng = {{ property.location.x|default:"36.817223" }};
+            const map = L.map('detailMap').setView([lat, lng], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup('{{ property.title|escapejs }}')
+                .openPopup();
+        }
+    });
+
+    // ============================================================================
+// MODAL ENGINE FOR SECURE DECOMMISSIONING PIPELINES
+// ============================================================================
+function toggleDeleteModal(shouldOpen) {
+    const modal = document.getElementById('deleteAssetModal');
+    const content = document.getElementById('deleteModalContent');
+    if (!modal || !content) return;
+
+    if (shouldOpen) {
+        // Remove structural interaction locks and scale out fluidly
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        content.classList.remove('scale-95');
+        document.body.classList.add('overflow-hidden');
+    } else {
+        // Re-apply concealment frames safely
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        content.classList.add('scale-95');
+        document.body.classList.remove('overflow-hidden');
+    }
+}
+</script>
+
+<style>
+    /* Subtle fade in animations for tabs */
+    .animate-fadeIn {
+        animation: fadeIn 0.2s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    /* Minimal scrollbar adjustments for aesthetic tracking tables */
+    .scrollbar-thin::-webkit-scrollbar {
+        height: 5px;
+        width: 5px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+
+     /* Mobile-friendly table improvements */
+    @media (max-width: 640px) {
+        .unit-table-wrapper table {
+            font-size: 0.7rem;
+        }
+        .unit-table-wrapper th,
+        .unit-table-wrapper td {
+            padding: 0.4rem 0.3rem;
+        }
+        .unit-table-wrapper .book-btn {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.4rem;
+        }
+        /* Ensure action column is not too wide */
+        .unit-table-wrapper td:last-child {
+            min-width: 60px;
+        }
+    }
+</style>
+{% endblock %} 

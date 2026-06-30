@@ -1,0 +1,651 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Title -->
+    <title>RentSure Kenya – Trusted Rental Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- CSS Files First -->
+    <link href="{% static 'css/tailwind.min.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Custom Styles -->
+    <style>
+        /* Custom styles for Kenyan flag colors */
+        .bg-kenya-green { background-color: #006B3F; }
+        .bg-kenya-red { background-color: #BB0000; }
+        .text-kenya-green { color: #006B3F; }
+        .btn-primary { background-color: #006B3F; transition: all 0.3s; }
+        .btn-primary:hover { background-color: #004d2e; }
+        .btn-outline { border: 1px solid #006B3F; color: #006B3F; }
+        .btn-outline:hover { background-color: #006B3F; color: white; }
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Animations for toasts and unread badge */
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .toast-slide {
+            animation: toastSlideIn 0.3s ease-out forwards;
+        }
+        @keyframes pulseRed {
+            0%, 100% { transform: scale(1); background-color: #dc2626; }
+            50% { transform: scale(1.2); background-color: #ef4444; }
+        }
+        .unread-pulse {
+            animation: pulseRed 0.6s ease-in-out 2;
+        }
+
+        /* Perfect circle badges */
+/* Perfect circle badges (with !important to override Tailwind) */
+.badge-circle {
+    display: inline-flex;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 50% !important;
+    background-color: #dc2626 !important;
+    color: white !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+    transform: translateY(-2px) !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+}
+
+.badge-circle-sm {
+    width: 25px !important;
+    height: 25px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    font-size: 12px !important;
+}
+
+.badge-circle-lg {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    font-size: 11px !important;
+}
+
+/* Fix for absolute positioned badges (top-right corner) */
+.absolute .badge-circle {
+    transform: translate(50%, -50%) !important;
+    top: 0 !important;
+    right: 0 !important;
+}
+    </style>
+
+    
+</head>
+
+<body class="bg-gray-50 font-sans flex flex-col min-h-screen">
+    <!-- Top bar with contact / emergency -->
+
+    <div class="bg-gradient-to-r from-green-800 to-green-700 text-white text-xs sm:text-sm py-2 px-4 border-b border-green-900/20">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            
+            <!-- Trust Statement Badge (Hidden on very small mobile to save space) -->
+            <span class="hidden sm:flex items-center gap-2 text-green-100 font-medium">
+                <svg class="w-3.5 h-3.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                Verified Platform &bull; Over 1,000+ Checked Listings
+            </span>
+
+            <!-- Fallback variant for mobile display symmetry -->
+            <span class="sm:hidden flex items-center gap-1.5 text-green-100 font-medium">
+                <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+                RentSure Verified
+            </span>
+            
+            <!-- Clickable 24/7 Telephone Anchor Link -->
+            <a href="tel:+254706242075" class="inline-flex items-center gap-2 hover:text-green-200 transition-colors duration-150 font-bold bg-white/10 px-2.5 py-0.5 rounded-md backdrop-blur-sm border border-white/5 text-[11px] sm:text-xs">
+                <svg class="w-3.5 h-3.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+                <span>24/7 Support: <span class="tracking-wide">0706 242 075</span></span>
+            </a>
+
+        </div>
+    </div>
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-100">
+    <div class="container mx-auto px-3 sm:px-6 py-2 sm:py-4 flex items-center justify-between gap-2 flex-nowrap">
+        <!-- Logo -->
+        <a href="/" class="flex items-center space-x-2 group shrink-0">
+            <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-r from-green-600 to-emerald-500 flex items-center justify-center shadow-md group-hover:scale-110 transition duration-300">
+                <span class="text-white text-lg sm:text-2xl">🏠</span>
+            </div>
+            <div>
+                <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight">
+                    <span class="text-green-700">RentSure</span>
+                    <span class="text-gray-800">Kenya</span>
+                </h1>
+                <p class="text-[10px] sm:text-xs text-gray-500 -mt-0.5 hidden xs:block">Smart House Hunting</p>
+            </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
+            <a href="/" class="group relative px-3 py-1.5 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-md">
+                <span class="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-400 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 rounded-lg"></span>
+                <span class="relative flex items-center text-gray-800 group-hover:text-white font-semibold text-sm z-10">
+                    <span class="mr-1.5 text-lg">🏠</span> Home
+                </span>
+            </a>
+            <a href="/search/" class="group relative px-3 py-1.5 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-md">
+                <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-400 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 rounded-lg"></span>
+                <span class="relative flex items-center text-gray-800 group-hover:text-white font-semibold text-sm z-10">
+                    <span class="mr-1.5 text-lg">🔍</span> Search
+                </span>
+            </a>
+            <a href="/how-it-works/" class="group relative px-3 py-1.5 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-md">
+                <span class="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 rounded-lg"></span>
+                <span class="relative flex items-center text-gray-800 group-hover:text-white font-semibold text-sm z-10">
+                    <span class="mr-1.5 text-lg">📘</span> How it Works
+                </span>
+            </a>
+            <a href="/safety/" class="group relative px-3 py-1.5 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-md">
+                <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-orange-400 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 rounded-lg"></span>
+                <span class="relative flex items-center text-gray-800 group-hover:text-white font-semibold text-sm z-10">
+                    <span class="mr-1.5 text-lg">🛡️</span> Safety Tips
+                </span>
+            </a>
+        </div>
+
+        <!-- User Section (compact) -->
+        <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            {% if user.is_authenticated %}
+                <!-- Messages & Notifications -->
+                <a href="{% url 'chat_list' %}" class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition">
+                    <i class="fas fa-comments text-sm sm:text-base text-gray-600"></i>
+                    <span id="unread-badge-desktop-icon" class="absolute -top-1 -right-1 badge-circle hidden">0</span>
+                </a>
+
+                <a href="{% url 'notification_list' %}" class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition">
+                    <i class="fas fa-bell text-sm sm:text-base text-gray-600"></i>
+                    <span id="notification-badge-icon" class="absolute -top-1 -right-1 badge-circle hidden">0</span>
+                </a>
+
+                <!-- Avatar / Dropdown -->
+                <div class="relative" id="user-dropdown-container">
+                    <button onclick="toggleDropdown(); event.stopPropagation();" 
+                            class="flex items-center gap-1.5 sm:gap-3 bg-white border border-gray-200 rounded-full sm:rounded-xl px-0.5 py-0.5 sm:px-4 sm:py-2 hover:bg-gray-50 transition shadow-sm">
+                        <!-- Profile Picture -->
+                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-green-600 to-emerald-500 flex items-center justify-center text-white text-xs sm:text-sm font-bold overflow-hidden flex-shrink-0">
+                            {% if user.profile_photo %}
+                                <img src="{{ user.profile_photo.url }}" alt="{{ user.username }}" class="w-full h-full object-cover">
+                            {% else %}
+                                {{ user.username|first|upper }}
+                            {% endif %}
+                        </div>
+                        <div class="hidden sm:block text-left">
+                            <p class="text-xs sm:text-sm font-bold text-gray-800">{{ user.username }}</p>
+                            <span class="text-[8px] sm:text-[10px] px-1.5 py-0.5 rounded-full 
+                                {% if user.role == 'landlord' %}bg-green-100 text-green-700
+                                {% elif user.role == 'tenant' %}bg-blue-100 text-blue-700
+                                {% elif user.role == 'admin' %}bg-red-100 text-red-700
+                                {% else %}bg-orange-100 text-orange-700{% endif %}">
+                                {{ user.get_role_display }}
+                            </span>
+                        </div>
+                        <i class="fas fa-chevron-down text-[10px] sm:text-xs text-gray-500 hidden sm:block"></i>
+                    </button>
+                    <div id="user-dropdown" class="absolute right-0 mt-2 sm:mt-3 w-56 sm:w-64 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200 ease-out opacity-0 scale-95 invisible origin-top-right">
+                        <a href="{% url 'dashboard' %}" class="block px-4 py-2.5 sm:py-3 hover:bg-gray-50 text-sm">📊 Dashboard</a>
+                        <a href="{% url 'profile_settings' %}" class="block px-4 py-2.5 sm:py-3 hover:bg-gray-50 text-sm">⚙️ Profile Settings</a>
+                        <hr>
+                        <a href="{% url 'logout' %}" class="block px-4 py-2.5 sm:py-3 text-red-600 hover:bg-red-50 text-sm">🚪 Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl border border-green-600 text-green-700 hover:bg-green-600 hover:text-white transition text-sm">Login</a>
+                <a href="{% url 'register' %}" class="px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-green-600 to-emerald-500 text-white shadow-md hover:shadow-xl transition text-sm">Register</a>
+            {% endif %}
+        </div>
+
+        <!-- Mobile hamburger -->
+        <div class="md:hidden">
+            <button id="mobile-menu-btn" class="text-gray-700 focus:outline-none p-1.5 rounded-lg hover:bg-gray-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 py-3 px-4 space-y-1.5 shadow-lg">
+        <!-- User Profile Card (if authenticated) -->
+        {% if user.is_authenticated %}
+        <div class="flex items-center gap-3 py-3 border-b border-gray-100 mb-2">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-green-600 to-emerald-500 flex items-center justify-center text-white font-bold text-lg overflow-hidden shadow-md flex-shrink-0">
+                {% if user.profile_photo %}
+                    <img src="{{ user.profile_photo.url }}" alt="{{ user.username }}" class="w-full h-full object-cover">
+                {% else %}
+                    {{ user.username|first|upper }}
+                {% endif %}
+            </div>
+            <div>
+                <p class="font-bold text-gray-800 text-base">{{ user.username }}</p>
+                <span class="text-[10px] px-2 py-0.5 rounded-full 
+                    {% if user.role == 'landlord' %}bg-green-100 text-green-700
+                    {% elif user.role == 'tenant' %}bg-blue-100 text-blue-700
+                    {% elif user.role == 'admin' %}bg-red-100 text-red-700
+                    {% else %}bg-orange-100 text-orange-700{% endif %}">
+                    {{ user.get_role_display }}
+                </span>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Navigation Links -->
+        <a href="/" class="block py-2.5 text-sm text-gray-700 hover:text-green-700 font-medium border-b border-gray-50">🏠 Home</a>
+        <a href="/search/" class="block py-2.5 text-sm text-gray-700 hover:text-blue-700 font-medium border-b border-gray-50">🔍 Search</a>
+        <a href="/how-it-works/" class="block py-2.5 text-sm text-gray-700 hover:text-purple-700 font-medium border-b border-gray-50">📘 How it Works</a>
+        <a href="/safety/" class="block py-2.5 text-sm text-gray-700 hover:text-red-700 font-medium border-b border-gray-50">🛡️ Safety Tips</a>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="block py-2.5 text-sm text-gray-700 hover:text-green-700 font-medium border-b border-gray-50">📊 Dashboard</a>
+            <a href="{% url 'chat_list' %}" class="flex items-center gap-2 py-2.5 text-sm text-gray-700 hover:text-indigo-700 font-medium border-b border-gray-50">
+                <span>💬 Messages</span>
+                <span id="unread-badge-mobile" class="badge-circle badge-circle-sm hidden">0</span>
+            </a>
+
+            <a href="{% url 'notification_list' %}" class="flex items-center gap-2 py-2.5 text-sm text-gray-700 hover:text-indigo-700 font-medium border-b border-gray-50">
+                <span>🔔 Notifications</span>
+                <span id="notification-badge-mobile" class="badge-circle badge-circle-sm hidden">0</span>
+            </a>
+            <a href="{% url 'profile_settings' %}" class="block py-2.5 text-sm text-gray-700 hover:text-indigo-700 font-medium border-b border-gray-50">⚙️ Profile Settings</a>
+            <a href="{% url 'logout' %}" class="block py-2.5 text-sm text-red-600 font-semibold">🚪 Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="block py-2.5 text-sm text-blue-600 font-semibold border-b border-gray-50">🔑 Login</a>
+            <a href="{% url 'register' %}" class="block py-2.5 text-sm text-green-600 font-semibold">📝 Register</a>
+        {% endif %}
+    </div>
+</nav>
+
+
+    <!-- Dynamic Django System/Validation Error Banners/ messages -->
+    {% if messages %}
+    <!-- Added id="django-messages-container" and transition styles below -->
+    <div id="django-messages-container" class="mb-6 space-y-3 max-w-4xl mx-auto transition-all duration-500 ease-in-out opacity-100">
+        {% for message in messages %}
+            <div class="flex items-start p-4 rounded-xl shadow-sm border font-semibold text-sm transition-colors
+                {% if 'error' in message.tags %}
+                    bg-rose-50 text-rose-800 border-rose-200
+                {% elif 'success' in message.tags %}
+                    bg-emerald-50 text-emerald-800 border-emerald-200
+                {% else %}
+                    bg-blue-50 text-blue-800 border-blue-200
+                {% endif %}">
+                
+                <!-- SVG Icon Container -->
+                <div class="mr-3 flex-shrink-0 mt-0.5">
+                    {% if 'error' in message.tags %}
+                        <!-- Modern Error Cross Circle -->
+                        <svg class="w-5 h-5 text-rose-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    {% elif 'success' in message.tags %}
+                        <!-- Modern Success Check Circle -->
+                        <svg class="w-5 h-5 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    {% else %}
+                        <!-- Modern Info/Notice Circle -->
+                        <svg class="w-5 h-5 text-blue-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    {% endif %}
+                </div>
+                
+                <!-- Message Text Body -->
+                <div class="flex-1 leading-tight">{{ message }}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+    <!-- Toast container for real‑time notifications -->
+    <div id="toast-container"
+         class="fixed top-24 right-4 z-[9999] space-y-3">
+    </div>
+
+    <!-- Main content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2026 RentSure Kenya. All rights reserved.</p>
+            <p class="text-sm text-gray-400 mt-2">Never send money directly. Use our escrow for safety.</p>
+        </div>
+    </footer>
+
+    <script>
+    // ---------- Helper: Toast notification ----------
+    function showToast(title, message) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = 'w-80 bg-white rounded-2xl shadow-2xl border-l-4 border-indigo-600 overflow-hidden toast-slide';
+        toast.innerHTML = `
+            <div class="p-4">
+                <div class="flex gap-3">
+                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                        <i class="fas fa-envelope text-indigo-600"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-800">${escapeHtml(title)}</h4>
+                        <p class="text-sm text-gray-500 mt-1">${escapeHtml(message)}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 5000);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ---------- Dropdown toggle (smooth) ----------
+    function toggleDropdown() {
+        const dropdown = document.getElementById('user-dropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('opacity-0');
+            dropdown.classList.toggle('scale-95');
+            dropdown.classList.toggle('invisible');
+            dropdown.classList.toggle('opacity-100');
+            dropdown.classList.toggle('scale-100');
+            dropdown.classList.toggle('visible');
+        }
+    }
+
+    // ---------- Close dropdown when clicking outside ----------
+    const dropdownContainer = document.getElementById('user-dropdown-container');
+    const dropdownElem = document.getElementById('user-dropdown');
+    if (dropdownContainer && dropdownElem) {
+        document.addEventListener('click', function(e) {
+            if (!dropdownContainer.contains(e.target)) {
+                dropdownElem.classList.add('opacity-0', 'scale-95', 'invisible');
+                dropdownElem.classList.remove('opacity-100', 'scale-100', 'visible');
+            }
+        });
+    }
+
+    // ---------- Mobile menu toggle ----------
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    }
+
+    // ---------- WebSocket for notifications ----------
+    let notificationSocket = null;
+    function connectNotificationSocket() {
+        {% if user.is_authenticated %}
+            const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+            const wsUrl = protocol + window.location.host + '/ws/notifications/';
+            notificationSocket = new WebSocket(wsUrl);
+            notificationSocket.onopen = () => console.log('Notification WebSocket connected');
+            notificationSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                if (data.type === 'new_message') {
+                    showToast('New Message', `${data.sender} sent a message about ${data.property_title}`);
+                    updateUnreadCount();
+                }
+            };
+            notificationSocket.onclose = () => setTimeout(connectNotificationSocket, 3000);
+            notificationSocket.onerror = (e) => console.error('Notification WebSocket error', e);
+        {% endif %}
+    }
+
+    // ---------- Unread messages badge (polling) ----------
+    let previousMsgCount = 0;
+    function updateNotificationCount() {
+    fetch('/unread-notifications/')
+        .then(res => res.json())
+        .then(data => {
+            const badgeIds = [
+                'notification-badge-icon',
+                'notification-badge-dropdown',
+                'notification-badge-mobile'
+            ];
+            badgeIds.forEach(id => {
+                const badge = document.getElementById(id);
+                if (badge) {
+                    if (data.count > 0) {
+                        badge.textContent = data.count;
+                        badge.classList.remove('hidden');
+                    } else {
+                        badge.classList.add('hidden');
+                    }
+                }
+            });
+        })
+        .catch(err => console.error('Notification count error:', err));
+}
+    // ---------- Unread notifications badge (polling) ----------
+function updateUnreadCount() {
+    fetch('/unread-messages/')
+        .then(res => res.json())
+        .then(data => {
+            console.log('💬 Messages API response:', data);
+            const count = data.unread_count || 0;
+            const badges = [
+                document.getElementById('unread-badge-desktop-icon'),
+                document.getElementById('unread-badge-desktop-dropdown'),
+                document.getElementById('unread-badge-mobile')
+            ];
+            badges.forEach(badge => {
+                if (badge) {
+                    console.log('Messages badge found:', badge);
+                    if (count > 0) {
+                        badge.textContent = count;
+                        badge.classList.remove('hidden');
+                        if (badge.id !== 'unread-badge-mobile') {
+                            badge.classList.add('unread-pulse');
+                        }
+                    } else {
+                        badge.textContent = '0';
+                        badge.classList.add('hidden');
+                        badge.classList.remove('unread-pulse');
+                    }
+                } else {
+                    console.warn('Messages badge not found:', badge);
+                }
+            });
+            if (count > previousMsgCount && previousMsgCount !== 0) {
+                showToast('New Message', 'You have received a new message.');
+            }
+            previousMsgCount = count;
+        })
+        .catch(err => console.log('Unread count error:', err));
+}
+
+
+    
+
+    // ---------- Leaflet Map (if the element exists) ----------
+    function initMap() {
+        const mapElement = document.getElementById('homeMap');
+        if (mapElement && typeof L !== 'undefined') {
+            var map = L.map('homeMap').setView([{{ map_center.0 }}, {{ map_center.1 }}], {{ map_zoom }});
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            {% for prop in map_properties %}
+                {% if prop.location %}
+                    var lat = {{ prop.location.y }};
+                    var lng = {{ prop.location.x }};
+                    if (lat && lng) {
+                        L.marker([lat, lng])
+                            .addTo(map)
+                            .bindPopup('<b>{{ prop.title|escapejs }}</b><br>{{ prop.town }}<br>KES {{ prop.rent }}<br><a href="/property/{{ prop.id }}/">View</a>');
+                    }
+                {% endif %}
+            {% endfor %}
+        } else {
+            console.log('Map element or Leaflet not ready');
+        }
+    }
+
+    // ---------- Start all timers and connections ----------
+    function startServices() {
+        connectNotificationSocket();
+        updateUnreadCount();
+        updateNotificationCount();
+        setInterval(updateUnreadCount, 5000);
+        setInterval(updateNotificationCount, 5000);
+        initMap();   // initialise map if present
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startServices);
+    } else {
+        startServices();
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+<script>
+    // Only for authenticated users
+    {% if user.is_authenticated %}
+    (async () => {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        const fingerprint = result.visitorId;
+        // Send to server
+        fetch('/api/device-fingerprint/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                fingerprint: fingerprint,
+                user_agent: navigator.userAgent,
+            }),
+        });
+    })();
+    {% endif %}
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const messageContainer = document.getElementById("django-messages-container");
+        
+        if (messageContainer) {
+            // Wait 4000 milliseconds (4 seconds), then fade out
+            setTimeout(function() {
+                // Smoothly reduce opacity to 0
+                messageContainer.classList.remove("opacity-100");
+                messageContainer.classList.add("opacity-0");
+                
+                // Completely remove from layout 500ms later (after the opacity fade ends)
+                setTimeout(function() {
+                    messageContainer.remove();
+                }, 400);
+                
+            }, 4000);
+        }
+    });
+
+
+    function removeFromCompareGlobal(buttonElement, unitId) {
+    // Optional: add a quick confirm if you want, or let it happen instantly for better speed
+    fetch(`/compare/remove/${unitId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'removed') {
+            // Option A: Smoothly reload the page to update all state flags
+            location.reload();
+            
+            // Option B: If you prefer instant UI swap without page reloading, uncomment below:
+            
+            const parent = buttonElement.parentElement;
+            parent.innerHTML = `
+                <a href="/compare/add/${unitId}/" class="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-900 hover:text-white text-slate-700 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-lg transition-all duration-200 shadow-3xs">
+                    <i class="fas fa-columns text-[9px] opacity-70"></i> Compare
+                </a>
+            `;
+            
+        }
+    })
+    .catch(err => console.error('Error removing unit:', err));
+}
+
+// Global cookie grabber helper (if not already globally accessible in your base template)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+
+
+</body>
+</html>

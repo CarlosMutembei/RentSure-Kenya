@@ -1,0 +1,346 @@
+{% comment %} {% elif user.role == 'tenant' %} {% endcomment %}
+
+<div class="grid gap-6 md:grid-cols-3">
+  <!-- Tenant Tools -->
+  <section class="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition hover:shadow-xl">
+    <div class="border-b border-blue-500/10 bg-gradient-to-r from-blue-700 to-blue-600 px-5 py-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white">
+          <span class="text-xl">🔧</span>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold tracking-tight text-white">Tenant Tools</h3>
+          <p class="text-xs text-blue-100/80">Useful actions tailored to tenants</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-3 p-5">
+      <a href="{% url 'update_location' %}" class="group flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50/80 p-4 transition hover:border-blue-200 hover:bg-blue-50 hover:shadow-md">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-2xl shadow-sm ring-1 ring-slate-100">
+          📍
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="font-semibold text-slate-900">Set My Default Location</p>
+          <p class="text-sm text-slate-500">Get personalized property recommendations</p>
+        </div>
+        <span class="text-slate-400 transition group-hover:translate-x-1 group-hover:text-blue-600">→</span>
+      </a>
+
+      <a href="{% url 'search' %}" class="group flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50/80 p-4 transition hover:border-blue-200 hover:bg-blue-50 hover:shadow-md">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-2xl shadow-sm ring-1 ring-slate-100">
+          🔍
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="font-semibold text-slate-900">Search Houses</p>
+          <p class="text-sm text-slate-500">Find rentals, BnBs, or short stays</p>
+        </div>
+        <span class="text-slate-400 transition group-hover:translate-x-1 group-hover:text-blue-600">→</span>
+      </a>
+
+      <a href="{% url 'submit_testimonial' %}" class="group flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50/80 p-4 transition hover:border-blue-200 hover:bg-blue-50 hover:shadow-md">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-2xl shadow-sm ring-1 ring-slate-100">
+          ✍️
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="font-semibold text-slate-900">Write a Testimonial</p>
+          <p class="text-sm text-slate-500">Help others find trustworthy homes</p>
+        </div>
+        <span class="text-slate-400 transition group-hover:translate-x-1 group-hover:text-blue-600">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Quick Links -->
+  <section class="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition hover:shadow-xl">
+    <div class="border-b border-slate-200 bg-gradient-to-r from-slate-800 to-slate-700 px-5 py-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white">
+          <span class="text-xl">⚡</span>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold tracking-tight text-white">Quick Links</h3>
+          <p class="text-xs text-slate-200/80">Helpful resources and guidance</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-3 p-5">
+      <a href="{% url 'how_it_works' %}" class="group flex items-center gap-4 rounded-xl border border-slate-200 px-4 py-3.5 transition hover:border-slate-300 hover:bg-slate-50">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-xl">
+          📘
+        </div>
+        <div class="flex-1">
+          <p class="font-semibold text-slate-900">How it works</p>
+          <p class="text-sm text-slate-500">Learn the process in a few steps</p>
+        </div>
+        <span class="text-slate-400 transition group-hover:translate-x-1">→</span>
+      </a>
+
+      <a href="{% url 'safety_tips' %}" class="group flex items-center gap-4 rounded-xl border border-slate-200 px-4 py-3.5 transition hover:border-slate-300 hover:bg-slate-50">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-xl">
+          🛡️
+        </div>
+        <div class="flex-1">
+          <p class="font-semibold text-slate-900">Safety Tips</p>
+          <p class="text-sm text-slate-500">Stay secure while house hunting</p>
+        </div>
+        <span class="text-slate-400 transition group-hover:translate-x-1">→</span>
+      </a>
+
+      <div class="rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-4">
+        <div class="flex items-start gap-3">
+          <div class="mt-0.5 text-blue-600">💡</div>
+          <p class="text-sm leading-6 text-blue-900">
+            Pro tip: Set your default location first to see properties near you automatically.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Saved Properties -->
+  <section class="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition hover:shadow-xl">
+    <div class="border-b border-emerald-500/10 bg-gradient-to-r from-emerald-700 to-teal-600 px-5 py-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white shadow-sm">
+          <svg class="h-5 w-5 text-rose-100 fill-rose-500 drop-shadow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold tracking-tight text-white">Saved Properties</h3>
+          <p class="text-xs text-emerald-100/80">Your curated collection</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-5">
+      {% if saved_properties %}
+        <div class="space-y-3">
+          {% for saved in saved_properties %}
+            <a href="{% url 'property_detail' saved.property.id %}" class="group block rounded-xl border border-slate-200 p-4 transition hover:border-emerald-200 hover:bg-emerald-50/40 hover:shadow-md">
+              <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0 flex-1">
+                  <p class="truncate font-semibold text-slate-900">{{ saved.property.title }}</p>
+                  <p class="mt-1 text-sm text-slate-500">{{ saved.property.town }}</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm font-semibold text-emerald-700">KES {{ saved.property.rent|floatformat:0 }}</p>
+                  <p class="mt-1 text-xs text-slate-400 group-hover:text-emerald-600 transition">View →</p>
+                </div>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="rounded-xl border border-dashed border-slate-200 bg-slate-50/70 py-8 text-center">
+          <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm text-slate-400">
+            <i class="fas fa-heart text-lg"></i>
+          </div>
+          <p class="text-sm font-medium text-slate-700">No saved properties yet.</p>
+          <p class="mt-1 text-xs text-slate-500">Save properties you like to revisit them later.</p>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<!-- Viewing Appointments -->
+<section class="mt-6 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition hover:shadow-xl">
+  <div class="border-b border-indigo-500/10 bg-gradient-to-r from-indigo-700 to-purple-700 px-5 py-4">
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold tracking-tight text-white">
+            My Viewing Appointments
+            {% if viewing_requests %}
+              <span class="ml-2 inline-flex items-center rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-semibold text-white">
+                {{ viewing_requests|length }}
+              </span>
+            {% endif %}
+          </h3>
+          <p class="text-xs text-indigo-100/80">Stay up to date</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-h-80 overflow-y-auto p-4 sm:p-5">
+    {% if viewing_requests %}
+      <div class="space-y-3">
+        {% for req in viewing_requests %}
+          <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-indigo-200 hover:shadow-md">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div class="min-w-0 flex-1">
+                <p class="font-semibold text-slate-900">{{ req.property.title }}</p>
+                <p class="mt-1 text-sm text-slate-500">{{ req.preferred_date }} at {{ req.preferred_time }}</p>
+                <p class="mt-1 text-sm text-slate-500 line-clamp-2">{{ req.message|truncatechars:80 }}</p>
+
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <span class="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold
+                    {% if req.status == 'pending' %}bg-yellow-100 text-yellow-700
+                    {% elif req.status == 'confirmed' %}bg-green-100 text-green-700
+                    {% elif req.status == 'cancelled' %}bg-red-100 text-red-700
+                    {% else %}bg-gray-100 text-gray-700{% endif %}">
+                    {{ req.get_status_display }}
+                  </span>
+
+                  {% if req.checked_in %}
+                    <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-[10px] font-semibold text-blue-700">✅ Checked In</span>
+                  {% endif %}
+
+                  {% if req.reminder_sent %}
+                    <span class="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-1 text-[10px] font-semibold text-purple-700">🔔 Reminder sent</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="flex shrink-0 items-center gap-2">
+                {% if req.status == 'confirmed' and not req.checked_in %}
+                  <a href="{% url 'appointment_qr' req.id %}" target="_blank" class="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+                    <i class="fas fa-qrcode"></i>
+                    QR
+                  </a>
+                {% endif %}
+
+                {% if req.status == 'pending' %}
+                  <a href="{% url 'cancel_appointment' req.id %}" class="text-xs font-semibold text-red-600 hover:underline">
+                    Cancel
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="py-10 text-center">
+        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
+          <i class="fas fa-calendar-plus text-lg"></i>
+        </div>
+        <p class="text-sm text-slate-500">No viewing appointments yet.</p>
+        <a href="{% url 'search' %}" class="mt-2 inline-block text-sm font-semibold text-indigo-600 hover:underline">
+          Browse properties →
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Escrow Transactions -->
+<section class="mt-6 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition hover:shadow-xl">
+  <div class="border-b border-emerald-500/10 bg-gradient-to-r from-emerald-700 to-green-600 px-5 py-4">
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold tracking-tight text-white">
+            Escrow Transactions
+            {% if tenant_escrows %}
+              <span class="ml-2 inline-flex items-center rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-semibold text-white">
+                {{ tenant_escrows|length }}
+              </span>
+            {% endif %}
+          </h3>
+          {% if tenant_escrows %}
+            <p class="text-xs text-emerald-100/80">Active first</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-h-96 overflow-y-auto p-4 sm:p-5">
+    {% if tenant_escrows %}
+      <div class="space-y-3">
+        {% for escrow in tenant_escrows %}
+          <a href="{% url 'escrow_status' escrow.id %}" class="group block rounded-xl border border-slate-200 bg-white p-4 transition hover:border-emerald-200 hover:bg-emerald-50/30 hover:shadow-md">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div class="min-w-0 flex-1">
+                <p class="font-semibold text-slate-900">{{ escrow.property.title }}</p>
+
+                <div class="mt-1 flex flex-wrap items-center gap-2">
+                  <span class="text-sm text-slate-600">KES {{ escrow.amount|floatformat:0 }}</span>
+                  {% if escrow.platform_fee > 0 %}
+                    <span class="text-xs text-slate-400">+ fee {{ escrow.platform_fee|floatformat:0 }}</span>
+                  {% endif %}
+
+                  <span class="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold
+                    {% if escrow.status == 'pending' %}bg-yellow-100 text-yellow-700
+                    {% elif escrow.status == 'paid' %}bg-green-100 text-green-700
+                    {% elif escrow.status == 'released' %}bg-blue-100 text-blue-700
+                    {% elif escrow.status == 'disputed' %}bg-red-100 text-red-700
+                    {% elif escrow.status == 'auto_released' %}bg-gray-100 text-gray-700
+                    {% else %}bg-gray-100 text-gray-700{% endif %}">
+                    {{ escrow.get_status_display }}
+                  </span>
+                </div>
+
+                <div class="mt-2 flex flex-wrap gap-2">
+                  {% if escrow.status == 'pending' %}
+                    <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-600">
+                      <i class="fas fa-clock"></i> Awaiting payment
+                    </span>
+                  {% elif escrow.status == 'paid' %}
+                    <span class="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-600">
+                      <i class="fas fa-check-circle"></i> Payment held
+                    </span>
+                  {% elif escrow.status == 'disputed' %}
+                    <span class="inline-flex items-center gap-1 text-[10px] font-medium text-red-600">
+                      <i class="fas fa-gavel"></i> In dispute
+                    </span>
+                  {% elif escrow.status == 'released' %}
+                    <span class="inline-flex items-center gap-1 text-[10px] font-medium text-blue-600">
+                      <i class="fas fa-check"></i> Released
+                    </span>
+                  {% elif escrow.status == 'auto_released' %}
+                    <span class="inline-flex items-center gap-1 text-[10px] font-medium text-gray-500">
+                      <i class="fas fa-undo-alt"></i> Auto-released
+                    </span>
+                  {% elif escrow.status == 'refunded' %}
+                    <span class="inline-flex items-center gap-1 text-[10px] font-medium text-gray-500">
+                      <i class="fas fa-money-bill-wave"></i> Refunded
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="flex shrink-0 items-center gap-2">
+                {% if escrow.status == 'paid' %}
+                  <a href="{% url 'confirm_move_in' escrow.id %}" onclick="event.stopPropagation();" class="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+                    Confirm
+                  </a>
+                  <a href="{% url 'raise_dispute' escrow.id %}" onclick="event.stopPropagation();" class="rounded-lg bg-red-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-red-700">
+                    Dispute
+                  </a>
+                {% elif escrow.status == 'disputed' %}
+                  <a href="{% url 'tenant_dispute_chat' escrow.id %}" onclick="event.stopPropagation();" class="rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700">
+                    Chat
+                  </a>
+                {% endif %}
+                <i class="fas fa-chevron-right text-xs text-slate-300"></i>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="py-10 text-center">
+        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+          <i class="fas fa-shield-alt text-lg"></i>
+        </div>
+        <p class="text-sm text-slate-500">No escrow transactions.</p>
+        <a href="{% url 'search' %}" class="mt-2 inline-block text-sm font-semibold text-emerald-600 hover:underline">
+          Browse properties →
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% comment %} {% endif %} {% endcomment %}

@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto p-4 max-w-2xl">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-emerald-800 to-green-800 p-6 sm:p-8 text-white relative">
+            <div class="absolute right-4 top-4 opacity-10 pointer-events-none hidden sm:block">
+                <span class="text-8xl">🏢</span>
+            </div>
+            <h2 class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
+                <span>➕</span> Add New Unit
+            </h2>
+            <p class="text-emerald-100 mt-1 text-sm">
+                to <strong>{{ property.title }}</strong> – {{ property.town }}
+            </p>
+        </div>
+
+        <!-- Info notice -->
+        <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mx-6 sm:mx-8 mt-6 rounded-r-xl">
+            <p class="text-sm font-medium text-gray-700">
+                💡 Enter the details of the rental unit below. All fields marked with <span class="text-red-500">*</span> are required.
+            </p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="p-6 sm:p-8 space-y-6">
+            {% csrf_token %}
+
+            <!-- Unit Information -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold text-emerald-900 border-b border-gray-100 pb-2 flex items-center gap-2">
+                    <span class="text-base">📋</span> Unit Information
+                </h3>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Unit Type -->
+                    <div>
+                        <label class="block font-semibold mb-2 text-gray-700 text-sm">
+                            Unit Type <span class="text-red-500">*</span>
+                        </label>
+                        <select name="unit_type" class="w-full border border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition bg-white" required>
+                            <option value="">– Select type –</option>
+                            <option value="studio">Bedsitter / Studio</option>
+                            <option value="1br">1 Bedroom</option>
+                            <option value="2br">2 Bedrooms</option>
+                            <option value="3br">3 Bedrooms</option>
+                            <option value="other">Other (specify in notes)</option>
+                        </select>
+                    </div>
+
+                    <!-- Unit Number -->
+                    <div>
+                        <label class="block font-semibold mb-2 text-gray-700 text-sm">
+                            Unit Number <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="unit_number" placeholder="e.g. A-12, 201" required
+                               class="w-full border border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition bg-white">
+                        <p class="text-xs text-gray-400 mt-1">Must be unique within this property.</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Monthly Rent -->
+                    <div>
+                        <label class="block font-semibold mb-2 text-gray-700 text-sm">
+                            Monthly Rent (KES) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="monthly_rent" placeholder="e.g. 15000" min="0" step="100" required
+                               class="w-full border border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition bg-white">
+                    </div>
+
+                    <!-- Deposit -->
+                    <div>
+                        <label class="block font-semibold mb-2 text-gray-700 text-sm">
+                            Deposit (KES) <span class="text-gray-400 text-xs">(optional)</span>
+                        </label>
+                        <input type="number" name="deposit" placeholder="e.g. 15000" min="0" step="100"
+                               class="w-full border border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition bg-white">
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Status -->
+                    <div>
+                        <label class="block font-semibold mb-2 text-gray-700 text-sm">
+                            Status <span class="text-red-500">*</span>
+                        </label>
+                        <select name="status" class="w-full border border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition bg-white" required>
+                            <option value="available" selected>Available</option>
+                            <option value="occupied">Occupied</option>
+                            <option value="booked">Booked (pending move-in)</option>
+                            <option value="maintenance">Under Maintenance</option>
+                        </select>
+                    </div>
+
+                    <!-- Available From -->
+                    <div>
+                        <label class="block font-semibold mb-2 text-gray-700 text-sm">
+                            Available From <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" name="available_from" value="{{ today }}"
+                               class="w-full border border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition bg-white">
+                    </div>
+                </div>
+
+                <!-- Furnished checkbox -->
+                <div class="flex items-center gap-3 pt-2">
+                    <input type="checkbox" name="furnished" id="furnished" class="w-4 h-4 accent-emerald-600 rounded">
+                    <label for="furnished" class="font-medium text-gray-700 text-sm cursor-pointer">
+                        🛋️ This unit is <strong>Fully Furnished</strong>
+                    </label>
+                </div>
+
+                <!-- Unit-specific amenities -->
+                <div class="border-t border-gray-100 pt-4 mt-2">
+                    <label class="block font-semibold mb-3 text-gray-700 text-sm">Amenities in this unit</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <label class="flex items-center p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-sm hover:border-emerald-300 transition">
+                            <input type="checkbox" name="has_water" checked class="accent-emerald-600 mr-2"> 💧 Water
+                        </label>
+                        <label class="flex items-center p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-sm hover:border-emerald-300 transition">
+                            <input type="checkbox" name="has_electricity" checked class="accent-emerald-600 mr-2"> ⚡ Electricity
+                        </label>
+                        <label class="flex items-center p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-sm hover:border-emerald-300 transition">
+                            <input type="checkbox" name="has_parking" class="accent-emerald-600 mr-2"> 🅿️ Parking
+                        </label>
+                        <label class="flex items-center p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-sm hover:border-emerald-300 transition">
+                            <input type="checkbox" name="has_security" class="accent-emerald-600 mr-2"> 🔒 Security
+                        </label>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">Uncheck any amenity that is <strong>not available</strong> in this unit.</p>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="w-full bg-gradient-to-r from-emerald-700 to-green-700 hover:from-emerald-800 hover:to-green-800 text-white py-4 rounded-xl font-bold text-lg shadow-md transition-all transform hover:-translate-y-0.5">
+                ➕ Add Rental Unit
+            </button>
+
+            <div class="text-center pt-2">
+                <a href="{% url 'manage_units' property.id %}" class="text-sm text-gray-500 hover:text-emerald-600 transition">
+                    ← Back to Manage Units
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

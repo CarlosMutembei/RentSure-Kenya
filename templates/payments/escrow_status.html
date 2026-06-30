@@ -1,0 +1,325 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-teal-100 py-6 sm:py-12 px-3 sm:px-4">
+    <div class="max-w-3xl mx-auto">
+        <div class="relative bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/30 overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+
+            <div class="relative bg-gradient-to-br from-emerald-800 via-emerald-700 to-green-600 px-4 sm:px-8 py-6 sm:py-10 text-center">
+                <div class="absolute inset-0 bg-black/20"></div>
+                <div class="relative z-10">
+                    <div class="w-20 h-20 sm:w-28 sm:h-28 mx-auto rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center mb-3 sm:mb-5 shadow-lg ring-4 ring-white/30">
+                        {% if escrow.status == 'pending' %}
+                            <i class="fas fa-hourglass-half text-3xl sm:text-5xl text-amber-400"></i>
+                        {% elif escrow.status == 'paid' %}
+                            <i class="fas fa-check-circle text-3xl sm:text-5xl text-green-400"></i>
+                        {% elif escrow.status == 'released' %}
+                            <i class="fas fa-hand-holding-usd text-3xl sm:text-5xl text-blue-400"></i>
+                        {% elif escrow.status == 'disputed' %}
+                            <i class="fas fa-exclamation-triangle text-3xl sm:text-5xl text-red-400"></i>
+                        {% else %}
+                            <i class="fas fa-coins text-3xl sm:text-5xl text-emerald-400"></i>
+                        {% endif %}
+                    </div>
+                    <h1 class="text-2xl sm:text-4xl font-black text-white tracking-tight">Escrow Status</h1>
+                    <p class="text-emerald-100 mt-1 sm:mt-2 text-sm sm:text-lg">Secure payment tracking</p>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full">
+                    <svg viewBox="0 0 1440 48" class="w-full text-white/10" fill="currentColor"><path d="M0,32L48,29.3C96,27,192,21,288,21.3C384,21,480,27,576,32C672,37,768,43,864,42.7C960,43,1056,37,1152,32C1248,27,1344,21,1392,18.7L1440,16L1440,48L1392,48C1344,48,1248,48,1152,48C1056,48,960,48,864,48C768,48,672,48,576,48C480,48,384,48,288,48C192,48,96,48,48,48L0,48Z"></path></svg>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-8 lg:p-10">
+                <div class="mb-8 sm:mb-12">
+                    <div class="relative flex justify-between items-center">
+                        <div class="flex flex-col items-center group">
+                            <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 text-white flex items-center justify-center shadow-lg ring-4 ring-green-100">
+                                <i class="fas fa-flag-checkered text-sm sm:text-xl"></i>
+                            </div>
+                            <span class="text-[10px] sm:text-xs font-semibold mt-1 sm:mt-3 text-gray-700">Initiated</span>
+                        </div>
+                        <div class="flex-1 h-1 mx-2 sm:mx-3 rounded-full bg-gradient-to-r from-green-400 to-green-300"></div>
+                        
+                        <div class="flex flex-col items-center group">
+                            <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br 
+                                {% if escrow.status == 'pending' %}from-amber-400 to-yellow-500{% else %}from-green-500 to-emerald-600{% endif %} 
+                                text-white flex items-center justify-center shadow-lg ring-4 
+                                {% if escrow.status == 'pending' %}ring-amber-100{% else %}ring-green-100{% endif %}">
+                                <i class="fas fa-credit-card text-sm sm:text-xl"></i>
+                            </div>
+                            <span class="text-[10px] sm:text-xs font-semibold mt-1 sm:mt-3 text-gray-700">Paid</span>
+                        </div>
+                        <div class="flex-1 h-1 mx-2 sm:mx-3 rounded-full {% if escrow.status == 'released' or escrow.status == 'refunded' %}bg-gradient-to-r from-green-400 to-green-300{% else %}bg-gray-200{% endif %}"></div>
+                        
+                        <div class="flex flex-col items-center group">
+                            <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br 
+                                {% if escrow.status == 'released' %}from-blue-500 to-cyan-600{% elif escrow.status == 'refunded' or escrow.status == 'auto_released' %}from-red-500 to-orange-600{% else %}from-gray-300 to-gray-400{% endif %} 
+                                text-white flex items-center justify-center shadow-lg ring-4 
+                                {% if escrow.status == 'released' %}ring-blue-100{% elif escrow.status == 'refunded' or escrow.status == 'auto_released' %}ring-red-100{% else %}ring-gray-100{% endif %}">
+                                <i class="fas fa-home text-sm sm:text-xl"></i>
+                            </div>
+                            <span class="text-[10px] sm:text-xs font-semibold mt-1 sm:mt-3 text-gray-700">
+                                {% if escrow.status == 'refunded' or escrow.status == 'auto_released' %}Terminated{% else %}Released{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between px-1 sm:px-2 mt-0.5 sm:mt-1">
+                        <span class="text-[8px] sm:text-xs text-gray-400 ml-1 sm:ml-2">Created</span>
+                        <span class="text-[8px] sm:text-xs text-gray-400 ml-4 sm:ml-8">Confirmed</span>
+                        <span class="text-[8px] sm:text-xs text-gray-400 mr-1 sm:mr-2">Completed</span>
+                    </div>
+                </div>
+
+                {% if escrow.status == 'pending' %}
+                <div class="relative bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-amber-200 shadow-xl overflow-hidden">
+                    <div class="absolute top-0 right-0 opacity-10">
+                        <i class="fas fa-hourglass-half text-6xl sm:text-9xl text-amber-700"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                            <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-amber-100 flex items-center justify-center">
+                                <i class="fas fa-spinner fa-pulse text-lg sm:text-2xl text-amber-600"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-bold text-amber-800">Awaiting Payment</h2>
+                        </div>
+                        <p class="text-sm sm:text-lg text-gray-700">Your STK push has been sent. Complete the prompt on your M-Pesa app.</p>
+                        <div class="mt-4 sm:mt-6 p-3 sm:p-4 bg-white/60 rounded-xl backdrop-blur-sm">
+                            <p class="text-xs sm:text-sm text-gray-600 flex items-center gap-2">
+                                <i class="fas fa-clock text-amber-600"></i>
+                                <span>Waiting for confirmation – funds will be held securely once paid.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif escrow.status == 'paid' %}
+                <div class="relative bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-green-200 shadow-xl overflow-hidden">
+                    <div class="absolute top-0 right-0 opacity-10">
+                        <i class="fas fa-shield-alt text-6xl sm:text-9xl text-green-700"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                            <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-green-100 flex items-center justify-center">
+                                <i class="fas fa-check-circle text-lg sm:text-2xl text-green-600"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-bold text-green-800">Payment Confirmed</h2>
+                        </div>
+                        <p class="text-sm sm:text-lg text-gray-700">Your funds are now in escrow. The landlord has been notified.</p>
+
+                        {% if remaining_sec > 0 %}
+                        <div class="mt-4 sm:mt-6 p-3 sm:p-4 bg-white/60 rounded-xl backdrop-blur-sm border border-gray-200">
+                            <p class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-clock"></i> Time remaining to raise a dispute
+                            </p>
+                            <div id="countdown" class="text-xl sm:text-3xl font-mono font-bold mt-1 sm:mt-2
+                                {% if is_critical %}text-red-600 animate-pulse{% else %}text-emerald-700{% endif %}">
+                                <span id="hours">{{ remaining_hours }}</span>h
+                                <span id="minutes">{{ remaining_minutes }}</span>m
+                                <span id="seconds">00</span>s
+                            </div>
+                            {% if is_critical %}
+                            <p class="text-red-600 text-xs sm:text-sm mt-2 font-semibold">
+                                ⚠️ Less than 12 hours remaining! Act now if you have concerns.
+                            </p>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                            <div class="bg-white rounded-xl p-3 sm:p-4 shadow-sm">
+                                <div class="flex items-center gap-2 mb-1 sm:mb-2">
+                                    <i class="fas fa-lock text-l sm:text-2xl text-emerald-600"></i>
+                                    <h4 class="font-bold text-gray-800 text-sm sm:text-base whitespace-nowrap">Secure Hold</h4>
+                                </div>
+                                <p class="text-xs text-gray-500">Money protected until move‑in.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-2 sm:gap-3">
+                            <a href="{% url 'confirm_move_in' escrow.id %}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-sm text-center">Confirm Move‑in</a>
+                            <a href="{% url 'raise_dispute' escrow.id %}" class="bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-sm text-center">Raise Dispute</a>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif escrow.status == 'released' %}
+                <div class="relative bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-5 sm:p-8 border border-blue-200 shadow-xl overflow-hidden">
+                    <div class="absolute top-0 right-0 opacity-10">
+                        <i class="fas fa-check-double text-9xl text-blue-700"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                            <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-blue-100 flex items-center justify-center">
+                                <i class="fas fa-check-circle text-lg sm:text-2xl text-blue-600"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-bold text-blue-800">
+                                {% if user == escrow.tenant %}
+                                    Move‑in Confirmed 🎉
+                                {% else %}
+                                    Escrow Completed
+                                {% endif %}
+                            </h2>
+                        </div>
+
+                        {% if user == escrow.tenant %}
+                            <p class="text-sm sm:text-lg text-gray-700">
+                                You have successfully confirmed move‑in for <strong>{{ escrow.property.title }}</strong>.
+                            </p>
+                            <p class="text-sm sm:text-base text-emerald-700 font-semibold mt-2">
+                                💰 Escrow funds (KES {{ escrow.amount|floatformat:0 }}) have been released to the landlord.
+                            </p>
+                            <p class="text-xs text-gray-500 mt-3">
+                                A notification has been sent to the landlord.
+                            </p>
+                        {% else %}
+                            <p class="text-sm sm:text-lg text-gray-700">
+                                <strong>{{ escrow.tenant.username }}</strong> has confirmed move‑in for <strong>{{ escrow.property.title }}</strong>.
+                            </p>
+                            <p class="text-sm sm:text-base text-emerald-700 font-semibold mt-2">
+                                💰 Escrow funds (KES {{ escrow.amount|floatformat:0 }}) have been released to your account.
+                            </p>
+                            <p class="text-xs text-gray-500 mt-3">
+                                A notification has been sent to the tenant.
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% elif escrow.status == 'disputed' %}
+                <div class="relative bg-gradient-to-br from-red-50 to-rose-50 rounded-3xl p-5 sm:p-8 border border-red-200 shadow-xl overflow-hidden">
+                    <div class="absolute top-0 right-0 opacity-10">
+                        <i class="fas fa-gavel text-9xl text-red-700"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                            <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-red-100 flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-lg sm:text-2xl text-red-600"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-bold text-red-900">Transaction Disputed</h2>
+                        </div>
+                        <p class="text-sm text-gray-700">Payout holds are frozen temporarily. The RentSure mediation desk is assessing the uploaded files.</p>
+                        <div class="mt-3 p-3 bg-white/70 rounded-xl text-xs sm:text-sm text-gray-600 border border-red-100">
+                            <strong>Reason Provided:</strong> {{ escrow.dispute_reason }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if escrow.status == 'refunded' or escrow.status == 'auto_released' %}
+                <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                    <h4 class="font-bold text-blue-800 flex items-center gap-2 relative z-10">
+                        <i class="fas fa-money-bill-wave animate-pulse"></i> Refund Details
+                    </h4>
+                    <div class="mt-2 space-y-1 text-sm text-gray-700 relative z-10">
+                        <p><span class="font-semibold text-gray-600">Status Type:</span> 
+                            <span class="px-2 py-0.5 rounded-full text-xs font-semibold {% if escrow.status == 'auto_released' %}bg-amber-100 text-amber-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                                {{ escrow.get_status_display }}
+                            </span>
+                        </p>
+                        <p><span class="font-semibold text-gray-600">Amount Refunded:</span> <span class="font-bold text-blue-700">KES {{ refund_amount|default:escrow.amount|floatformat:0 }}</span></p>
+                        <p><span class="font-semibold text-gray-600">Reason:</span> {{ refund_reason|default:"Booking protection execution loop triggered." }}</p>
+                        <p><span class="font-semibold text-gray-600">Processed on:</span> {{ escrow.updated_at|date:"M d, Y H:i" }}</p>
+                        
+                        {% if escrow.penalty_applied and escrow.penalty_amount > 0 %}
+                        <p class="text-amber-600 font-medium flex items-center gap-1.5 mt-2 bg-amber-50 p-2 rounded-lg border border-amber-200">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            Penalty deducted: KES {{ escrow.penalty_amount|floatformat:2 }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="mt-8 sm:mt-10 bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
+                    <div class="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                            <i class="fas fa-receipt text-emerald-600 text-sm sm:text-base"></i>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-bold text-gray-800">Transaction Summary</h3>
+                    </div>
+                    <div class="space-y-3 sm:space-y-4">
+                        <div class="flex justify-between items-center pb-2 sm:pb-3 border-b border-gray-100">
+                            <span class="text-gray-500 text-sm sm:text-base">Property</span>
+                            <span class="font-medium text-gray-900 text-sm sm:text-base">{{ escrow.property.title }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pb-2 sm:pb-3 border-b border-gray-100">
+                            <span class="text-gray-500 text-sm sm:text-base font-semibold">Unit</span>
+                            <span class="font-medium text-gray-900 text-sm sm:text-base">
+                                {{ escrow.unit.get_unit_type_display }} #{{ escrow.unit.unit_number|default:"N/A" }}
+                            </span>
+                        </div>
+
+                        <div class="flex justify-between items-center pb-2 sm:pb-3 border-b border-gray-100">
+                            <span class="text-gray-500 text-sm sm:text-base">Escrow amount (rent + deposit)</span>
+                            <span class="font-semibold text-emerald-700 text-sm sm:text-base">KES {{ escrow.amount|floatformat:0 }}</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2 sm:pb-3 border-b border-gray-100">
+                            <span class="text-gray-500 text-sm sm:text-base">Platform fee (non‑refundable)</span>
+                            <span class="font-semibold text-amber-600 text-sm sm:text-base">KES {{ escrow.platform_fee|floatformat:0 }}</span>
+                        </div>
+                        <div class="flex justify-between items-center font-bold border-t pt-2 sm:pt-2 mt-2">
+                            <span class="text-gray-500 text-sm sm:text-base">Total paid</span>
+                            <span class="text-emerald-700 text-base sm:text-lg">KES {{ escrow.amount|add:escrow.platform_fee|floatformat:0 }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm sm:text-base">Reference</span>
+                            <span class="font-mono text-xs sm:text-sm text-gray-600">ESC-{{ escrow.id }}{% if escrow.mpesa_receipt %}-{{ escrow.mpesa_receipt }}{% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <a href="{% url 'property_detail' escrow.property.id %}" 
+                       class="flex-1 text-center bg-white border border-gray-300 text-gray-700 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold hover:bg-gray-50 transition shadow-sm flex items-center justify-center gap-2 text-sm sm:text-base">
+                        <i class="fas fa-arrow-left"></i> Back to Property
+                    </a>
+                    {% if escrow.status == 'pending' %}
+                    <button onclick="location.reload()" 
+                            class="flex-1 bg-amber-500 hover:bg-amber-600 text-white py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold transition shadow-md flex items-center justify-center gap-2 text-sm sm:text-base">
+                        <i class="fas fa-sync-alt"></i> Refresh Status
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        var totalSeconds = {{ remaining_sec|default:0 }};
+        var hoursSpan = document.getElementById('hours');
+        var minutesSpan = document.getElementById('minutes');
+        var secondsSpan = document.getElementById('seconds');
+        var countdownDiv = document.getElementById('countdown');
+
+        function updateTimer() {
+            if (totalSeconds <= 0) {
+                if (countdownDiv) countdownDiv.innerHTML = '⏳ Dispute window closed.';
+                return;
+            }
+            var hours = Math.floor(totalSeconds / 3600);
+            var minutes = Math.floor((totalSeconds % 3600) / 60);
+            var seconds = Math.floor(totalSeconds % 60);
+            if (hoursSpan) hoursSpan.textContent = String(hours).padStart(2, '0');
+            if (minutesSpan) minutesSpan.textContent = String(minutes).padStart(2, '0');
+            if (secondsSpan) secondsSpan.textContent = String(seconds).padStart(2, '0');
+            
+            // Change color when critical
+            if (totalSeconds <= 12 * 3600 && countdownDiv) {
+                countdownDiv.classList.remove('text-emerald-700');
+                countdownDiv.classList.add('text-red-600', 'animate-pulse');
+            }
+            totalSeconds--;
+        }
+
+        if (totalSeconds > 0) {
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+    })();
+</script>
+{% endblock %}

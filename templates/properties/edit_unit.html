@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto p-3 sm:p-4 max-w-2xl">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-2xl">
+
+        <!-- Premium Header Banner -->
+        <div class="bg-gradient-to-r from-emerald-800 to-green-800 p-6 sm:p-8 text-white relative">
+            <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl pointer-events-none select-none font-bold">
+                EDIT
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight flex items-center gap-2">
+                <span>✏️</span> Edit Inventory Unit
+            </h2>
+            <p class="text-emerald-100 mt-1.5 text-xs sm:text-sm font-medium tracking-wide bg-emerald-900/30 inline-block px-3 py-1 rounded-md backdrop-blur-sm">
+                {{ unit.unit_number }} &mdash; {{ property.title }}
+            </p>
+        </div>
+
+        <!-- Form Submission Section -->
+        <form method="post" class="p-5 sm:p-8 space-y-6 sm:space-y-7">
+            {% csrf_token %}
+
+            <div class="space-y-5">
+                <!-- Row 1: Type & Number -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                    <div>
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Unit Config Style</label>
+                        <select name="unit_type" class="w-full bg-white border border-gray-300 p-2.5 sm:p-3 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition-all duration-200" required>
+                            <option value="studio" {% if unit.unit_type == 'studio' %}selected{% endif %}>Bedsitter / Studio Room</option>
+                            <option value="single" {% if unit.unit_type == 'single' %}selected{% endif %}>Single Room</option>
+                            <option value="double" {% if unit.unit_type == 'double' %}selected{% endif %}>Double Room (shared)</option>
+                            <option value="1br" {% if unit.unit_type == '1br' %}selected{% endif %}>1 Bedroom House</option>
+                            <option value="2br" {% if unit.unit_type == '2br' %}selected{% endif %}>2 Bedroom House</option>
+                            <option value="3br" {% if unit.unit_type == '3br' %}selected{% endif %}>3 Bedroom House</option>
+                            <option value="short-single" {% if unit.unit_type == 'short-single' %}selected{% endif %}>Short-stay Single Room</option>
+                            <option value="short-1br" {% if unit.unit_type == 'short-1br' %}selected{% endif %}>Short-stay 1 Bedroom</option>
+                            <option value="commercial" {% if unit.unit_type == 'commercial' %}selected{% endif %}>Commercial / Shop Front</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Unit Designation Number</label>
+                        <input type="text" name="unit_number" value="{{ unit.unit_number }}" placeholder="e.g. A-12" required
+                               class="w-full bg-white border border-gray-300 p-2.5 sm:p-3 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition-all duration-200">
+                    </div>
+                </div>
+
+                <!-- Row 2: Rent & Deposit -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                    <div>
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Monthly Rent (KES)</label>
+                        <input type="number" name="monthly_rent" value="{{ unit.monthly_rent }}" min="0" step="100" required
+                               class="w-full bg-white border border-gray-300 p-2.5 sm:p-3 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition-all duration-200">
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Required Deposit (KES)</label>
+                        <input type="number" name="deposit" value="{{ unit.deposit|default:'' }}" min="0" step="100" placeholder="Optional"
+                               class="w-full bg-white border border-gray-300 p-2.5 sm:p-3 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition-all duration-200">
+                    </div>
+                </div>
+
+                <!-- Row 3: Status & Timing -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                    <div>
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Live Operational Status</label>
+                        <select name="status" class="w-full bg-white border border-gray-300 p-2.5 sm:p-3 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition-all duration-200" required>
+                            <option value="available" {% if unit.status == 'available' %}selected{% endif %}>Available</option>
+                            <option value="occupied" {% if unit.status == 'occupied' %}selected{% endif %}>Occupied</option>
+                            <option value="booked" {% if unit.status == 'booked' %}selected{% endif %}>Booked</option>
+                            <option value="maintenance" {% if unit.status == 'maintenance' %}selected{% endif %}>Under Maintenance</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1.5 text-gray-700 text-xs sm:text-sm">Available Starting From</label>
+                        <input type="date" name="available_from" value="{{ unit.available_from|date:'Y-m-d' }}" required
+                               class="w-full bg-white border border-gray-300 p-2.5 sm:p-3 text-sm rounded-xl focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition-all duration-200">
+                    </div>
+                </div>
+
+                <!-- Furnished Checkbox -->
+                <div class="flex items-center gap-3 pt-2">
+                    <input type="checkbox" name="furnished" id="furnished" {% if unit.furnished %}checked{% endif %}
+                           class="w-4 h-4 text-emerald-600 accent-emerald-600 rounded cursor-pointer transition focus:ring-emerald-500">
+                    <label for="furnished" class="font-semibold text-gray-700 text-xs sm:text-sm cursor-pointer select-none">
+                        🛋️ This Unit is Fully Furnished
+                    </label>
+                </div>
+
+                <!-- Dedicated In-Unit Amenities -->
+                <div class="border-t border-gray-100 pt-4 mt-2">
+                    <label class="block font-semibold mb-2.5 text-gray-700 text-xs sm:text-sm">In-Unit Available Amenities</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <label class="flex items-center p-2.5 sm:p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-xs sm:text-sm hover:border-emerald-500 hover:bg-emerald-50/20 transition duration-150 select-none">
+                            <input type="checkbox" name="has_water" {% if unit.has_water %}checked{% endif %} class="accent-emerald-600 mr-2 rounded"> 💧 Water
+                        </label>
+                        <label class="flex items-center p-2.5 sm:p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-xs sm:text-sm hover:border-emerald-500 hover:bg-emerald-50/20 transition duration-150 select-none">
+                            <input type="checkbox" name="has_electricity" {% if unit.has_electricity %}checked{% endif %} class="accent-emerald-600 mr-2 rounded"> ⚡ Electricity
+                        </label>
+                        <label class="flex items-center p-2.5 sm:p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-xs sm:text-sm hover:border-emerald-500 hover:bg-emerald-50/20 transition duration-150 select-none">
+                            <input type="checkbox" name="has_parking" {% if unit.has_parking %}checked{% endif %} class="accent-emerald-600 mr-2 rounded"> 🅿️ Parking
+                        </label>
+                        <label class="flex items-center p-2.5 sm:p-3 bg-white border border-gray-200 rounded-xl cursor-pointer text-xs sm:text-sm hover:border-emerald-500 hover:bg-emerald-50/20 transition duration-150 select-none">
+                            <input type="checkbox" name="has_security" {% if unit.has_security %}checked{% endif %} class="accent-emerald-600 mr-2 rounded"> 🔒 Security
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Execution Action Blocks -->
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                <button type="submit" class="w-full sm:flex-1 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 active:from-emerald-800 active:to-green-800 text-white py-3 rounded-xl font-bold text-sm tracking-wide shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-1.5 order-2 sm:order-1">
+                    💾 Save Changes
+                </button>
+                <a href="{% url 'manage_units' property.id %}" class="w-full sm:flex-1 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 py-3 rounded-xl font-bold text-sm text-center tracking-wide transition duration-150 order-1 sm:order-2 flex items-center justify-center">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

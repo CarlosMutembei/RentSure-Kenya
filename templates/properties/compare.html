@@ -1,0 +1,473 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Compare Units | RentSure Kenya{% endblock %}
+
+{% block content %}
+<!-- Main premium background container with a refined mesh design pattern -->
+<div class="min-h-screen py-10 bg-gradient-to-br from-slate-50 via-white to-slate-100 relative overflow-hidden">
+  <div class="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none"></div>
+
+  <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+
+    <!-- ============================================================
+         HEADER COMPONENT
+    ============================================================ -->
+    <div class="mb-12">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-6 border-b border-slate-200/60">
+        <div>
+          <div class="inline-flex items-center gap-4">
+            <!-- Icon with sophisticated Kenyan flag accent trim -->
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-700 shadow-lg shadow-emerald-700/15 flex items-center justify-center text-white relative group">
+              <svg class="w-6 h-6 text-white transform group-hover:scale-110 transition duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0V6.75A2.25 2.25 0 0110.5 4.5h3a2.25 2.25 0 012.25 2.25v9.75M6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0-6h.008v.008H6.75V9z" />
+              </svg>
+              <!-- Micro Kenyan Accent Tag -->
+              <div class="absolute -bottom-1.5 flex h-1.5 w-8 rounded-full overflow-hidden shadow-sm">
+                <span class="w-1/3 bg-black"></span>
+                <span class="w-1/3 bg-[#BB0000]"></span>
+                <span class="w-1/3 bg-emerald-600"></span>
+              </div>
+            </div>
+            <div>
+              <h1 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Compare Units</h1>
+              <p class="mt-1 text-sm text-slate-500 font-medium">Side‑by‑side features, pricing configurations, and utility structures.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action CTA -->
+        <div class="flex items-center shrink-0">
+          <a href="{% url 'search' %}" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl text-xs sm:text-sm shadow-md transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg> 
+            Browse More Properties
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         IF ACTIVE SELECTIONS PRESENT
+    ============================================================ -->
+    {% if units %}
+
+      <!-- ====================
+            UNIT CARDS GRID
+      ==================== -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+        {% for unit in units %}
+          <div class="relative bg-white rounded-2xl overflow-hidden border border-slate-200/60 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col justify-between" data-unit-id="{{ unit.id }}">
+            
+            <!-- Kenyan National Stripe Accent Ribbon -->
+            <div class="absolute inset-x-0 top-0 h-1 flex">
+              <span class="w-1/3 h-full bg-emerald-600"></span>
+              <span class="w-1/6 h-full bg-black"></span>
+              <span class="w-1/6 h-full bg-[#BB0000]"></span>
+              <span class="w-1/3 h-full bg-emerald-600"></span>
+            </div>
+
+            <!-- Dismiss / Remove Button -->
+            <button onclick="removeFromCompare({{ unit.id }}, event)" title="Remove" class="absolute right-3 top-3 z-20 w-8 h-8 rounded-lg bg-white/80 backdrop-blur-md flex items-center justify-center text-slate-500 hover:bg-rose-500 hover:text-white border border-slate-200 shadow-sm transition-all duration-200 transform active:scale-95">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <!-- Card Layout Body Area -->
+            <div class="p-6 pt-7 flex-grow">
+              <!-- Metric Badges -->
+              <div class="flex items-center justify-between mb-3.5">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider
+                  {% if unit.status == 'available' %}bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/10
+                  {% elif unit.status == 'occupied' %}bg-rose-50 text-rose-700 ring-1 ring-rose-600/10
+                  {% else %}bg-amber-50 text-amber-700 ring-1 ring-amber-600/10{% endif %}">
+                  <span class="w-1.5 h-1.5 rounded-full {% if unit.status == 'available' %}bg-emerald-500 animate-pulse{% else %}bg-slate-400{% endif %}"></span>
+                  {{ unit.get_status_display }}
+                </span>
+                <span class="text-slate-400 text-xs font-semibold bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md">Unit #{{ unit.unit_number|default:"N/A" }}</span>
+              </div>
+
+              <!-- Headings -->
+              <h3 class="text-slate-900 font-black text-lg leading-tight tracking-tight mb-0.5">{{ unit.get_unit_type_display }}</h3>
+              <p class="text-emerald-600 font-bold text-sm mb-4 truncate">{{ unit.property.title }}</p>
+
+              <!-- Dynamic Map Coordinates -->
+              <p class="text-slate-500 text-xs font-semibold flex items-center gap-1.5 mb-5">
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1115 0z" />
+                </svg>
+                {{ unit.property.town }}{% if unit.property.estate %}, {{ unit.property.estate }}{% endif %}
+              </p>
+
+              <!-- Luxury Valuation Vault Box -->
+              <div class="rounded-xl p-4 bg-gradient-to-br from-slate-50 to-slate-100/50 border border-slate-200/40 mb-5">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-2xl font-black text-slate-900">KES {{ unit.monthly_rent|floatformat:0 }}</span>
+                  <span class="text-xs font-bold text-slate-400">/mo</span>
+                </div>
+                {% if unit.deposit %}
+                  <div class="mt-2.5 text-[11px] font-bold text-slate-500 flex justify-between border-t border-slate-200/50 pt-2">
+                    <span class="text-slate-400 uppercase tracking-wider">Refundable deposit</span>
+                    <span class="text-slate-800">KES {{ unit.deposit|floatformat:0 }}</span>
+                  </div>
+                {% endif %}
+              </div>
+
+              <!-- Feature Inclusions Blueprint chips -->
+              <div class="flex flex-wrap gap-1.5">
+                {% if unit.furnished %}<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 text-xs font-semibold shadow-sm">🛋️ Furnished</span>{% endif %}
+                {% if unit.has_water %}<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 text-xs font-semibold shadow-sm">💧 Water</span>{% endif %}
+                {% if unit.has_electricity %}<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 text-xs font-semibold shadow-sm">⚡ Power</span>{% endif %}
+                {% if unit.has_parking %}<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 text-xs font-semibold shadow-sm">🅿️ Parking</span>{% endif %}
+                {% if unit.has_security %}<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 text-xs font-semibold shadow-sm">🔒 Security</span>{% endif %}
+              </div>
+            </div>
+
+            <!-- Card Bottom Frame -->
+            <div class="p-5 bg-slate-50/80 border-t border-slate-100">
+              <a href="{% url 'property_detail' unit.property.id %}" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-sm shadow-emerald-700/10 hover:shadow-md">
+                View Full Details 
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- ====================
+            COMPARISON MATRIX TABLE COMPONENT
+      ==================== -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-12">
+        <div class="px-6 py-4.5 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+          <h3 class="text-white font-extrabold text-sm flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-12-3h18m-18-6h18m-18-6h18" />
+            </svg>
+            Side‑by‑Side Specifications Matrix
+          </h3>
+          <span class="text-[10px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-md border border-emerald-500/20">Analytical System</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm table-fixed border-collapse">
+            <thead>
+              <tr class="bg-slate-50/70 border-b border-slate-100">
+                <th class="text-left p-4.5 font-bold text-slate-400 text-[10px] uppercase tracking-wider min-w-[240px]">Target Features</th>
+                {% for unit in units %}
+                  <th class="text-center p-4.5 font-black text-slate-900 text-xs uppercase tracking-wide border-l border-slate-100 bg-white/40">
+                    <span class="block text-slate-800 truncate">{{ unit.get_unit_type_display }}</span>
+                    <span class="text-emerald-600 font-bold text-[11px] mt-0.5 block">Unit #{{ unit.unit_number|default:"N/A" }}</span>
+                  </th>
+                {% endfor %}
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-slate-100">
+              <!-- Property Context -->
+              <tr class="hover:bg-slate-50/60 transition duration-150">
+                <td class="p-4.5 font-bold text-slate-800 flex items-center gap-2">🏢 Property Identity</td>
+                {% for unit in units %}
+                  <td class="p-4.5 text-center text-slate-600 font-medium border-l border-slate-100 truncate">{{ unit.property.title }}</td>
+                {% endfor %}
+              </tr>
+
+              <!-- Geolocation Matrix -->
+              <tr class="hover:bg-slate-50/60 transition duration-150">
+                <td class="p-4.5 font-bold text-slate-800">📍 Regional Location</td>
+                {% for unit in units %}
+                  <td class="p-4.5 text-center text-slate-500 font-semibold text-xs border-l border-slate-100">
+                    {{ unit.property.town }}{% if unit.property.estate %}, {{ unit.property.estate }}{% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+
+              <!-- Financial Valuation (Emphasized) -->
+              <tr class="bg-emerald-50/30 hover:bg-emerald-50/50 transition duration-150">
+                <td class="p-4.5 font-bold text-slate-900">💰 Monthly Base Rent</td>
+                {% for unit in units %}
+                  <td class="p-4.5 text-center text-emerald-600 font-black text-base border-l border-slate-200/60">
+                    KES {{ unit.monthly_rent|floatformat:0 }}
+                  </td>
+                {% endfor %}
+              </tr>
+
+              <!-- Vault Deposits -->
+              <tr class="hover:bg-slate-50/60 transition duration-150">
+                <td class="p-4.5 font-bold text-slate-800">🏦 Advance Security Deposit</td>
+                {% for unit in units %}
+                  <td class="p-4.5 text-center text-slate-700 font-bold border-l border-slate-100">
+                    {% if unit.deposit %}KES {{ unit.deposit|floatformat:0 }}{% else %}—{% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+
+              <!-- Furnishing -->
+              <tr class="hover:bg-slate-50/60 transition duration-150">
+                <td class="p-4.5 font-bold text-slate-800">🛋️ Interior Furnishing</td>
+                {% for unit in units %}
+                  <td class="p-4.5 text-center border-l border-slate-100">
+                    {% if unit.furnished %}
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700">✓</span>
+                    {% else %}
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-slate-100 text-slate-400">✕</span>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+
+              <!-- Water -->
+              <tr class="hover:bg-slate-50/60 transition duration-150">
+                <td class="p-4.5 font-bold text-slate-800">💧 Regular Water Supply</td>
+                {% for unit in units %}
+                  <td class="p-4.5 text-center border-l border-slate-100">
+                    {% if unit.has_water %}
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700">✓</span>
+                    {% else %}
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-slate-100 text-slate-400">✕</span>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+
+              <!-- Electricity -->
+              <tr class="hover:bg-slate-50/60 transition duration-150">
+                <td class="p-4.5 font-bold text-slate-800">⚡ Mainline Electricity</td>
+                {% for unit in units %}
+                  <td class="p-4.5 text-center border-l border-slate-100">
+                    {% if unit.has_electricity %}
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700">✓</span>
+                    {% else %}
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-slate-100 text-slate-400">✕</span>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+
+              <!-- Parking -->
+              <tr class="hover:bg-slate-50/60 transition duration-150">
+                <td class="p-4.5 font-bold text-slate-800">🅿️ Allocated Parking Space</td>
+                {% for unit in units %}
+                  <td class="p-4.5 text-center border-l border-slate-100">
+                    {% if unit.has_parking %}
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700">✓</span>
+                    {% else %}
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-slate-100 text-slate-400">✕</span>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+
+              <!-- Security -->
+              <tr class="hover:bg-slate-50/60 transition duration-150">
+                <td class="p-4.5 font-bold text-slate-800">🔒 Guard & Security Systems</td>
+                {% for unit in units %}
+                  <td class="p-4.5 text-center border-l border-slate-100">
+                    {% if unit.has_security %}
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700">✓</span>
+                    {% else %}
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-slate-100 text-slate-400">✕</span>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ====================
+            AI RECOMMENDATION INTELLIGENCE ENGINE
+  
+            AI RECOMMENDATION INTELLIGENCE ENGINE (UPDATED)
+      ==================== -->
+      {% if recommendation %}
+        <div class="mb-16 relative overflow-hidden rounded-3xl shadow-xl border border-emerald-800/40">
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-950 via-emerald-900 to-slate-950"></div>
+          
+          <div class="relative z-10 p-8 sm:p-10 text-white">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/10">
+              <div>
+                <span class="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-emerald-500/20">
+                  ⚡ Recommendation Engine
+                </span>
+                <h2 class="mt-3 text-2xl sm:text-3xl font-black tracking-tight">Our Premium Evaluation</h2>
+                <p class="mt-1 text-sm text-emerald-200/70 font-medium">Algorithmic analysis mapped against current asset pricing structures.</p>
+              </div>
+            </div>
+
+            <!-- CONDITIONAL CHECK: If options are identical, show one clean unified feature spotlight -->
+            {% if recommendation.best_overall.unit.id == recommendation.cheapest.unit.id and recommendation.best_overall.unit.id == recommendation.best_value.unit.id %}
+              
+              <!-- Clean Single Highlight Layout for Identical Twins/Ties -->
+              <div class="mt-8 max-w-2xl mx-auto p-8 bg-white/[0.04] backdrop-blur-md rounded-2xl border border-white/10 text-center">
+                <div class="inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-amber-500/30 mb-4">
+                  🏆 Universal Best Choice
+                </div>
+                <h3 class="font-black text-2xl tracking-tight">{{ recommendation.best_overall.unit.get_unit_type_display }}</h3>
+                <p class="text-sm text-emerald-300 font-bold truncate mt-1">{{ recommendation.best_overall.unit.property.title }}</p>
+                
+                <div class="my-6 text-3xl font-black text-white">
+                  KES {{ recommendation.best_overall.unit.monthly_rent|floatformat:0 }}
+                  <span class="text-xs text-slate-400 font-medium">/month</span>
+                </div>
+
+                <p class="text-sm font-medium text-emerald-100/90 leading-relaxed bg-black/30 p-4 rounded-xl border border-white/5 max-w-xl mx-auto">
+                  "These units are identically priced and configured. Since they represent the baseline pricing floor and offer matching amenities, you are looking at a uniform value layout. Choosing either unit gives you optimal pricing yield for this property location."
+                </p>
+
+                <a href="{% url 'property_detail' recommendation.best_overall.unit.property.id %}" class="inline-flex items-center justify-center mt-6 bg-white text-slate-900 font-bold text-sm px-8 py-3.5 rounded-xl hover:bg-emerald-400 hover:text-slate-950 transition-all duration-200">
+                  Proceed to Property Details →
+                </a>
+              </div>
+
+            {% else %}
+              
+              <!-- Standard 3-Column Grid if options are genuinely distinct -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                
+                <!-- Segment: Best Overall -->
+                <div class="p-6 bg-white/[0.04] backdrop-blur-md rounded-2xl border border-white/10 flex flex-col justify-between hover:bg-white/[0.07] transition-all duration-300">
+                  <div>
+                    <div class="text-[10px] font-bold tracking-widest uppercase text-emerald-400 flex items-center gap-1.5">
+                      <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span> ✨ Best Overall
+                    </div>
+                    <h4 class="mt-3 font-black text-lg tracking-tight">{{ recommendation.best_overall.unit.get_unit_type_display }}</h4>
+                    <p class="text-xs text-emerald-200/60 font-semibold truncate">{{ recommendation.best_overall.unit.property.title }}</p>
+                    <p class="mt-4 text-2xl font-black tracking-tight text-white">KES {{ recommendation.best_overall.unit.monthly_rent|floatformat:0 }}</p>
+                    <p class="mt-4 text-xs font-medium text-emerald-100/80 leading-relaxed bg-black/20 p-3 rounded-xl border border-white/5">“{{ recommendation.best_overall.reason }}”</p>
+                  </div>
+                  <a href="{% url 'property_detail' recommendation.best_overall.unit.property.id %}" class="w-full text-center mt-5 bg-white text-slate-900 font-bold text-xs py-3 rounded-xl hover:bg-emerald-400 hover:text-slate-950 transition-all duration-200">View Selected Unit →</a>
+                </div>
+
+                <!-- Segment: Economical Option -->
+                <div class="p-6 bg-white/[0.04] backdrop-blur-md rounded-2xl border border-white/10 flex flex-col justify-between hover:bg-white/[0.07] transition-all duration-300">
+                  <div>
+                    <div class="text-[10px] font-bold tracking-widest uppercase text-emerald-400 flex items-center gap-1.5">
+                      <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span> 💰 Lowest Budget
+                    </div>
+                    <h4 class="mt-3 font-black text-lg tracking-tight">{{ recommendation.cheapest.unit.get_unit_type_display }}</h4>
+                    <p class="text-xs text-emerald-200/60 font-semibold truncate">{{ recommendation.cheapest.unit.property.title }}</p>
+                    <p class="mt-4 text-2xl font-black tracking-tight text-white">KES {{ recommendation.cheapest.unit.monthly_rent|floatformat:0 }}</p>
+                    <p class="mt-4 text-xs font-medium text-emerald-100/80 leading-relaxed bg-black/20 p-3 rounded-xl border border-white/5">“{{ recommendation.cheapest.reason }}”</p>
+                  </div>
+                  <a href="{% url 'property_detail' recommendation.cheapest.unit.property.id %}" class="w-full text-center mt-5 bg-white text-slate-900 font-bold text-xs py-3 rounded-xl hover:bg-emerald-400 hover:text-slate-950 transition-all duration-200">View Selected Unit →</a>
+                </div>
+
+                <!-- Segment: Maximum Yield/Value -->
+                <div class="p-6 bg-white/[0.04] backdrop-blur-md rounded-2xl border border-white/10 flex flex-col justify-between hover:bg-white/[0.07] transition-all duration-300">
+                  <div>
+                    <div class="text-[10px] font-bold tracking-widest uppercase text-emerald-400 flex items-center gap-1.5">
+                      <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span> ⭐ Strategic Value
+                    </div>
+                    <h4 class="mt-3 font-black text-lg tracking-tight">{{ recommendation.best_value.unit.get_unit_type_display }}</h4>
+                    <p class="text-xs text-emerald-200/60 font-semibold truncate">{{ recommendation.best_value.unit.property.title }}</p>
+                    <p class="mt-4 text-2xl font-black tracking-tight text-white">KES {{ recommendation.best_value.unit.monthly_rent|floatformat:0 }}</p>
+                    <p class="mt-4 text-xs font-medium text-emerald-100/80 leading-relaxed bg-black/20 p-3 rounded-xl border border-white/5">“{{ recommendation.best_value.reason }}”</p>
+                  </div>
+                  <a href="{% url 'property_detail' recommendation.best_value.unit.property.id %}" class="w-full text-center mt-5 bg-white text-slate-900 font-bold text-xs py-3 rounded-xl hover:bg-emerald-400 hover:text-slate-950 transition-all duration-200">View Selected Unit →</a>
+                </div>
+
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      {% endif %}
+
+    <!-- ============================================================
+         EMPTY DASHBOARD CONFIGURATION (IF NO ACTIVE SELECTIONS)
+    ============================================================ -->
+    {% else %}
+      <div class="max-w-xl mx-auto mt-16 relative">
+        <!-- Floating decorative glowing backdrop orbs -->
+        <div class="absolute -top-12 -left-12 w-40 h-40 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-12 -right-12 w-40 h-40 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="bg-white/80 backdrop-blur-md rounded-3xl p-10 sm:p-14 border border-slate-200/70 shadow-xl text-center relative z-10">
+          <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200/60 flex items-center justify-center text-slate-400 shadow-sm mb-6 transform hover:rotate-6 transition duration-300">
+            <svg class="w-9 h-9 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+            </svg>
+          </div>
+          
+          <h3 class="text-2xl font-black text-slate-900 tracking-tight">No units selected for comparison</h3>
+          <p class="mt-3 text-slate-500 text-sm font-medium leading-relaxed max-w-sm mx-auto">
+            Build custom comparison matrices by checking the <span class="font-bold text-slate-800">Compare</span> option on individual asset dashboards.
+          </p>
+          
+          <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col gap-2.5">
+            <a href="{% url 'search' %}" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3.5 rounded-xl shadow-md shadow-emerald-700/10 transition duration-150 text-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+              </svg>
+              Search Available Listings
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT LOGIC ARCHITECTURE
+============================================================ -->
+<script>
+    function removeFromCompare(unitId, event) {
+        if (event) event.preventDefault();
+        
+        // Target wrapper card securely across responsive templates
+        const card = document.querySelector(`[data-unit-id="${unitId}"]`);
+        
+        if (card) {
+            card.style.transition = 'all 0.45s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.92) translateY(12px)';
+            setTimeout(() => card.remove(), 450);
+        }
+
+        // Send silent deletion telemetry payload to engine matrix API
+        fetch(`/compare/remove/${unitId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Analytical transaction matrix failure');
+            return response.json();
+        })
+        .then(data => {
+            // Hot swap/reload structural framework layout view models silently
+            location.reload(); 
+        })
+        .catch(err => {
+            console.error('Telemetry Core Sync Exception:', err);
+            location.reload();
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

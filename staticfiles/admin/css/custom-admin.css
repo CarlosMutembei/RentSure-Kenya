@@ -1,0 +1,2471 @@
+/* ============================================================
+   RentSure Kenya – Complete Unified Admin CSS
+   Covers: Core Structure, Tables, Fixes, & Single-Border Login
+============================================================ */
+
+:root {
+    --kenya-green: #006B3F;
+    --kenya-green-dark: #004d2e;
+    --kenya-red: #BB0000;
+    --kenya-gold: #FFD700;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --text-dark: #1e293b;
+    --radius: 12px;
+}
+
+/* ============================================================
+   SECTION 1: GLOBAL CANVAS & BRANDING
+   ============================================================ */
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+    background-color: var(--gray-50);
+}
+
+#container {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+#content {
+    padding: 20px 24px !important;
+}
+
+#header {
+    background: linear-gradient(135deg, var(--kenya-green), var(--kenya-green-dark)) !important;
+    border-bottom: 3px solid var(--kenya-red) !important;
+    padding: 12px 20px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+}
+
+#header #site-name a,
+#header #branding h1,
+#header a:link,
+#header a:visited {
+    color: white !important;
+    font-weight: 700 !important;
+}
+
+div.breadcrumbs {
+    background: white !important;
+    border-bottom: 1px solid var(--gray-200) !important;
+    color: var(--text-dark) !important;
+    padding: 12px 20px !important;
+}
+
+div.breadcrumbs a {
+    color: var(--kenya-green) !important;
+    font-weight: 600 !important;
+}
+
+div.breadcrumbs a:hover {
+    color: var(--kenya-red) !important;
+}
+
+.module h2,
+.module caption,
+.inline-group h2,
+#changelist-filter h2 {
+    background: linear-gradient(135deg, var(--kenya-green), var(--kenya-green-dark)) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    padding: 12px 16px !important;
+    border-bottom: 3px solid var(--kenya-red) !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}
+
+/* Dashboard Default Module Alignment */
+.dashboard .module {
+    background: white !important;
+    border: 1px solid var(--gray-200) !important;
+    border-radius: var(--radius) !important;
+    overflow: hidden !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02) !important;
+}
+
+.dashboard .module table tbody tr {
+    transition: background 0.2s ease !important;
+}
+
+.dashboard .module table tbody tr:hover {
+    background-color: #f0fdf4 !important;
+}
+
+/* ============================================================
+   SECTION 2: CHANGE LIST TABLES & DYNAMIC ACTIONS BAR
+   ============================================================ */
+#changelist {
+    background: white !important;
+    border: 1px solid var(--gray-200) !important;
+    border-radius: var(--radius) !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02) !important;
+}
+
+#changelist thead th {
+    background: var(--gray-100) !important;
+    color: var(--text-dark) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.05em !important;
+    padding: 14px 16px !important;
+    border-bottom: 2px solid var(--gray-200) !important;
+}
+
+#changelist thead th a {
+    color: var(--text-dark) !important;
+}
+
+#changelist tbody tr {
+    transition: background 0.2s !important;
+}
+
+#changelist tbody tr:nth-child(even) {
+    background: #fafafa !important;
+}
+
+#changelist tbody tr:hover {
+    background: #f0fdf4 !important;
+}
+
+#changelist tbody td {
+    padding: 14px 16px !important;
+    border-bottom: 1px solid var(--gray-200) !important;
+    vertical-align: middle !important;
+    font-size: 0.95rem !important;
+}
+
+#changelist tbody td a {
+    color: var(--kenya-green) !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+}
+
+#changelist tbody td a:hover {
+    color: var(--kenya-red) !important;
+}
+
+/* THE DEFINITIVE UNCHOPPABLE CHOSEN/ACTION SELECT BOX FIX */
+.actions {
+    padding: 16px 20px !important;
+    background: var(--gray-50) !important;
+    border-top: 1px solid var(--gray-200) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+}
+
+.actions select {
+    box-sizing: border-box !important;
+    height: auto !important;
+    min-height: 38px !important;
+    padding: 8px 32px 8px 12px !important;
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+    border: 1px solid var(--gray-200) !important;
+    border-radius: 8px !important;
+    background-color: white !important;
+    color: var(--text-dark) !important;
+    vertical-align: middle !important;
+}
+
+.actions select:focus {
+    border-color: var(--kenya-green) !important;
+    box-shadow: 0 0 0 3px rgba(0,107,63,0.1) !important;
+}
+
+.actions .button {
+    background: var(--kenya-green) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 8px 20px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    height: auto !important;
+    min-height: 38px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: background 0.2s !important;
+}
+
+.actions .button:hover {
+    background: var(--kenya-green-dark) !important;
+}
+
+.actions .action-counter {
+    color: #64748b !important;
+    font-size: 0.9rem !important;
+    margin-left: 8px !important;
+}
+
+/* ============================================================
+   SECTION 3: FORM FIELDS & INLINE PLACEMENTS 
+   ============================================================ */
+#content form .aligned .vTextField,
+#content form .aligned .vLargeTextField,
+#content form .aligned select {
+    box-sizing: border-box !important;
+    height: auto !important;
+    min-height: 42px !important;
+    padding: 8px 12px !important;
+    font-size: 0.95rem !important;
+    line-height: 1.4 !important;
+    border: 1px solid var(--gray-200) !important;
+    border-radius: 8px !important;
+    background-color: white !important;
+}
+
+#content form .aligned .related-widget-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* ============================================================
+   SECTION 4: SINGLE OUTER BORDER PREMIUM LOGIN PAGE FIX
+   ============================================================ */
+body.login {
+    background-color: var(--gray-50) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+    border: none !important; /* Block double outer borders from viewport canvas */
+}
+
+/* THE ONLY PERMITTED CARD BORDER */
+body.login #container {
+    background: white !important;
+    border: 3px solid var(--kenya-green) !important; /* Solid outer frame line */
+    border-radius: var(--radius) !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05) !important;
+    overflow: hidden !important;
+    max-width: 440px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+}
+
+/* Banner area styling inside the card container */
+body.login #header {
+    background: linear-gradient(135deg, var(--kenya-green), var(--kenya-green-dark)) !important;
+    border: none !important;
+    border-bottom: 4px solid var(--kenya-red) !important;
+    padding: 24px 16px !important;
+    text-align: center !important;
+    box-shadow: none !important;
+}
+
+/* ABSOLUTE DOUBLE-BORDER DESTRUCTOR */
+body.login #content,
+body.login #content-main,
+body.login .form-row,
+body.login fieldset,
+body.login form {
+    border: none !important;         /* Strip any legacy Django inner boundaries entirely */
+    box-shadow: none !important;     /* Strip overlapping inner layer shading */
+    background: transparent !important;
+}
+
+body.login #content {
+    padding: 28px 32px !important;
+    box-sizing: border-box !important;
+}
+
+body.login .form-row {
+    padding: 0 0 18px 0 !important;
+}
+
+body.login .form-row label {
+    color: var(--text-dark) !important;
+    font-weight: 700 !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+    font-size: 0.95rem !important;
+}
+
+/* INPUT VISIBILITY RECOVERY BLOCK (KENYAN GREEN BORDER) */
+body.login .form-row input[type="text"],
+body.login .form-row input[type="password"] {
+    display: block !important;
+    visibility: visible !important;
+    background-color: white !important;               /* Force fields clear white background */
+    color: var(--text-dark) !important;                /* Crispy black text inside fields */
+    border: 2px solid var(--kenya-green) !important;  /* High visibility Kenyan Green border layout */
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 46px !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+}
+
+body.login .form-row input:focus {
+    border-color: var(--kenya-red) !important;        /* Swaps to red smoothly when typing active */
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(187, 0, 0, 0.1) !important;
+}
+
+body.login .submit-row {
+    background: transparent !important;
+    padding: 8px 0 0 0 !important;
+    border: none !important;
+    margin: 0 !important;
+    text-align: center !important;
+}
+
+body.login .submit-row input[type="submit"] {
+    width: 100% !important;
+    height: 48px !important;
+    background: var(--kenya-green) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+    letter-spacing: 0.5px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: background 0.2s ease !important;
+}
+
+body.login .submit-row input[type="submit"]:hover {
+    background: var(--kenya-green-dark) !important;
+}
+/* ============================================================
+   CHANGE LIST – Enhanced Table Styling
+============================================================ */
+
+/* ---- Change list container ---- */
+#changelist {
+    background: white !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* ---- Toolbar (search and filters) ---- */
+#changelist #toolbar {
+    padding: 16px 20px !important;
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+#changelist #toolbar form input[type="text"] {
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 8px 14px !important;
+    font-size: 0.9rem !important;
+    transition: all 0.2s !important;
+}
+
+#changelist #toolbar form input[type="text"]:focus {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.08) !important;
+    outline: none !important;
+}
+
+#changelist #toolbar form input[type="submit"] {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 8px 20px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    transition: background 0.2s !important;
+    cursor: pointer !important;
+}
+
+#changelist #toolbar form input[type="submit"]:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+}
+
+/* ---- Table header ---- */
+#changelist thead th {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.05em !important;
+    padding: 12px 16px !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    border-right: 1px solid #e2e8f0 !important;
+}
+
+#changelist thead th a {
+    color: #1e293b !important;
+    text-decoration: none !important;
+}
+
+#changelist thead th a:hover {
+    color: #006B3F !important;
+}
+
+/* ---- Table rows (alternating) ---- */
+#changelist tbody tr {
+    transition: background 0.2s !important;
+}
+
+#changelist tbody tr:nth-child(even) {
+    background: #fafafa !important;
+}
+
+#changelist tbody tr:nth-child(even):hover {
+    background: #f0fdf4 !important;
+}
+
+#changelist tbody tr:nth-child(odd):hover {
+    background: #f0fdf4 !important;
+}
+
+#changelist tbody td {
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    vertical-align: middle !important;
+    font-size: 0.9rem !important;
+    color: #1e293b !important;
+}
+
+#changelist tbody td a {
+    color: #006B3F !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    border-bottom: 1px solid transparent !important;
+    transition: border 0.2s !important;
+}
+
+#changelist tbody td a:hover {
+    color: #BB0000 !important;
+    border-bottom-color: #BB0000 !important;
+}
+
+/* ---- Checkbox column ---- */
+#changelist .action-checkbox-column {
+    width: 40px !important;
+    text-align: center !important;
+}
+
+#changelist .action-checkbox-column input[type="checkbox"] {
+    accent-color: #006B3F !important;
+    width: 16px !important;
+    height: 16px !important;
+    cursor: pointer !important;
+}
+
+/* ---- Action bar (bottom) ---- */
+.actions {
+    padding: 14px 20px !important;
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+    border-radius: 0 0 12px 12px !important;
+}
+
+.actions select {
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 6px 12px !important;
+    font-size: 0.85rem !important;
+}
+
+.actions select:focus {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.08) !important;
+    outline: none !important;
+}
+
+.actions .button {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 6px 20px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    transition: background 0.2s !important;
+    cursor: pointer !important;
+}
+
+.actions .button:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+}
+
+/* ---- Pagination ---- */
+.paginator {
+    padding: 14px 20px !important;
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+    font-size: 0.85rem !important;
+}
+
+.paginator a:link,
+.paginator a:visited {
+    background: #006B3F !important;
+    color: white !important;
+    border-radius: 30px !important;
+    padding: 4px 16px !important;
+    margin: 0 4px !important;
+    text-decoration: none !important;
+    transition: background 0.2s !important;
+}
+
+.paginator a:hover {
+    background: #004d2e !important;
+}
+
+.paginator .this-page {
+    background: #BB0000 !important;
+    color: white !important;
+    border-radius: 30px !important;
+    padding: 4px 16px !important;
+    font-weight: 700 !important;
+}
+
+.paginator .end {
+    color: #64748b !important;
+}
+
+/* ---- Filter sidebar ---- */
+#changelist-filter {
+    background: #f8fafc !important;
+    border-left: 1px solid #e2e8f0 !important;
+    padding: 20px !important;
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
+    border-radius: 8px !important;
+    margin-top: 0 !important;
+}
+
+#changelist-filter h3 {
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    margin: 16px 0 8px !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+}
+
+#changelist-filter ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 0 12px 0 !important;
+}
+
+#changelist-filter ul li {
+    padding: 4px 0 !important;
+}
+
+#changelist-filter ul li a {
+    color: #006B3F !important;
+    text-decoration: none !important;
+    font-size: 0.85rem !important;
+    transition: color 0.2s !important;
+}
+
+#changelist-filter ul li a:hover {
+    color: #BB0000 !important;
+}
+
+#changelist-filter ul li.selected a {
+    color: #BB0000 !important;
+    font-weight: 700 !important;
+}
+/* ============================================================
+   ADD/EDIT FORM – Enhanced Styling
+============================================================ */
+
+/* ---- Form container ---- */
+#content form {
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* ---- Field labels ---- */
+#content form .aligned label {
+    color: #1e293b !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 0.2px !important;
+    margin-bottom: 4px !important;
+}
+
+/* ---- Input fields ---- */
+#content form .aligned .vTextField,
+#content form .aligned .vLargeTextField,
+#content form .aligned .vURLField,
+#content form .aligned .vEmailField,
+#content form .aligned select,
+#content form .aligned textarea {
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    transition: all 0.2s ease !important;
+    background: #fafafa !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 0.95rem !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+#content form .aligned .vTextField:focus,
+#content form .aligned .vLargeTextField:focus,
+#content form .aligned .vURLField:focus,
+#content form .aligned .vEmailField:focus,
+#content form .aligned select:focus,
+#content form .aligned textarea:focus {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 4px rgba(0, 107, 63, 0.06) !important;
+    background: white !important;
+    outline: none !important;
+}
+
+/* ---- Help text ---- */
+#content form .aligned .help {
+    color: #64748b !important;
+    font-size: 0.75rem !important;
+    margin-top: 4px !important;
+    font-style: italic !important;
+}
+
+/* ---- Required field indicator ---- */
+#content form .aligned label.required:after {
+    content: " *" !important;
+    color: #BB0000 !important;
+    font-weight: 700 !important;
+}
+
+/* ---- Fieldset styling ---- */
+#content form fieldset {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+    background: white !important;
+}
+
+#content form fieldset h2 {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    padding: 10px 16px !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    margin: -20px -20px 20px -20px !important;
+    border-bottom: 3px solid #BB0000 !important;
+}
+
+/* ---- Inline forms (within add/edit) ---- */
+.inline-group {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+    margin-top: 24px !important;
+    background: white !important;
+}
+
+.inline-group h2 {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    padding: 12px 18px !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    border-bottom: 2px solid #BB0000 !important;
+    margin: 0 !important;
+}
+
+.inline-group .tabular tbody tr:hover {
+    background: #f0fdf4 !important;
+}
+
+.inline-group .tabular td {
+    padding: 8px 12px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    vertical-align: middle !important;
+}
+
+.inline-group .tabular .delete-row {
+    accent-color: #BB0000 !important;
+}
+
+/* ---- Add another link (inline) ---- */
+.inline-group .add-row {
+    background: #f8fafc !important;
+    padding: 10px 16px !important;
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+.inline-group .add-row a {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    padding: 6px 20px !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 8px rgba(0, 107, 63, 0.15) !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+
+.inline-group .add-row a:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+    box-shadow: 0 4px 14px rgba(0, 107, 63, 0.25) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ---- Delete row checkbox (inline) ---- */
+.inline-group .tabular .delete-row {
+    accent-color: #BB0000 !important;
+}
+
+/* ---- Related widget links (plus/minus) ---- */
+.related-widget-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+}
+
+.related-widget-wrapper a {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    line-height: 1 !important;
+    box-shadow: 0 2px 8px rgba(0, 107, 63, 0.2) !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+.related-widget-wrapper a:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+    box-shadow: 0 4px 14px rgba(0, 107, 63, 0.3) !important;
+    transform: scale(1.1) !important;
+}
+
+.related-widget-wrapper a.related-widget-wrapper-link.delete-related {
+    background: linear-gradient(135deg, #BB0000, #990000) !important;
+    box-shadow: 0 2px 8px rgba(187, 0, 0, 0.2) !important;
+}
+
+.related-widget-wrapper a.related-widget-wrapper-link.delete-related:hover {
+    background: linear-gradient(135deg, #990000, #7a0000) !important;
+    box-shadow: 0 4px 14px rgba(187, 0, 0, 0.3) !important;
+}
+
+/* ---- History link ---- */
+.object-tools .historylink {
+    background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+    color: white !important;
+    border-radius: 30px !important;
+    padding: 6px 20px !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.25s ease !important;
+    border: none !important;
+}
+
+.object-tools .historylink:hover {
+    background: linear-gradient(135deg, #0f172a, #000000) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+}
+/* ============================================================
+   CUSTOM MODAL – Action Confirmation
+============================================================ */
+
+/* ---- Overlay ---- */
+.alert-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(4px) !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease !important;
+}
+
+.alert-overlay.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ---- Modal card ---- */
+.alert-modal {
+    background: white !important;
+    border-radius: 16px !important;
+    max-width: 500px !important;
+    width: 100% !important;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2) !important;
+    overflow: hidden !important;
+    transform: scale(0.95) translateY(10px) !important;
+    transition: all 0.3s ease !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+.alert-overlay.active .alert-modal {
+    transform: scale(1) translateY(0) !important;
+}
+
+/* ---- Header ---- */
+.alert-modal .alert-header {
+    padding: 24px 28px 20px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.alert-modal .alert-header .alert-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    font-size: 1.4rem !important;
+}
+
+.alert-modal .alert-header .alert-icon.warning {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+}
+
+.alert-modal .alert-header .alert-icon.info {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+}
+
+.alert-modal .alert-header .alert-icon.success {
+    background: #d1fae5 !important;
+    color: #065f46 !important;
+}
+
+.alert-modal .alert-header .alert-icon.danger {
+    background: #fee2e2 !important;
+    color: #BB0000 !important;
+}
+
+.alert-modal .alert-header h3 {
+    margin: 0 !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+}
+
+.alert-modal .alert-header p {
+    margin: 4px 0 0 !important;
+    font-size: 0.85rem !important;
+    color: #64748b !important;
+}
+
+/* ---- Body ---- */
+.alert-modal .alert-body {
+    padding: 20px 28px !important;
+}
+
+.alert-modal .alert-body .alert-message {
+    font-size: 0.95rem !important;
+    color: #1e293b !important;
+    line-height: 1.6 !important;
+}
+
+.alert-modal .alert-body .alert-details {
+    margin-top: 12px !important;
+    padding: 12px 16px !important;
+    background: #f8fafc !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+    color: #475569 !important;
+    border-left: 3px solid #006B3F !important;
+}
+
+/* ---- Footer ---- */
+.alert-modal .alert-footer {
+    padding: 16px 28px 24px !important;
+    border-top: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    gap: 12px !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+}
+
+.alert-modal .alert-footer .btn {
+    padding: 10px 28px !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.alert-modal .alert-footer .btn-primary {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    box-shadow: 0 2px 10px rgba(0, 107, 63, 0.2) !important;
+}
+
+.alert-modal .alert-footer .btn-primary:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+    box-shadow: 0 4px 16px rgba(0, 107, 63, 0.3) !important;
+    transform: translateY(-1px) !important;
+}
+
+.alert-modal .alert-footer .btn-secondary {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+.alert-modal .alert-footer .btn-secondary:hover {
+    background: #e2e8f0 !important;
+    transform: translateY(-1px) !important;
+}
+
+.alert-modal .alert-footer .btn-danger {
+    background: linear-gradient(135deg, #BB0000, #990000) !important;
+    color: white !important;
+    box-shadow: 0 2px 10px rgba(187, 0, 0, 0.2) !important;
+}
+
+.alert-modal .alert-footer .btn-danger:hover {
+    background: linear-gradient(135deg, #990000, #7a0000) !important;
+    box-shadow: 0 4px 16px rgba(187, 0, 0, 0.3) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 480px) {
+    .alert-modal .alert-header {
+        padding: 18px 20px 14px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .alert-modal .alert-body {
+        padding: 16px 20px !important;
+    }
+
+    .alert-modal .alert-footer {
+        padding: 14px 20px 18px !important;
+        flex-direction: column !important;
+    }
+
+    .alert-modal .alert-footer .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+/* ============================================================
+   ALL SAVE BUTTONS – Professional Styling
+============================================================ */
+
+/* ---- All submit buttons in the submit row ---- */
+.submit-row input[type="submit"],
+.submit-row input[type="button"],
+.submit-row button {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px 28px !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 10px rgba(0, 107, 63, 0.2) !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+}
+
+.submit-row input[type="submit"]:hover,
+.submit-row input[type="button"]:hover,
+.submit-row button:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+    box-shadow: 0 4px 16px rgba(0, 107, 63, 0.3) !important;
+    transform: translateY(-2px) !important;
+}
+
+.submit-row input[type="submit"]:active,
+.submit-row input[type="button"]:active,
+.submit-row button:active {
+    transform: scale(0.98) !important;
+}
+
+/* ---- Specific: "Save", "Save and add another", "Save and continue editing" ---- */
+.submit-row input[name="_save"] {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    min-width: 120px !important;
+}
+
+.submit-row input[name="_addanother"] {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    opacity: 0.9 !important;
+}
+
+.submit-row input[name="_addanother"]:hover {
+    opacity: 1 !important;
+}
+
+.submit-row input[name="_continue"] {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+}
+
+/* ---- Save button with icon (optional enhancement) ---- */
+.submit-row input[name="_save"]::before,
+.submit-row input[type="submit"]::before {
+    content: "💾 " !important;
+    font-size: 0.9rem !important;
+}
+
+.submit-row input[name="_addanother"]::before {
+    content: "➕ " !important;
+    font-size: 0.9rem !important;
+}
+
+.submit-row input[name="_continue"]::before {
+    content: "✏️ " !important;
+    font-size: 0.9rem !important;
+}
+
+/* ---- Delete button (keep red) ---- */
+.submit-row input.deletelink {
+    background: linear-gradient(135deg, #BB0000, #990000) !important;
+    box-shadow: 0 2px 10px rgba(187, 0, 0, 0.2) !important;
+}
+
+.submit-row input.deletelink:hover {
+    background: linear-gradient(135deg, #990000, #7a0000) !important;
+    box-shadow: 0 4px 16px rgba(187, 0, 0, 0.3) !important;
+}
+
+.submit-row input.deletelink::before {
+    content: "🗑️ " !important;
+    font-size: 0.9rem !important;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+    .submit-row input[type="submit"],
+    .submit-row input[type="button"],
+    .submit-row button {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 12px 20px !important;
+    }
+}
+/* ============================================================
+   OBJECT TOOLS – "Add" Button at Top of Change List
+============================================================ */
+
+/* ---- Object tools container ---- */
+.object-tools {
+    margin: 0 0 16px 0 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+/* ---- "Add" button ---- */
+.object-tools a.addlink,
+.object-tools a {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    padding: 10px 24px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 10px rgba(0, 107, 63, 0.2) !important;
+    transition: all 0.25s ease !important;
+    border: none !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+}
+
+.object-tools a.addlink:hover,
+.object-tools a:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+    box-shadow: 0 4px 16px rgba(0, 107, 63, 0.3) !important;
+    transform: translateY(-2px) !important;
+}
+
+.object-tools a.addlink:active,
+.object-tools a:active {
+    transform: scale(0.98) !important;
+}
+
+/* ---- "Add" button icon ---- */
+.object-tools a.addlink::before,
+.object-tools a::before {
+    content: "➕ " !important;
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+}
+
+/* ---- "History" button (if present) ---- */
+.object-tools a.historylink {
+    background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    padding: 10px 24px !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.25s ease !important;
+    border: none !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.object-tools a.historylink:hover {
+    background: linear-gradient(135deg, #0f172a, #000000) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    transform: translateY(-2px) !important;
+}
+
+.object-tools a.historylink::before {
+    content: "📜 " !important;
+    font-size: 0.9rem !important;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+    .object-tools {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+
+    .object-tools a.addlink,
+    .object-tools a,
+    .object-tools a.historylink {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 12px 20px !important;
+    }
+}
+/* ============================================================
+   CHANGE LIST – Enhanced Table Styling
+============================================================ */
+
+/* ---- Change list container ---- */
+#changelist {
+    background: white !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* ---- Toolbar (search and filters) ---- */
+#changelist #toolbar {
+    padding: 16px 20px !important;
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+#changelist #toolbar form input[type="text"] {
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 8px 14px !important;
+    font-size: 0.9rem !important;
+    transition: all 0.2s !important;
+}
+
+#changelist #toolbar form input[type="text"]:focus {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.08) !important;
+    outline: none !important;
+}
+
+#changelist #toolbar form input[type="submit"] {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 8px 20px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    transition: background 0.2s !important;
+    cursor: pointer !important;
+}
+
+#changelist #toolbar form input[type="submit"]:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+}
+
+/* ---- Table header ---- */
+#changelist thead th {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.05em !important;
+    padding: 12px 16px !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    border-right: 1px solid #e2e8f0 !important;
+}
+
+#changelist thead th a {
+    color: #1e293b !important;
+    text-decoration: none !important;
+}
+
+#changelist thead th a:hover {
+    color: #006B3F !important;
+}
+
+/* ---- Table rows (alternating) ---- */
+#changelist tbody tr {
+    transition: background 0.2s !important;
+}
+
+#changelist tbody tr:nth-child(even) {
+    background: #fafafa !important;
+}
+
+#changelist tbody tr:nth-child(even):hover {
+    background: #f0fdf4 !important;
+}
+
+#changelist tbody tr:nth-child(odd):hover {
+    background: #f0fdf4 !important;
+}
+
+#changelist tbody td {
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    vertical-align: middle !important;
+    font-size: 0.9rem !important;
+    color: #1e293b !important;
+}
+
+#changelist tbody td a {
+    color: #006B3F !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    border-bottom: 1px solid transparent !important;
+    transition: border 0.2s !important;
+}
+
+#changelist tbody td a:hover {
+    color: #BB0000 !important;
+    border-bottom-color: #BB0000 !important;
+}
+
+/* ---- Checkbox column ---- */
+#changelist .action-checkbox-column {
+    width: 40px !important;
+    text-align: center !important;
+}
+
+#changelist .action-checkbox-column input[type="checkbox"] {
+    accent-color: #006B3F !important;
+    width: 16px !important;
+    height: 16px !important;
+    cursor: pointer !important;
+}
+
+/* ---- Action bar (bottom) ---- */
+.actions {
+    padding: 14px 20px !important;
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+    border-radius: 0 0 12px 12px !important;
+}
+
+.actions select {
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 6px 12px !important;
+    font-size: 0.85rem !important;
+}
+
+.actions select:focus {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.08) !important;
+    outline: none !important;
+}
+
+.actions .button {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 6px 20px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    transition: background 0.2s !important;
+    cursor: pointer !important;
+}
+
+.actions .button:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+}
+
+/* ---- Pagination ---- */
+.paginator {
+    padding: 14px 20px !important;
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+    font-size: 0.85rem !important;
+}
+
+.paginator a:link,
+.paginator a:visited {
+    background: #006B3F !important;
+    color: white !important;
+    border-radius: 30px !important;
+    padding: 4px 16px !important;
+    margin: 0 4px !important;
+    text-decoration: none !important;
+    transition: background 0.2s !important;
+}
+
+.paginator a:hover {
+    background: #004d2e !important;
+}
+
+.paginator .this-page {
+    background: #BB0000 !important;
+    color: white !important;
+    border-radius: 30px !important;
+    padding: 4px 16px !important;
+    font-weight: 700 !important;
+}
+
+.paginator .end {
+    color: #64748b !important;
+}
+
+/* ---- Filter sidebar ---- */
+#changelist-filter {
+    background: #f8fafc !important;
+    border-left: 1px solid #e2e8f0 !important;
+    padding: 20px !important;
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
+    border-radius: 8px !important;
+    margin-top: 0 !important;
+}
+
+#changelist-filter h3 {
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    margin: 16px 0 8px !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+}
+
+#changelist-filter ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 0 12px 0 !important;
+}
+
+#changelist-filter ul li {
+    padding: 4px 0 !important;
+}
+
+#changelist-filter ul li a {
+    color: #006B3F !important;
+    text-decoration: none !important;
+    font-size: 0.85rem !important;
+    transition: color 0.2s !important;
+}
+
+#changelist-filter ul li a:hover {
+    color: #BB0000 !important;
+}
+
+#changelist-filter ul li.selected a {
+    color: #BB0000 !important;
+    font-weight: 700 !important;
+}
+/* ============================================================
+   FINAL POLISH – Miscellaneous Elements
+============================================================ */
+
+/* ---- Help text (field descriptions) ---- */
+.help {
+    color: #64748b !important;
+    font-size: 0.75rem !important;
+    font-style: italic !important;
+    margin-top: 4px !important;
+}
+
+/* ---- Required field asterisk ---- */
+.required label::after {
+    content: " *" !important;
+    color: #BB0000 !important;
+    font-weight: 700 !important;
+}
+
+/* ---- Inline related objects ---- */
+.related-widget-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+}
+
+/* ---- Calendar widget (date picker) ---- */
+.calendar {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.calendar caption {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    padding: 8px !important;
+    font-weight: 600 !important;
+}
+
+/* ---- Clock widget (time picker) ---- */
+.clockbox {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ---- File upload widget ---- */
+.file-upload {
+    border: 1px dashed #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+    background: #fafafa !important;
+    transition: all 0.2s !important;
+}
+
+.file-upload:hover {
+    border-color: #006B3F !important;
+    background: #f0fdf4 !important;
+}
+
+/* ---- Select multiple widget (ManyToMany) ---- */
+.select2-container--admin-autocomplete .select2-selection--multiple {
+    border-radius: 8px !important;
+    border: 1px solid #d1d5db !important;
+}
+
+.select2-container--admin-autocomplete .select2-selection--multiple:focus-within {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.08) !important;
+}
+
+/* ---- Raw ID admin widget ---- */
+.vForeignKeyRawIdAdminField {
+    border-radius: 8px !important;
+    border: 1px solid #d1d5db !important;
+    padding: 8px 12px !important;
+}
+
+.vForeignKeyRawIdAdminField:focus {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.08) !important;
+    outline: none !important;
+}
+
+/* ---- Tabular inline rows (edit inline) ---- */
+.inline-group .tabular tr td {
+    vertical-align: middle !important;
+}
+
+.inline-group .tabular tr td .vTextField,
+.inline-group .tabular tr td .vIntegerField,
+.inline-group .tabular tr td select {
+    border-radius: 6px !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 6px 10px !important;
+    font-size: 0.85rem !important;
+}
+
+.inline-group .tabular tr td .vTextField:focus,
+.inline-group .tabular tr td .vIntegerField:focus,
+.inline-group .tabular tr td select:focus {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.06) !important;
+    outline: none !important;
+}
+
+/* ---- Delete confirmation page ---- */
+.delete-confirmation form input[type="submit"] {
+    background: linear-gradient(135deg, #BB0000, #990000) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 12px 28px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 10px rgba(187, 0, 0, 0.2) !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+}
+
+.delete-confirmation form input[type="submit"]:hover {
+    background: linear-gradient(135deg, #990000, #7a0000) !important;
+    box-shadow: 0 4px 16px rgba(187, 0, 0, 0.3) !important;
+    transform: translateY(-2px) !important;
+}
+
+.delete-confirmation form .cancel-link {
+    background: transparent !important;
+    color: #1e293b !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 12px 28px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+
+.delete-confirmation form .cancel-link:hover {
+    background: #f8fafc !important;
+    border-color: #BB0000 !important;
+    color: #BB0000 !important;
+}
+
+/* ---- Footer styling (admin footer) ---- */
+#footer {
+    background: #f8fafc !important;
+    border-top: 3px solid #006B3F !important;
+    color: #475569 !important;
+    padding: 14px 20px !important;
+    font-size: 0.85rem !important;
+    text-align: center !important;
+}
+
+/* ---- Django message tags ---- */
+.messagelist .success {
+    background-color: #d1fae5 !important;
+    border-left: 4px solid #006B3F !important;
+    color: #065f46 !important;
+    padding: 14px 18px !important;
+    border-radius: 10px !important;
+    margin: 8px 0 !important;
+}
+
+.messagelist .error {
+    background-color: #fee2e2 !important;
+    border-left: 4px solid #BB0000 !important;
+    color: #991b1b !important;
+    padding: 14px 18px !important;
+    border-radius: 10px !important;
+    margin: 8px 0 !important;
+}
+
+.messagelist .warning {
+    background-color: #fef3c7 !important;
+    border-left: 4px solid #f59e0b !important;
+    color: #78350f !important;
+    padding: 14px 18px !important;
+    border-radius: 10px !important;
+    margin: 8px 0 !important;
+}
+
+/* ---- Responsive fine-tuning ---- */
+@media (max-width: 480px) {
+    .inline-group .tabular tr td {
+        display: block !important;
+        width: 100% !important;
+        padding: 4px 0 !important;
+    }
+}
+/* ============================================================
+   DASHBOARD APP LIST – ADD & CHANGE BUTTONS
+============================================================ */
+
+/* ---- App list module rows ---- */
+.dashboard .module table tbody tr {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 10px 16px !important;
+    margin: 0 8px 8px !important;
+    border-radius: 8px !important;
+    background: #fafafa !important;
+    border: 1px solid #e2e8f0 !important;
+    transition: all 0.25s ease !important;
+}
+
+.dashboard .module table tbody tr:hover {
+    background: #f0fdf4 !important;
+    border-color: #006B3F !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 107, 63, 0.08) !important;
+}
+
+/* ---- Model name link ---- */
+.dashboard .module table tbody td:first-child a {
+    color: #1e293b !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    transition: color 0.2s ease !important;
+}
+
+.dashboard .module table tbody td:first-child a:hover {
+    color: #006B3F !important;
+    text-decoration: underline !important;
+}
+
+/* ---- "Add" button in app list ---- */
+.dashboard .module table tbody td:last-child .addlink {
+    display: inline-block !important;
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    padding: 4px 16px !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 6px rgba(0, 107, 63, 0.15) !important;
+    border: none !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+}
+
+.dashboard .module table tbody td:last-child .addlink:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+    box-shadow: 0 4px 12px rgba(0, 107, 63, 0.25) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    color: white !important;
+}
+
+.dashboard .module table tbody td:last-child .addlink:active {
+    transform: scale(0.97) !important;
+}
+
+.dashboard .module table tbody td:last-child .addlink::before {
+    content: "➕ " !important;
+    font-size: 0.6rem !important;
+    font-weight: 400 !important;
+}
+
+/* ---- "Change" button in app list ---- */
+.dashboard .module table tbody td:last-child .changelink {
+    display: inline-block !important;
+    background: transparent !important;
+    color: #1e293b !important;
+    padding: 4px 16px !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    border: 1.5px solid #d1d5db !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+}
+
+.dashboard .module table tbody td:last-child .changelink:hover {
+    background: #f8fafc !important;
+    border-color: #006B3F !important;
+    color: #006B3F !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+}
+
+.dashboard .module table tbody td:last-child .changelink:active {
+    transform: scale(0.97) !important;
+}
+
+.dashboard .module table tbody td:last-child .changelink::before {
+    content: "✏️ " !important;
+    font-size: 0.6rem !important;
+    font-weight: 400 !important;
+}
+
+/* ---- Button group spacing ---- */
+.dashboard .module table tbody td:last-child {
+    display: flex !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+    .dashboard .module table tbody td:last-child {
+        justify-content: flex-start !important;
+    }
+    
+    .dashboard .module table tbody td:last-child .addlink,
+    .dashboard .module table tbody td:last-child .changelink {
+        padding: 3px 12px !important;
+        font-size: 0.65rem !important;
+    }
+}
+/* ============================================================
+   SECTION 5: FORM FIELD ICONS (SVG) – Professional Icons
+============================================================ */
+.field-tenant label::before,
+.field-tenant .aligned label[for="id_tenant"]::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23006B3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+    flex-shrink: 0 !important;
+}
+.field-landlord label::before,
+.field-landlord .aligned label[for="id_landlord"]::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23006B3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3Cpath d='M18 7l3 3-3 3'/%3E%3Cpath d='M6 7l-3 3 3 3'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+    flex-shrink: 0 !important;
+}
+.field-property label::before,
+.field-property .aligned label[for="id_property"]::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23006B3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+    flex-shrink: 0 !important;
+}
+.field-unit label::before,
+.field-unit .aligned label[for="id_unit"]::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23006B3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='14' rx='2' ry='2'/%3E%3Cpath d='M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+    flex-shrink: 0 !important;
+}
+.field-amount label::before,
+.field-amount .aligned label[for="id_amount"]::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23006B3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M8 12h8'/%3E%3Cpath d='M12 8v8'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+    flex-shrink: 0 !important;
+}
+.field-status label::before,
+.field-status .aligned label[for="id_status"]::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23006B3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 8v4l3 3'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+    flex-shrink: 0 !important;
+}
+.field-description label::before,
+.field-description .aligned label[for="id_description"]::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23006B3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7h16'/%3E%3Cpath d='M4 12h10'/%3E%3Cpath d='M4 17h6'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+    flex-shrink: 0 !important;
+}
+.field-email label::before,
+.field-email .aligned label[for="id_email"]::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23006B3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'/%3E%3Cpolyline points='22,6 12,13 2,6'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+    flex-shrink: 0 !important;
+}
+.field-phone label::before,
+.field-phone .aligned label[for="id_phone"]::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23006B3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+    flex-shrink: 0 !important;
+}
+
+/* ============================================================
+   SECTION 6: INLINE "ADD ANOTHER" BUTTON – Professional
+============================================================ */
+.inline-group .add-row {
+    background: #f8fafc !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid #e2e8f0 !important;
+}
+.inline-group .add-row a {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    padding: 8px 24px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 8px rgba(0, 107, 63, 0.15) !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+.inline-group .add-row a:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+    box-shadow: 0 4px 14px rgba(0, 107, 63, 0.25) !important;
+    transform: translateY(-2px) !important;
+}
+.inline-group .add-row a::before {
+    content: "➕ " !important;
+}
+.inline-group .tabular .add-row a {
+    padding: 6px 18px !important;
+    font-size: 0.75rem !important;
+}
+
+/* ============================================================
+   SECTION 7: PLUS/MINUS BUTTONS – Professional & Interactive
+============================================================ */
+.related-widget-wrapper a.add-another,
+.related-widget-wrapper a.change-related,
+.related-widget-wrapper a.delete-related,
+a.add-another,
+a.change-related,
+a.delete-related {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 1.2rem !important;
+    line-height: 1 !important;
+    box-shadow: 0 2px 8px rgba(0, 107, 63, 0.2) !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    margin: 0 3px !important;
+    padding: 0 !important;
+    vertical-align: middle !important;
+}
+.related-widget-wrapper a.add-another:hover,
+.related-widget-wrapper a.change-related:hover,
+a.add-another:hover,
+a.change-related:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+    box-shadow: 0 4px 14px rgba(0, 107, 63, 0.3) !important;
+    transform: scale(1.12) !important;
+}
+.related-widget-wrapper a.delete-related,
+a.delete-related {
+    background: linear-gradient(135deg, #BB0000, #990000) !important;
+    box-shadow: 0 2px 8px rgba(187, 0, 0, 0.2) !important;
+}
+.related-widget-wrapper a.delete-related:hover,
+a.delete-related:hover {
+    background: linear-gradient(135deg, #990000, #7a0000) !important;
+    box-shadow: 0 4px 14px rgba(187, 0, 0, 0.3) !important;
+    transform: scale(1.12) !important;
+}
+.related-widget-wrapper a.add-another::before,
+a.add-another::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 16px !important;
+    height: 16px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+}
+.related-widget-wrapper a.change-related::before,
+a.change-related::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 14px !important;
+    height: 14px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+}
+.related-widget-wrapper a.delete-related::before,
+a.delete-related::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 16px !important;
+    height: 16px !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E") no-repeat center !important;
+    background-size: contain !important;
+}
+
+/* ============================================================
+   SECTION 8: DASHBOARD APP LIST – ADD & CHANGE BUTTONS
+============================================================ */
+.dashboard .module table tbody tr {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 10px 16px !important;
+    margin: 0 8px 8px !important;
+    border-radius: 8px !important;
+    background: #fafafa !important;
+    border: 1px solid #e2e8f0 !important;
+    transition: all 0.25s ease !important;
+}
+.dashboard .module table tbody tr:hover {
+    background: #f0fdf4 !important;
+    border-color: #006B3F !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 107, 63, 0.08) !important;
+}
+.dashboard .module table tbody td:first-child a {
+    color: #1e293b !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    transition: color 0.2s ease !important;
+}
+.dashboard .module table tbody td:first-child a:hover {
+    color: #006B3F !important;
+    text-decoration: underline !important;
+}
+.dashboard .module table tbody td:last-child .addlink {
+    display: inline-block !important;
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    padding: 4px 16px !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 6px rgba(0, 107, 63, 0.15) !important;
+    border: none !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+}
+.dashboard .module table tbody td:last-child .addlink:hover {
+    background: linear-gradient(135deg, #004d2e, #003321) !important;
+    box-shadow: 0 4px 12px rgba(0, 107, 63, 0.25) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    color: white !important;
+}
+.dashboard .module table tbody td:last-child .addlink::before {
+    content: "➕ " !important;
+    font-size: 0.6rem !important;
+    font-weight: 400 !important;
+}
+.dashboard .module table tbody td:last-child .changelink {
+    display: inline-block !important;
+    background: transparent !important;
+    color: #1e293b !important;
+    padding: 4px 16px !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    border: 1.5px solid #d1d5db !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+}
+.dashboard .module table tbody td:last-child .changelink:hover {
+    background: #f8fafc !important;
+    border-color: #006B3F !important;
+    color: #006B3F !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+}
+.dashboard .module table tbody td:last-child .changelink::before {
+    content: "✏️ " !important;
+    font-size: 0.6rem !important;
+    font-weight: 400 !important;
+}
+.dashboard .module table tbody td:last-child {
+    display: flex !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+}
+
+@media (max-width: 640px) {
+    .dashboard .module table tbody td:last-child {
+        justify-content: flex-start !important;
+    }
+    .dashboard .module table tbody td:last-child .addlink,
+    .dashboard .module table tbody td:last-child .changelink {
+        padding: 3px 12px !important;
+        font-size: 0.65rem !important;
+    }
+}
+
+/* ============================================================
+   SECTION 9: FINAL POLISH – Miscellaneous Elements
+============================================================ */
+.help {
+    color: #64748b !important;
+    font-size: 0.75rem !important;
+    font-style: italic !important;
+    margin-top: 4px !important;
+}
+.required label::after {
+    content: " *" !important;
+    color: #BB0000 !important;
+    font-weight: 700 !important;
+}
+.related-widget-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+}
+.calendar {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+.calendar caption {
+    background: linear-gradient(135deg, #006B3F, #004d2e) !important;
+    color: white !important;
+    padding: 8px !important;
+    font-weight: 600 !important;
+}
+.clockbox {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+.file-upload {
+    border: 1px dashed #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+    background: #fafafa !important;
+    transition: all 0.2s !important;
+}
+.file-upload:hover {
+    border-color: #006B3F !important;
+    background: #f0fdf4 !important;
+}
+.select2-container--admin-autocomplete .select2-selection--multiple {
+    border-radius: 8px !important;
+    border: 1px solid #d1d5db !important;
+}
+.select2-container--admin-autocomplete .select2-selection--multiple:focus-within {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.08) !important;
+}
+.vForeignKeyRawIdAdminField {
+    border-radius: 8px !important;
+    border: 1px solid #d1d5db !important;
+    padding: 8px 12px !important;
+}
+.vForeignKeyRawIdAdminField:focus {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.08) !important;
+    outline: none !important;
+}
+.inline-group .tabular tr td .vTextField,
+.inline-group .tabular tr td .vIntegerField,
+.inline-group .tabular tr td select {
+    border-radius: 6px !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 6px 10px !important;
+    font-size: 0.85rem !important;
+}
+.inline-group .tabular tr td .vTextField:focus,
+.inline-group .tabular tr td .vIntegerField:focus,
+.inline-group .tabular tr td select:focus {
+    border-color: #006B3F !important;
+    box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.06) !important;
+    outline: none !important;
+}
+.delete-confirmation form input[type="submit"] {
+    background: linear-gradient(135deg, #BB0000, #990000) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 12px 28px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 10px rgba(187, 0, 0, 0.2) !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+}
+.delete-confirmation form input[type="submit"]:hover {
+    background: linear-gradient(135deg, #990000, #7a0000) !important;
+    box-shadow: 0 4px 16px rgba(187, 0, 0, 0.3) !important;
+    transform: translateY(-2px) !important;
+}
+.delete-confirmation form .cancel-link {
+    background: transparent !important;
+    color: #1e293b !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 12px 28px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.25s ease !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+.delete-confirmation form .cancel-link:hover {
+    background: #f8fafc !important;
+    border-color: #BB0000 !important;
+    color: #BB0000 !important;
+}
+#footer {
+    background: #f8fafc !important;
+    border-top: 3px solid #006B3F !important;
+    color: #475569 !important;
+    padding: 14px 20px !important;
+    font-size: 0.85rem !important;
+    text-align: center !important;
+}
+.messagelist .success {
+    background-color: #d1fae5 !important;
+    border-left: 4px solid #006B3F !important;
+    color: #065f46 !important;
+    padding: 14px 18px !important;
+    border-radius: 10px !important;
+    margin: 8px 0 !important;
+}
+.messagelist .error {
+    background-color: #fee2e2 !important;
+    border-left: 4px solid #BB0000 !important;
+    color: #991b1b !important;
+    padding: 14px 18px !important;
+    border-radius: 10px !important;
+    margin: 8px 0 !important;
+}
+.messagelist .warning {
+    background-color: #fef3c7 !important;
+    border-left: 4px solid #f59e0b !important;
+    color: #78350f !important;
+    padding: 14px 18px !important;
+    border-radius: 10px !important;
+    margin: 8px 0 !important;
+}
+@media (max-width: 480px) {
+    .inline-group .tabular tr td {
+        display: block !important;
+        width: 100% !important;
+        padding: 4px 0 !important;
+    }
+}
+
+/* ============================================================
+   SECTION 10: FULL WIDTH DASHBOARD – ACTION CARDS 4 PER ROW
+============================================================ */
+#content {
+    max-width: 100% !important;
+    padding: 20px 24px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.admin-welcome {
+    background: linear-gradient(135deg, var(--kenya-green), var(--kenya-green-dark));
+    border-radius: var(--radius);
+    padding: 24px 32px;
+    margin: 0 0 24px 0;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    box-shadow: 0 4px 16px rgba(0, 107, 63, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    width: 100%;
+    box-sizing: border-box;
+}
+.admin-welcome h2 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -0.3px;
+    color: white;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+.admin-welcome h2 span {
+    color: var(--kenya-gold);
+}
+.admin-welcome p {
+    margin: 4px 0 0;
+    opacity: 0.85;
+    font-size: 0.95rem;
+}
+.date-badge {
+    background: rgba(255, 255, 255, 0.12);
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(4px);
+    color: white;
+    white-space: nowrap;
+}
+
+.admin-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 100%;
+    margin: 0 0 36px 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.admin-action-card {
+    background: #ffffff;
+    border-radius: var(--radius);
+    padding: 28px 16px 22px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    transition: all 0.3s ease;
+    text-decoration: none !important;
+    color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+    min-height: 170px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+.admin-action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--kenya-green), var(--kenya-red), var(--kenya-gold));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.admin-action-card:hover::before {
+    opacity: 1;
+}
+.admin-action-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--kenya-green);
+}
+.admin-action-card .icon {
+    font-size: 2.4rem;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+.admin-action-card .title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #0f172a;
+    letter-spacing: -0.2px;
+}
+.admin-action-card .desc {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+}
+.admin-action-card .badge {
+    margin-top: 10px;
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 16px;
+    border-radius: 30px;
+    background: #f1f5f9;
+    color: #1e293b;
+    display: inline-block;
+}
+.admin-action-card.red {
+    border-left: 4px solid var(--kenya-red);
+}
+.admin-action-card.red .badge {
+    background: #fee2e2;
+    color: var(--kenya-red);
+}
+.admin-action-card.gold {
+    border-left: 4px solid var(--kenya-gold);
+}
+.admin-action-card.gold .badge {
+    background: #fef3c7;
+    color: #92400e;
+}
+.admin-action-card.dark {
+    border-left: 4px solid #1e293b;
+}
+.admin-action-card.dark .badge {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+.admin-action-card.green {
+    border-left: 4px solid var(--kenya-green);
+}
+.admin-action-card.green .badge {
+    background: #d1fae5;
+    color: var(--kenya-green);
+}
+
+@media (max-width: 1024px) {
+    .admin-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    .app-list {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px !important;
+    }
+}
+@media (max-width: 768px) {
+    #content {
+        padding: 14px 16px !important;
+    }
+    .admin-welcome {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+    }
+    .admin-welcome h2 {
+        font-size: 1.3rem;
+    }
+    .admin-actions-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin: 16px 0 24px 0;
+    }
+    .admin-action-card {
+        min-height: 150px;
+        padding: 22px 14px 18px;
+    }
+    .admin-action-card .icon {
+        font-size: 2rem;
+    }
+    .admin-action-card .title {
+        font-size: 0.95rem;
+    }
+    .admin-action-card .desc {
+        font-size: 0.75rem;
+    }
+    .app-list {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+    .dashboard .module table tbody tr {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+    }
+    .dashboard .module table tbody td:last-child {
+        justify-content: flex-start !important;
+    }
+    .date-badge {
+        font-size: 0.75rem;
+        padding: 4px 12px;
+    }
+}
+@media (max-width: 480px) {
+    .admin-actions-grid {
+        gap: 12px;
+    }
+    .admin-action-card {
+        min-height: 140px;
+        padding: 20px 12px 16px;
+    }
+    .admin-action-card .badge {
+        padding: 3px 12px;
+    }
+}

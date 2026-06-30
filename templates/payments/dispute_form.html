@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Raise Formal Dispute | RentSure Kenya{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50/50 py-10 px-4">
+    <div class="max-w-xl mx-auto">
+        
+        <!-- Premium Action Header Card -->
+        <div class="bg-white rounded-2xl shadow-xl shadow-slate-100 border border-gray-200/80 overflow-hidden">
+            
+            <!-- Context Header Banner -->
+            <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-rose-950 p-6 text-white border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-black tracking-tight">Dispute Resolution Filing</h2>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Formal claim entry & escrow protection center</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Meta Identity Block -->
+            <div class="bg-slate-50/70 p-4 border-b border-gray-100 grid grid-cols-2 gap-4 text-xs">
+                <div class="flex items-start gap-2.5 min-w-0">
+                    <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    <div class="min-w-0">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Property Asset</p>
+                        <p class="font-bold text-slate-800 truncate mt-0.5">{{ escrow.property.title }}</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start gap-2.5 min-w-0 border-l border-gray-200 pl-4">
+                    <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <div class="min-w-0">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Unit / Assignment</p>
+                        <p class="font-bold text-slate-800 truncate mt-0.5">
+                            {% if escrow.unit %}
+                                {{ escrow.unit.get_unit_type_display }} #{{ escrow.unit.unit_number }}
+                            {% else %}
+                                Entire Property Portfolio
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Legal Input Fields -->
+            <form method="post" enctype="multipart/form-data" class="p-6 space-y-5">
+                {% csrf_token %}
+                
+                <div>
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
+                        Statement of Facts <span class="text-rose-600">*</span>
+                    </label>
+                    <textarea 
+                        name="reason" 
+                        rows="5" 
+                        placeholder="Provide a comprehensive, objective account of the non-compliance or property conditions issue. Mention relevant dates, attempts to communicate, and structural factors..." 
+                        class="w-full border border-gray-200 rounded-xl p-3.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-rose-500/5 focus:border-rose-500 bg-gray-50/30 transition-all font-medium leading-relaxed" 
+                        required></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
+                        Evidential Upload Portfolio
+                    </label>
+                    <div class="relative w-full border border-dashed border-gray-300 hover:border-slate-400 bg-gray-50/50 rounded-xl p-4 transition-colors text-center group">
+                        <input 
+                            type="file" 
+                            name="evidence_files" 
+                            multiple 
+                            accept="image/*,video/*" 
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <div class="flex flex-col items-center justify-center pointer-events-none">
+                            <svg class="w-6 h-6 text-slate-400 mb-2 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                            <span class="text-xs font-bold text-slate-700">Click to upload or drag files here</span>
+                            <span class="text-[10px] text-gray-400 font-medium mt-1">Multi-selection active (JPEG, PNG, MP4) &bull; Maximum 5MB per media file</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategic Security Notice Warning -->
+                <div class="rounded-xl bg-amber-50/50 border border-amber-200/60 p-3 flex gap-3">
+                    <svg class="w-4 h-4 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p class="text-[11px] text-amber-800 font-medium leading-normal">
+                        Filing this claim immediately halts payout releases. Escrow values will remain vaulted securely inside RentSure Kenya until an arbiter reaches a formal mutual determination.
+                    </p>
+                </div>
+
+                <!-- Command Actions Dock -->
+                <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+                    <a href="{% url 'dashboard' %}" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-gray-100 transition-all">
+                        Cancel Filing
+                    </a>
+                    <button 
+                        type="submit" 
+                        class="inline-flex items-center justify-center bg-rose-600 hover:bg-rose-700 text-white px-5 py-2.5 rounded-xl text-xs font-black shadow-md shadow-rose-600/10 transition duration-150 tracking-wide">
+                        Submit Official Dispute
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

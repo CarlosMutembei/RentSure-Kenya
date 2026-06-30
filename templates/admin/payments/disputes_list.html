@@ -1,0 +1,123 @@
+{% extends "admin/base_site.html" %}
+{% load static i18n %}
+
+{% block extrahead %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto mt-8 px-4">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-kenya-green via-green-700 to-green-800 rounded-2xl shadow-xl overflow-hidden">
+        <div class="px-6 py-5 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                <i class="fas fa-gavel text-white text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-white">Dispute Resolution Center</h1>
+                <p class="text-emerald-100 text-sm mt-0.5">Manage active disputes</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                <i class="fas fa-clock text-amber-600 text-xl"></i>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase">Open Disputes</p>
+                <p class="text-2xl font-bold text-gray-800">{{ disputed_escrows|length }}</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase">Critical (12h left)</p>
+                <p class="text-2xl font-bold text-red-600">
+                    {{ disputed_escrows|length|default:0 }}  <!-- You can compute critical count in view -->
+                </p>
+            </div>
+        </div>
+        <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-5 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
+                <i class="fas fa-check-circle text-emerald-600 text-xl"></i>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase">Resolved This Month</p>
+                <p class="text-2xl font-bold text-emerald-600">
+                    {{ resolved_this_month|default:0 }}  <!-- Add to context in admin -->
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disputes Table -->
+    <div class="mt-8 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+            <h3 class="font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-list"></i> All Disputes
+            </h3>
+            <span class="text-xs text-gray-500">{{ disputed_escrows|length }} records</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50/80">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Escrow #</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tenant</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dispute Reason</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time Left</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                    {% for escrow in disputed_escrows %}
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ escrow.id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ escrow.property.title|truncatechars:30 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {{ escrow.tenant.username }}<br>
+                            <span class="text-xs text-gray-400">{{ escrow.tenant.email }}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-emerald-700">KES {{ escrow.amount|floatformat:0 }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">{{ escrow.dispute_reason|truncatechars:60 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% with remaining=escrow.remaining_dispute_seconds|floatformat:0 %}
+                                {% if remaining < 43200 %}
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                                        {{ remaining|floatformat:0|divisibleby:3600}}h {{ remaining|divisibleby:60 }}m left
+                                    </span>
+                                {% else %}
+                                    <span class="text-sm text-gray-500">{{ remaining|floatformat:0|divisibleby:3600 }}h {{ remaining|divisibleby:60 }}m</span>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                            <a href="{% url 'admin:dispute_chat' escrow.id %}" class="inline-flex items-center gap-1 bg-kenya-green hover:bg-green-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">
+                                <i class="fas fa-comment"></i> Chat
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <i class="fas fa-check-circle text-3xl text-emerald-300 mb-2 block"></i>
+                            No active disputes. All clear!
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

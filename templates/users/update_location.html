@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mx-auto p-6 max-w-3xl">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-700 to-blue-500 px-6 py-4">
+            <h2 class="text-white font-bold text-xl flex items-center gap-2">
+                📍 Set Your Default Location
+            </h2>
+            <p class="text-blue-100 text-sm">Where are you based? This helps us show properties near you.</p>
+        </div>
+        
+        <form method="post" class="p-6 space-y-4">
+            {% csrf_token %}
+            
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-semibold mb-1">Town / City</label>
+                    <input type="text" name="town" id="town" value="{{ user.default_town|default:'' }}" required class="w-full border p-2 rounded">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">Estate / Area</label>
+                    <input type="text" name="estate" id="estate" value="{{ user.default_estate|default:'' }}" class="w-full border p-2 rounded">
+                </div>
+            </div>
+            
+            <!-- Map picker -->
+            <div>
+                <label class="block font-semibold mb-1">Pin your exact location (drag the marker)</label>
+                <div id="locationPicker" style="height: 400px;" class="rounded border"></div>
+                <input type="hidden" name="latitude" id="latitude" required>
+                <input type="hidden" name="longitude" id="longitude" required>
+                <p class="text-xs text-gray-500 mt-1">Search for a place, then drag marker to your exact spot.</p>
+            </div>
+            
+            <div class="flex justify-end gap-2">
+                <a href="{% url 'dashboard' %}" class="bg-gray-300 text-gray-800 px-4 py-2 rounded">Cancel</a>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Location</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Leaflet map + search -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Default center: if user has saved location, use that; else Nairobi
+    var defaultLat = {{ user.default_latitude|default:'-1.286389' }};
+    var defaultLng = {{ user.default_longitude|default:'36.817223' }};
+    var defaultTown = "{{ user.default_town|default:'Nairobi' }}";
+    
+    var map = L.map('locationPicker').setView([defaultLat, defaultLng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    
+    var marker = L.marker([defaultLat, defaultLng], {draggable: true}).addTo(map);
+    marker.on('dragend', function(e) {
+        var pos = marker.getLatLng();
+        document.getElementById('latitude').value = pos.lat;
+        document.getElementById('longitude').value = pos.lng;
+        reverseGeocode(pos.lat, pos.lng);
+    });
+    
+    // Set initial hidden inputs
+    document.getElementById('latitude').value = defaultLat;
+    document.getElementById('longitude').value = defaultLng;
+    
+    // Reverse geocoding to get town/estate from coordinates (optional)
+    function reverseGeocode(lat, lng) {
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
+            headers: { 'User-Agent': 'RentSureKenya' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.address) {
+                let town = data.address.city || data.address.town || data.address.village || '';
+                let suburb = data.address.suburb || data.address.neighbourhood || '';
+                if (town) document.getElementById('town').value = town;
+                if (suburb) document.getElementById('estate').value = suburb;
+            }
+        })
+        .catch(err => console.log(err));
+    }
+    
+    // Search for a place
+    function searchLocation() {
+        var query = document.getElementById('search-input').value;
+        if (!query) return;
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`, {
+            headers: { 'User-Agent': 'RentSureKenya' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data && data.length) {
+                var lat = parseFloat(data[0].lat);
+                var lon = parseFloat(data[0].lon);
+                map.setView([lat, lon], 16);
+                marker.setLatLng([lat, lon]);
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lon;
+                reverseGeocode(lat, lon);
+            } else {
+                alert('Location not found');
+            }
+        });
+    }
+    
+    // Add a search box above the map
+    var searchDiv = document.createElement('div');
+    searchDiv.innerHTML = `
+        <div class="flex gap-2 mb-2">
+            <input type="text" id="search-input" placeholder="Search for a place (e.g., Kahawa West)" class="flex-1 border p-2 rounded">
+            <button type="button" onclick="searchLocation()" class="bg-blue-600 text-white px-4 py-2 rounded">Search</button>
+        </div>
+    `;
+    document.getElementById('locationPicker').parentNode.insertBefore(searchDiv, document.getElementById('locationPicker'));
+</script>
+{% endblock %}
